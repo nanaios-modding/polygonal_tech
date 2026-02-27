@@ -1,7 +1,7 @@
 package com.nanaios.polygonal_tech.item.interfaces;
 
 /// 角素アイテムのインターフェース
-public interface IPolygonalElementItem {
+public interface IElementItem {
     /// 何角形なのかを返す
     ///
     /// @return 角の数

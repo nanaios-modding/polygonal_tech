@@ -1,6 +1,7 @@
 package com.nanaios.polygonal_tech;
 
 import com.mojang.logging.LogUtils;
+import com.nanaios.polygonal_tech.registries.PolyTechCreativeModeTabRegister;
 import com.nanaios.polygonal_tech.registries.PolyTechItemRegister;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
@@ -17,5 +18,6 @@ public class PolygonalTech {
         IEventBus bus = context.getModEventBus();
 
         PolyTechItemRegister.ITEMS.register(bus);
+        PolyTechCreativeModeTabRegister.CREATIVE_TABS.register(bus);
     }
 }
