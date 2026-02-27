@@ -3,6 +3,7 @@ package com.nanaios.polygonal_tech.registries;
 import com.nanaios.polygonal_tech.PolygonalTechLang;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.DeferredRegister;
 
@@ -14,6 +15,13 @@ public class PolyTechCreativeModeTabRegister {
             MAIN_TAB.register("main_tab", () -> CreativeModeTab.builder()
                     .title(PolygonalTechLang.MAIN_TAB.get())
                     .icon(() ->new ItemStack(PolyTechItemRegister.ELEMENT_3.get()))
+                    .displayItems((parameters, output) -> {
+                        displayItem(output, PolyTechItemRegister.ELEMENTS);
+                    })
                     .build());
+    }
+
+    static public void displayItem(CreativeModeTab.Output output, DeferredRegister<Item> itemRegister) {
+        itemRegister.getEntries().forEach(entry -> output.accept(entry.get()));
     }
 }
