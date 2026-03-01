@@ -3,12 +3,17 @@ package com.nanaios.polygonal_tech.registries;
 import com.nanaios.polygonal_tech.PolygonalTech;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 public class MultipleRegister<T> {
     public final ResourceKey<? extends Registry<T>> registryKey;
@@ -36,6 +41,22 @@ public class MultipleRegister<T> {
         DeferredRegister<T> deferredRegister = DeferredRegister.create(registryKey, modid);
         deferredRegisters.add(deferredRegister);
         return deferredRegister;
+    }
+
+    @Nullable
+    public T get(String name) {
+        ResourceLocation key = ResourceLocation.fromNamespaceAndPath(modid, name);
+
+        for (DeferredRegister<T> deferredRegister : deferredRegisters) {
+            for(RegistryObject<T> registryObject : deferredRegister.getEntries()) {
+                ResourceLocation registryObjectKey = registryObject.getId();
+                if(registryObjectKey == null) continue;
+                if(registryObject.getId().equals(key)) {
+                    return registryObject.get();
+                }
+            }
+        }
+        return null;
     }
 
     public void register(IEventBus bus) {
