@@ -17,7 +17,7 @@ public class PolyTechCreativeModeTabRegister {
                 .icon(() -> new ItemStack(PolyTechItemRegister.ELEMENT_3.get()))
                 .displayItems((parameters, output) -> {
                     PolyTechItemRegister.ELEMENTS.display(output);
-                    PolyTechBlockRegister.FACTORY_BLOCKS.display(output);
+                    PolyTechBlockRegister.MACHINE_BLOCKS.display(output);
                 })
                 .build());
     }

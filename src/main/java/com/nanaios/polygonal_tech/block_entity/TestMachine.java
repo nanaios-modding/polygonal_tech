@@ -5,11 +5,18 @@ import com.nanaios.polygonal_tech.block_entity.base.BaseBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.client.model.data.ModelData;
+import org.jetbrains.annotations.NotNull;
 
-public class TestFactory extends BaseBlockEntity<TestFactory> {
+public class TestMachine extends BaseBlockEntity<TestMachine> {
 
-    public TestFactory(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+    public TestMachine(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
         PolygonalTech.LOGGER.info("TestFactory created at {}", pos);
+    }
+
+    @Override
+    public @NotNull ModelData getModelData() {
+        return super.getModelData();
     }
 }

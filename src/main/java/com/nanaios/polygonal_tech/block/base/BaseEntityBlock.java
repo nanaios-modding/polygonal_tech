@@ -16,6 +16,11 @@ import org.jetbrains.annotations.Nullable;
 
 public class BaseEntityBlock<T extends BlockEntity> extends Block implements EntityBlock {
     private final RegistryObject<BlockEntityType<?>> blockEntityType;
+
+    public BaseEntityBlock(RegistryObject<Block> block) {
+        this(Block.Properties.of().noOcclusion(), block);
+    }
+
     public BaseEntityBlock(Properties properties, RegistryObject<Block> block) {
         super(properties);
         blockEntityType = DeferredBlockEntityTypeRegister.blockEntityTypes.get(block.hashCode());

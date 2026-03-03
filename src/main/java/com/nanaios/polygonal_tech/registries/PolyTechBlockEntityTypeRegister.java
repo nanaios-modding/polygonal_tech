@@ -1,6 +1,6 @@
 package com.nanaios.polygonal_tech.registries;
 
-import com.nanaios.polygonal_tech.block_entity.TestFactory;
+import com.nanaios.polygonal_tech.block_entity.TestMachine;
 import com.nanaios.polygonal_tech.registries.impl.MultipleBlockEntityTypeRegister;
 import com.nanaios.polygonal_tech.registries.impl.DeferredBlockEntityTypeRegister;
 
@@ -10,9 +10,9 @@ public class PolyTechBlockEntityTypeRegister {
 
     static {
         FACTORY_BLOCK_ENTITIES.register(
-                "test_factor",
-                TestFactory::new,
-                PolyTechBlockRegister.TEST_FACTORY
+                "test_machine",
+                TestMachine::new,
+                PolyTechBlockRegister.TEST_MACHINE
         );
     }
 }
