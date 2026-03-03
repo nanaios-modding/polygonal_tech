@@ -12,7 +12,6 @@ public class TestMachine extends BaseBlockEntity<TestMachine> {
 
     public TestMachine(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
-        PolygonalTech.LOGGER.info("TestFactory created at {}", pos);
     }
 
     @Override

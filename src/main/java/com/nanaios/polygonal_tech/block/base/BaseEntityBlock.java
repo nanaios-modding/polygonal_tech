@@ -14,7 +14,7 @@ import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class BaseEntityBlock<T extends BlockEntity> extends Block implements EntityBlock {
+public class BaseEntityBlock extends Block implements EntityBlock {
     private final RegistryObject<BlockEntityType<?>> blockEntityType;
 
     public BaseEntityBlock(RegistryObject<Block> block) {
