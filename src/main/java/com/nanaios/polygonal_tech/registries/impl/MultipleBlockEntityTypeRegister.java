@@ -1,10 +1,11 @@
-package com.nanaios.polygonal_tech.registries.base;
+package com.nanaios.polygonal_tech.registries.impl;
 
+import com.nanaios.polygonal_tech.registries.base.MultipleRegister;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class BlockEntityTypeRegister extends MultipleRegister<BlockEntityType<?>>{
-    public BlockEntityTypeRegister() {
+public class MultipleBlockEntityTypeRegister extends MultipleRegister<BlockEntityType<?>> {
+    public MultipleBlockEntityTypeRegister() {
         super(ForgeRegistries.BLOCK_ENTITY_TYPES);
     }
 

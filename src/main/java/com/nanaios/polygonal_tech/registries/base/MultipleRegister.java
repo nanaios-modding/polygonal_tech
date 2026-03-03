@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MultipleRegister<T> {
-    private final ResourceKey<? extends Registry<T>> registryKey;
-    private final String modid;
+    protected final ResourceKey<? extends Registry<T>> registryKey;
+    protected final String modid;
     private final List<DeferredRegister<T>> deferredRegisters = new ArrayList<>();
 
     public MultipleRegister(IForgeRegistry<T> registry) {

@@ -1,8 +1,7 @@
 package com.nanaios.polygonal_tech.block.base;
 
 import com.nanaios.polygonal_tech.block_entity.base.BaseBlockEntity;
-import com.nanaios.polygonal_tech.registries.base.DeferredBlockEntityTypeRegister;
-import com.nanaios.polygonal_tech.registries.base.DeferredBlockEntityTypeRegister.BlockEntitySupplier;
+import com.nanaios.polygonal_tech.registries.impl.DeferredBlockEntityTypeRegister;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -17,9 +16,9 @@ import org.jetbrains.annotations.Nullable;
 
 public class BaseEntityBlock<T extends BlockEntity> extends Block implements EntityBlock {
     private final RegistryObject<BlockEntityType<?>> blockEntityType;
-    public BaseEntityBlock(Properties properties, BlockEntitySupplier<T> supplier) {
+    public BaseEntityBlock(Properties properties, RegistryObject<Block> block) {
         super(properties);
-        blockEntityType = DeferredBlockEntityTypeRegister.blockEntityTypes.get(supplier);
+        blockEntityType = DeferredBlockEntityTypeRegister.blockEntityTypes.get(block.hashCode());
     }
 
     @Override
