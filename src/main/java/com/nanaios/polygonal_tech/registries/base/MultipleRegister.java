@@ -1,24 +1,19 @@
-package com.nanaios.polygonal_tech.registries;
+package com.nanaios.polygonal_tech.registries.base;
 
 import com.nanaios.polygonal_tech.PolygonalTech;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.RegistryObject;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 
 public class MultipleRegister<T> {
-    public final ResourceKey<? extends Registry<T>> registryKey;
-    public final String modid;
-    public final List<DeferredRegister<T>> deferredRegisters = new ArrayList<>();
+    private final ResourceKey<? extends Registry<T>> registryKey;
+    private final String modid;
+    private final List<DeferredRegister<T>> deferredRegisters = new ArrayList<>();
 
     public MultipleRegister(IForgeRegistry<T> registry) {
         this(registry, PolygonalTech.MODID);
@@ -37,26 +32,16 @@ public class MultipleRegister<T> {
         this.modid = modid;
     }
 
-    public DeferredRegister<T> create() {
+    /// 内部的にDeferredRegisterを作成するためのメソッド\
+    /// このメソッドによって生成されたDeferredRegisterは、registerメソッドでイベントバスに登録される
+    protected DeferredRegister<T> createDeferredRegister() {
         DeferredRegister<T> deferredRegister = DeferredRegister.create(registryKey, modid);
         deferredRegisters.add(deferredRegister);
         return deferredRegister;
     }
 
-    @Nullable
-    public T get(String name) {
-        ResourceLocation key = ResourceLocation.fromNamespaceAndPath(modid, name);
-
-        for (DeferredRegister<T> deferredRegister : deferredRegisters) {
-            for(RegistryObject<T> registryObject : deferredRegister.getEntries()) {
-                ResourceLocation registryObjectKey = registryObject.getId();
-                if(registryObjectKey == null) continue;
-                if(registryObject.getId().equals(key)) {
-                    return registryObject.get();
-                }
-            }
-        }
-        return null;
+    public WrapperDeferredRegister<T> create() {
+        return new WrapperDeferredRegister<>(createDeferredRegister());
     }
 
     public void register(IEventBus bus) {

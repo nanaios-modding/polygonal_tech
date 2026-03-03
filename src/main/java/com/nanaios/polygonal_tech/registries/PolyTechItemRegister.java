@@ -1,15 +1,16 @@
 package com.nanaios.polygonal_tech.registries;
 
 import com.nanaios.polygonal_tech.item.ElementItem;
+import com.nanaios.polygonal_tech.registries.base.MultipleRegister;
+import com.nanaios.polygonal_tech.registries.base.WrapperDeferredRegister;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 public class PolyTechItemRegister {
     public static final MultipleRegister<Item> ITEMS = new MultipleRegister<>(ForgeRegistries.ITEMS);
-    public static final DeferredRegister<Item> ELEMENTS = ITEMS.create();
-    public static final DeferredRegister<Item> EASTER_EGGS = ITEMS.create();
+    public static final WrapperDeferredRegister<Item> ELEMENTS = ITEMS.create();
+    public static final WrapperDeferredRegister<Item> EASTER_EGGS = ITEMS.create();
 
     // 角素アイテム
     public static final RegistryObject<Item> ELEMENT_3;
