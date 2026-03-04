@@ -5,8 +5,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.energy.IEnergyStorage;
 
-public interface ILongEnergyStorage extends IEnergyStorage, INBTSerializable<CompoundTag>,ICapabilityMarker {
-    String ENERGY_STORED_KEY = "Energy";
+public interface ILongEnergyStorage extends IEnergyStorage,ICapabilityMarker {
+    String ENERGY_STORED_KEY = "stored";
 
     long getLongEnergyStored();
 

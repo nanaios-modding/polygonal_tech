@@ -2,16 +2,26 @@ package com.nanaios.polygonal_tech.capability.base;
 
 import com.nanaios.polygonal_tech.capability.interfaces.ICapabilityMarker;
 import com.nanaios.polygonal_tech.capability.interfaces.ICombinedCapability;
+import com.nanaios.polygonal_tech.container.base.BaseContainer;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
-public abstract class BaseProvider<T extends ICapabilityMarker,C extends ICombinedCapability<T>> implements ICapabilityProvider {
+public abstract class BaseProvider<T extends ICapabilityMarker,C extends ICombinedCapability<T>> implements ICapabilityProvider, INBTSerializable<CompoundTag> {
+    public static String UP_KEY = "up";
+    public static String DOWN_KEY = "down";
+    public static String NORTH_KEY = "north";
+    public static String SOUTH_KEY = "south";
+    public static String WEST_KEY = "west";
+    public static String EAST_KEY = "east";
+
     // 面のCapabilityインスタンス
     protected C up;
     protected C down;
@@ -79,7 +89,7 @@ public abstract class BaseProvider<T extends ICapabilityMarker,C extends ICombin
     /// Capabilityを指定した面に追加
     /// @param side 追加する面
     /// @param capability 追加するCapability
-    public void add(Direction side, T capability) {
+    private void add(Direction side, T capability) {
         switch (side) {
             case UP -> up.add(capability);
             case DOWN -> down.add(capability);
@@ -98,14 +108,13 @@ public abstract class BaseProvider<T extends ICapabilityMarker,C extends ICombin
         switch (ioType) {
             case INPUT -> add(side, container.getInput());
             case OUTPUT -> add(side, container.getOutput());
-            case INPUT_OUTPUT -> add(side, container.getInputOutput());
         }
     }
 
     /// Capabilityを指定した面から削除
     /// @param side 削除する面
     /// @param capability 削除するCapability
-    public void remove(Direction side, T capability) {
+    private void remove(Direction side, T capability) {
         switch (side) {
             case UP -> up.remove(capability);
             case DOWN -> down.remove(capability);
@@ -124,7 +133,18 @@ public abstract class BaseProvider<T extends ICapabilityMarker,C extends ICombin
         switch (ioType) {
             case INPUT -> remove(side, container.getInput());
             case OUTPUT -> remove(side, container.getOutput());
-            case INPUT_OUTPUT -> remove(side, container.getInputOutput());
         }
+    }
+
+    @Override
+    public CompoundTag serializeNBT() {
+        CompoundTag tag = new CompoundTag();
+        tag.put(up, up.serializeNBT());
+        return new CompoundTag();
+    }
+
+    @Override
+    public void deserializeNBT(CompoundTag nbt) {
+
     }
 }

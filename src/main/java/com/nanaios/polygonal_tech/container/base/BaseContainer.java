@@ -1,16 +1,14 @@
-package com.nanaios.polygonal_tech.capability.base;
+package com.nanaios.polygonal_tech.container.base;
 
 import com.nanaios.polygonal_tech.capability.interfaces.ICapabilityMarker;
 
 public abstract class BaseContainer<T extends ICapabilityMarker> {
     private final T input;
     private final T output;
-    private final T inputOutput;
 
-    public BaseContainer(T input, T output, T inputOutput) {
+    public BaseContainer(T input, T output) {
         this.input = input;
         this.output = output;
-        this.inputOutput = inputOutput;
     }
 
     public T getInput() {
@@ -21,14 +19,9 @@ public abstract class BaseContainer<T extends ICapabilityMarker> {
         return output;
     }
 
-    public T getInputOutput() {
-        return inputOutput;
-    }
-
 
     public enum IOType {
         INPUT,
-        OUTPUT,
-        INPUT_OUTPUT
+        OUTPUT
     }
 }

@@ -1,9 +1,12 @@
 package com.nanaios.polygonal_tech.block_entity.base;
 
 import com.nanaios.polygonal_tech.capability.PolygonalTechCapabilities;
+import com.nanaios.polygonal_tech.capability.interfaces.ILongEnergyStorage;
 import com.nanaios.polygonal_tech.capability.provider.EnergyStorageProvider;
+import com.nanaios.polygonal_tech.container.ContainerBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
@@ -13,13 +16,16 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class BaseMachine<M extends BaseMachine<M>> extends BaseBlockEntity<M> {
-    protected EnergyStorageProvider energyStorageProvider = new EnergyStorageProvider();
+    private final EnergyStorageProvider energyStorageProvider = new EnergyStorageProvider();
 
     public BaseMachine(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
+
+        initEnergyContainer().build(energyStorageProvider);
     }
 
-    protected void initEnergyContainer() {
+    protected ContainerBuilder<ILongEnergyStorage> initEnergyContainer() {
+        return new ContainerBuilder<>();
     }
 
     @Override
@@ -28,6 +34,17 @@ public abstract class BaseMachine<M extends BaseMachine<M>> extends BaseBlockEnt
             return energyStorageProvider.getCapability(cap, side);
         }
         return super.getCapability(cap, side);
+    }
+
+    @Override
+    public void save(CompoundTag tag) {
+        super.save(tag);
+
+    }
+
+    @Override
+    public void load(@NotNull CompoundTag tag) {
+        super.load(tag);
     }
 
     @Override
