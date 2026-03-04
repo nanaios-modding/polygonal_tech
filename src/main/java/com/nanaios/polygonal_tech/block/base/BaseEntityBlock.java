@@ -1,7 +1,6 @@
 package com.nanaios.polygonal_tech.block.base;
 
 import com.nanaios.polygonal_tech.block_entity.base.BaseBlockEntity;
-import com.nanaios.polygonal_tech.registries.impl.DeferredBlockEntityTypeRegister;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -14,16 +13,16 @@ import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class BaseEntityBlock extends Block implements EntityBlock {
-    private final RegistryObject<BlockEntityType<?>> blockEntityType;
+public class BaseEntityBlock<T extends BlockEntity> extends Block implements EntityBlock {
+    private final RegistryObject<BlockEntityType<T>> blockEntityType;
 
-    public BaseEntityBlock(RegistryObject<Block> block) {
-        this(Block.Properties.of().noOcclusion(), block);
+    public BaseEntityBlock(RegistryObject<BlockEntityType<T>> blockEntityType) {
+        this(Block.Properties.of().noOcclusion(), blockEntityType);
     }
 
-    public BaseEntityBlock(Properties properties, RegistryObject<Block> block) {
+    public BaseEntityBlock(Properties properties, RegistryObject<BlockEntityType<T>> blockEntityType) {
         super(properties);
-        blockEntityType = DeferredBlockEntityTypeRegister.blockEntityTypes.get(block.hashCode());
+        this.blockEntityType = blockEntityType;
     }
 
     @Override

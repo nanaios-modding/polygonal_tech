@@ -3,7 +3,7 @@ package com.nanaios.polygonal_tech.capability.interfaces;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
-public interface ILongFluidHandler extends IFluidHandler,IDirectionCapability {
+public interface ILongFluidHandler extends IFluidHandler {
     long getLongFluidAmount();
 
     long getLongTankCapacity();

@@ -1,22 +1,20 @@
 package com.nanaios.polygonal_tech.capability.impl;
 
-import com.nanaios.polygonal_tech.capability.interfaces.IDirectionFunction;
 import com.nanaios.polygonal_tech.capability.interfaces.ILongEnergyStorage;
-import com.nanaios.polygonal_tech.util.MathUtil;
-import net.minecraft.core.Direction;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.LongSupplier;
 
 public class LongEnergyStorage implements ILongEnergyStorage {
     private long energy;
     private final LongSupplier capacity;
-    private final IDirectionFunction canReceive;
-    private final IDirectionFunction canExtract;
+    private final BooleanSupplier canReceive;
+    private final BooleanSupplier canExtract;
 
     public LongEnergyStorage(
             LongSupplier capacity,
-            IDirectionFunction canReceive,
-            IDirectionFunction canExtract
+            BooleanSupplier canReceive,
+            BooleanSupplier canExtract
     ) {
         this.capacity = capacity;
         this.canReceive = canReceive;
@@ -56,42 +54,49 @@ public class LongEnergyStorage implements ILongEnergyStorage {
     }
 
     @Override
-    public boolean canReceive(Direction side) {
-        return canReceive.get(side);
-    }
-
-    @Override
-    public boolean canExtract(Direction side) {
-        return canExtract.get(side);
-    }
-
-    @Override
-    public int receiveEnergy(int maxReceive, boolean simulate) {
-        return MathUtil.longToInt(receiveLongEnergy(maxReceive, simulate));
-    }
-
-    @Override
-    public int extractEnergy(int maxExtract, boolean simulate) {
-        return MathUtil.longToInt(extractLongEnergy(maxExtract, simulate));
-    }
-
-    @Override
-    public int getEnergyStored() {
-        return MathUtil.longToInt(energy);
-    }
-
-    @Override
-    public int getMaxEnergyStored() {
-        return MathUtil.longToInt(capacity.getAsLong());
-    }
-
-    @Override
     public boolean canExtract() {
-        return canExtract.get(null);
+        return canExtract.getAsBoolean();
     }
 
     @Override
     public boolean canReceive() {
-        return canReceive.get(null);
+        return canReceive.getAsBoolean();
+    }
+
+    public static class InputOnly extends LongEnergyStorage {
+        private final LongEnergyStorage baseStorage;
+        public InputOnly(LongEnergyStorage baseStorage) {
+            super(baseStorage::getLongMaxEnergyStored, baseStorage::canReceive, () -> false);
+            this.baseStorage = baseStorage;
+        }
+
+        @Override
+        public long getLongEnergyStored() {
+            return baseStorage.getLongEnergyStored();
+        }
+
+        @Override
+        public long receiveLongEnergy(long maxReceive, boolean simulate) {
+            return baseStorage.receiveLongEnergy(maxReceive, simulate);
+        }
+    }
+
+    public static class OutputOnly extends LongEnergyStorage {
+        private final LongEnergyStorage baseStorage;
+
+        public OutputOnly(LongEnergyStorage baseStorage) {
+            super(baseStorage::getLongMaxEnergyStored, () -> false, baseStorage::canExtract);
+            this.baseStorage = baseStorage;
+        }
+
+        @Override
+        public long getLongEnergyStored() {
+            return baseStorage.getLongEnergyStored();
+        }
+
+        @Override
+        public long extractLongEnergy(long maxExtract, boolean simulate) {
+            return baseStorage.extractLongEnergy(maxExtract, simulate);
+        }
     }
 }

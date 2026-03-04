@@ -10,9 +10,11 @@ public class PolyTechBlockRegister {
     public static MultipleBlockRegister BLOCKS = new MultipleBlockRegister();
     public static DeferredBlockRegister MACHINE_BLOCKS = BLOCKS.create();
 
-    public static RegistryObject<Block> TEST_MACHINE;
+    public static RegistryObject<Block> PHOTOLYSIS_MACHINE;
 
     static {
-        TEST_MACHINE = MACHINE_BLOCKS.registerMachine("test_machine", BaseEntityBlock::new);
+            PHOTOLYSIS_MACHINE = MACHINE_BLOCKS.register(
+                    "photolysis_machine",
+                    () -> new BaseEntityBlock<>(PolyTechBlockEntityTypeRegister.PHOTOLYSIS_MACHINE));
     }
 }
