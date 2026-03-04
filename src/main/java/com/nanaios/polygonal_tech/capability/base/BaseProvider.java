@@ -12,6 +12,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Supplier;
 
 public abstract class BaseProvider<T extends ICapabilityMarker,C extends ICombinedCapability<T>> implements ICapabilityProvider {
+    // 面のCapabilityインスタンス
     protected C up;
     protected C down;
     protected C north;
@@ -19,6 +20,7 @@ public abstract class BaseProvider<T extends ICapabilityMarker,C extends ICombin
     protected C west;
     protected C east;
 
+    // 面のLazyOptional
     protected LazyOptional<C> upLazy;
     protected LazyOptional<C> downLazy;
     protected LazyOptional<C> northLazy;
@@ -37,13 +39,18 @@ public abstract class BaseProvider<T extends ICapabilityMarker,C extends ICombin
         initCaps();
     }
 
-    public void initCaps() {
+    /// LazyOptionalの初期化
+    private void initCaps() {
         upLazy = LazyOptional.of(() -> up);
         downLazy = LazyOptional.of(() -> down);
         northLazy = LazyOptional.of(() -> north);
         southLazy = LazyOptional.of(() -> south);
         westLazy = LazyOptional.of(() -> west);
         eastLazy = LazyOptional.of(() -> east);
+    }
+
+    public void reviveCaps() {
+        initCaps();
     }
 
     public void invalidateCaps() {
@@ -67,5 +74,57 @@ public abstract class BaseProvider<T extends ICapabilityMarker,C extends ICombin
             case WEST -> westLazy.cast();
             case EAST -> eastLazy.cast();
         };
+    }
+
+    /// Capabilityを指定した面に追加
+    /// @param side 追加する面
+    /// @param capability 追加するCapability
+    public void add(Direction side, T capability) {
+        switch (side) {
+            case UP -> up.add(capability);
+            case DOWN -> down.add(capability);
+            case NORTH -> north.add(capability);
+            case SOUTH -> south.add(capability);
+            case WEST -> west.add(capability);
+            case EAST -> east.add(capability);
+        }
+    }
+
+    /// containerのCapabilityを指定した面に追加
+    /// @param side 追加する面
+    /// @param container 追加するCapabilityを持つcontainer
+    /// @param ioType 追加するCapabilityの種類
+    public void add(Direction side, BaseContainer<T> container, BaseContainer.IOType ioType) {
+        switch (ioType) {
+            case INPUT -> add(side, container.getInput());
+            case OUTPUT -> add(side, container.getOutput());
+            case INPUT_OUTPUT -> add(side, container.getInputOutput());
+        }
+    }
+
+    /// Capabilityを指定した面から削除
+    /// @param side 削除する面
+    /// @param capability 削除するCapability
+    public void remove(Direction side, T capability) {
+        switch (side) {
+            case UP -> up.remove(capability);
+            case DOWN -> down.remove(capability);
+            case NORTH -> north.remove(capability);
+            case SOUTH -> south.remove(capability);
+            case WEST -> west.remove(capability);
+            case EAST -> east.remove(capability);
+        }
+    }
+
+    /// containerのCapabilityを指定した面から削除
+    /// @param side 削除する面
+    /// @param container 削除するCapabilityを持つcontainer
+    /// @param ioType 削除するCapabilityの種類
+    public void remove(Direction side, BaseContainer<T> container, BaseContainer.IOType ioType) {
+        switch (ioType) {
+            case INPUT -> remove(side, container.getInput());
+            case OUTPUT -> remove(side, container.getOutput());
+            case INPUT_OUTPUT -> remove(side, container.getInputOutput());
+        }
     }
 }

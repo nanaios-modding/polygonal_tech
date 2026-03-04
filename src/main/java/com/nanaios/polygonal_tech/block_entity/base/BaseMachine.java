@@ -1,7 +1,6 @@
 package com.nanaios.polygonal_tech.block_entity.base;
 
 import com.nanaios.polygonal_tech.capability.PolygonalTechCapabilities;
-import com.nanaios.polygonal_tech.capability.interfaces.ILongEnergyStorage;
 import com.nanaios.polygonal_tech.capability.provider.EnergyStorageProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -34,10 +33,12 @@ public abstract class BaseMachine<M extends BaseMachine<M>> extends BaseBlockEnt
     @Override
     public void reviveCaps() {
         super.reviveCaps();
+        energyStorageProvider.reviveCaps();
     }
 
     @Override
     public void invalidateCaps() {
         super.invalidateCaps();
+        energyStorageProvider.invalidateCaps();
     }
 }
