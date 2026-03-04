@@ -1,4 +1,4 @@
-package com.nanaios.polygonal_tech.capability.container;
+package com.nanaios.polygonal_tech.capability.base;
 
 public abstract class BaseContainer<T> {
     private final T input;

@@ -14,16 +14,19 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class BaseMachine<M extends BaseMachine<M>> extends BaseBlockEntity<M> {
-    private EnergyStorageProvider energyStorageProvider = new EnergyStorageProvider();
-
+    protected EnergyStorageProvider energyStorageProvider = new EnergyStorageProvider();
 
     public BaseMachine(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
     }
 
+    protected void initEnergyContainer() {
+    }
+
     @Override
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
         if(cap == ForgeCapabilities.ENERGY || cap == PolygonalTechCapabilities.LONG_ENERGY) {
+            return energyStorageProvider.getCapability(cap, side);
         }
         return super.getCapability(cap, side);
     }
@@ -31,5 +34,10 @@ public abstract class BaseMachine<M extends BaseMachine<M>> extends BaseBlockEnt
     @Override
     public void reviveCaps() {
         super.reviveCaps();
+    }
+
+    @Override
+    public void invalidateCaps() {
+        super.invalidateCaps();
     }
 }
