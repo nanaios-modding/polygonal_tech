@@ -37,12 +37,6 @@ public abstract class BaseMachine<M extends BaseMachine<M>> extends BaseBlockEnt
     }
 
     @Override
-    public void save(CompoundTag tag) {
-        super.save(tag);
-
-    }
-
-    @Override
     public void load(@NotNull CompoundTag tag) {
         super.load(tag);
     }
