@@ -1,28 +1,21 @@
 package com.nanaios.polygonal_tech.capability.base;
 
-import com.nanaios.polygonal_tech.capability.interfaces.ICapabilityMarker;
-import com.nanaios.polygonal_tech.capability.interfaces.ICombinedCapability;
 import com.nanaios.polygonal_tech.container.base.BaseContainer;
+import com.nanaios.polygonal_tech.container.interfaces.ICombinedContainer;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Supplier;
+import java.util.ArrayList;
+import java.util.List;
 
-public abstract class BaseProvider<T extends ICapabilityMarker,C extends ICombinedCapability<T>> implements ICapabilityProvider, INBTSerializable<CompoundTag> {
-    public static String UP_KEY = "up";
-    public static String DOWN_KEY = "down";
-    public static String NORTH_KEY = "north";
-    public static String SOUTH_KEY = "south";
-    public static String WEST_KEY = "west";
-    public static String EAST_KEY = "east";
+public abstract class BaseProvider<T,C extends ICombinedContainer<T>> implements ICapabilityProvider {
+    protected final List<BaseContainer<T>> containers = new ArrayList<>();
 
-    // 面のCapabilityインスタンス
+    // 面ごとのコンテナ
     protected C up;
     protected C down;
     protected C north;
@@ -38,13 +31,13 @@ public abstract class BaseProvider<T extends ICapabilityMarker,C extends ICombin
     protected LazyOptional<C> westLazy;
     protected LazyOptional<C> eastLazy;
 
-    public BaseProvider(Supplier<C> capabilitySupplier) {
-        this.up = capabilitySupplier.get();
-        this.down = capabilitySupplier.get();
-        this.north = capabilitySupplier.get();
-        this.south = capabilitySupplier.get();
-        this.west = capabilitySupplier.get();
-        this.east = capabilitySupplier.get();
+    public BaseProvider(ContainerSupplier<T,C> containerSupplier) {
+        this.up = containerSupplier.create(Direction.UP, containers);
+        this.down = containerSupplier.create(Direction.DOWN, containers);
+        this.north = containerSupplier.create(Direction.NORTH, containers);
+        this.south = containerSupplier.create(Direction.SOUTH, containers);
+        this.west = containerSupplier.create(Direction.WEST, containers);
+        this.east = containerSupplier.create(Direction.EAST, containers);
 
         initCaps();
     }
@@ -75,76 +68,26 @@ public abstract class BaseProvider<T extends ICapabilityMarker,C extends ICombin
     @Override
     public @NotNull <I> LazyOptional<I> getCapability(@NotNull Capability<I> cap, @Nullable Direction side) {
         if(side == null) return LazyOptional.empty();
-
         return switch (side) {
-            case UP -> upLazy.cast();
-            case DOWN -> downLazy.cast();
-            case NORTH -> northLazy.cast();
-            case SOUTH -> southLazy.cast();
-            case WEST -> westLazy.cast();
-            case EAST -> eastLazy.cast();
+            case UP -> up.isActive() ? upLazy.cast() : LazyOptional.empty();
+            case DOWN -> down.isActive() ? downLazy.cast() : LazyOptional.empty();
+            case NORTH -> north.isActive() ? northLazy.cast() : LazyOptional.empty();
+            case SOUTH -> south.isActive() ? southLazy.cast() : LazyOptional.empty();
+            case WEST -> west.isActive() ? westLazy.cast() : LazyOptional.empty();
+            case EAST -> east.isActive() ? eastLazy.cast() : LazyOptional.empty();
         };
     }
 
-    /// Capabilityを指定した面に追加
-    /// @param side 追加する面
-    /// @param capability 追加するCapability
-    private void add(Direction side, T capability) {
-        switch (side) {
-            case UP -> up.add(capability);
-            case DOWN -> down.add(capability);
-            case NORTH -> north.add(capability);
-            case SOUTH -> south.add(capability);
-            case WEST -> west.add(capability);
-            case EAST -> east.add(capability);
-        }
+    public void addContainer(BaseContainer<T> container) {
+        containers.add(container);
     }
 
-    /// containerのCapabilityを指定した面に追加
-    /// @param side 追加する面
-    /// @param container 追加するCapabilityを持つcontainer
-    /// @param ioType 追加するCapabilityの種類
-    public void add(Direction side, BaseContainer<T> container, BaseContainer.IOType ioType) {
-        switch (ioType) {
-            case INPUT -> add(side, container.getInput());
-            case OUTPUT -> add(side, container.getOutput());
-        }
+    public void removeContainer(BaseContainer<T> container) {
+        containers.remove(container);
     }
 
-    /// Capabilityを指定した面から削除
-    /// @param side 削除する面
-    /// @param capability 削除するCapability
-    private void remove(Direction side, T capability) {
-        switch (side) {
-            case UP -> up.remove(capability);
-            case DOWN -> down.remove(capability);
-            case NORTH -> north.remove(capability);
-            case SOUTH -> south.remove(capability);
-            case WEST -> west.remove(capability);
-            case EAST -> east.remove(capability);
-        }
-    }
-
-    /// containerのCapabilityを指定した面から削除
-    /// @param side 削除する面
-    /// @param container 削除するCapabilityを持つcontainer
-    /// @param ioType 削除するCapabilityの種類
-    public void remove(Direction side, BaseContainer<T> container, BaseContainer.IOType ioType) {
-        switch (ioType) {
-            case INPUT -> remove(side, container.getInput());
-            case OUTPUT -> remove(side, container.getOutput());
-        }
-    }
-
-    @Override
-    public CompoundTag serializeNBT() {
-        CompoundTag tag = new CompoundTag();
-        tag.put(up, up.serializeNBT());
-        return new CompoundTag();
-    }
-
-    @Override
-    public void deserializeNBT(CompoundTag nbt) {
-
+    @FunctionalInterface
+    public interface ContainerSupplier<T,R> {
+        R create(Direction side,List<BaseContainer<T>> containers);
     }
 }

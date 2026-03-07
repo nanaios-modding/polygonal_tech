@@ -22,7 +22,7 @@ public class PhotolysisMachine extends BaseMachine<PhotolysisMachine> {
         ContainerBuilder<ILongEnergyStorage> builder = new ContainerBuilder<>();
         builder.add(
                 energyContainer = EnergyContainer.create(() -> 10000),
-                new Directions().input(Direction.DOWN).output(Direction.UP)
+                new Directions().inputOnly(Direction.DOWN).outputOnly(Direction.UP)
         );
 
         return builder;

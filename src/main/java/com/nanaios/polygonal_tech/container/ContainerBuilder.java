@@ -1,17 +1,18 @@
 package com.nanaios.polygonal_tech.container;
 
 import com.nanaios.polygonal_tech.capability.base.BaseProvider;
-import com.nanaios.polygonal_tech.capability.interfaces.ICapabilityMarker;
 import com.nanaios.polygonal_tech.container.base.BaseContainer;
 import com.nanaios.polygonal_tech.util.Directions;
 
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraftforge.common.util.INBTSerializable;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
 
 /// BaseContainerをProviderに登録するためのBuilderクラス
-public class ContainerBuilder<T extends ICapabilityMarker> {
+public class ContainerBuilder<T extends INBTSerializable<CompoundTag>> {
     private List<Pair<BaseContainer<T>, Directions>> containers;
 
     public ContainerBuilder() {}
@@ -28,17 +29,10 @@ public class ContainerBuilder<T extends ICapabilityMarker> {
             BaseContainer<T> container = pair.getLeft();
             Directions directions = pair.getRight();
 
-            if(directions.inputs != null) {
-                for(Direction side : directions.inputs) {
-                    provider.add(side,container, BaseContainer.IOType.INPUT);
-                }
-            }
+            // containerに搬入出方向を設定
+            directions.applyToContainer(container);
 
-            if(directions.outputs != null) {
-                for(Direction side : directions.outputs) {
-                    provider.add(side,container, BaseContainer.IOType.OUTPUT);
-                }
-            }
+            provider.addContainer(container);
         }
     }
 }
