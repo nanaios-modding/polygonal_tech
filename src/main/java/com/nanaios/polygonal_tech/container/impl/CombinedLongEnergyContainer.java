@@ -8,8 +8,8 @@ import net.minecraft.core.Direction;
 
 import java.util.List;
 
-public class CombinedLongEnergyStorage extends CombinedContainer<ILongEnergyStorage> implements ILongEnergyStorage {
-    public CombinedLongEnergyStorage(Direction side, List<BaseContainer<ILongEnergyStorage>> containers) {
+public class CombinedLongEnergyContainer extends CombinedContainer<ILongEnergyStorage> implements ILongEnergyStorage {
+    public CombinedLongEnergyContainer(Direction side, List<BaseContainer<ILongEnergyStorage>> containers) {
         super(side, containers);
     }
 

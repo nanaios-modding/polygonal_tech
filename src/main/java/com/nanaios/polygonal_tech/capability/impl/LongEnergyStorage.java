@@ -1,6 +1,7 @@
 package com.nanaios.polygonal_tech.capability.impl;
 
 import com.nanaios.polygonal_tech.capability.interfaces.ILongEnergyStorage;
+import net.minecraftforge.energy.EnergyStorage;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.LongSupplier;

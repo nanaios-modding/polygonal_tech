@@ -27,6 +27,10 @@ public class LongFluidStack extends FluidStack {
         this(stack.getFluid(), longAmount, stack.getTag());
     }
 
+    public static LongFluidStack of(FluidStack stack) {
+        return new LongFluidStack(stack, stack.getAmount());
+    }
+
     public static LongFluidStack loadLongFluidStackFromNBT(CompoundTag nbt) {
         if (nbt == null) return EMPTY;
         if (!nbt.contains("FluidName", 8)) return EMPTY;
