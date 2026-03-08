@@ -3,6 +3,7 @@ package com.nanaios.polygonal_tech.container.base;
 import com.nanaios.polygonal_tech.container.interfaces.ICombinedContainer;
 import com.nanaios.polygonal_tech.container.interfaces.IIOMode;
 import net.minecraft.core.Direction;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -36,7 +37,7 @@ public class CombinedContainer<T> implements ICombinedContainer<T> {
     }
 
     @Override
-    public void setSideMode(Direction side, IIOMode ioMode) {
+    public void setSideMode(Direction side, @NotNull IIOMode ioMode) {
 
     }
 

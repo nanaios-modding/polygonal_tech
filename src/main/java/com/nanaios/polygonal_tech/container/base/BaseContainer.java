@@ -4,6 +4,7 @@ import com.nanaios.polygonal_tech.container.impl.IOMode;
 import com.nanaios.polygonal_tech.container.interfaces.IContainer;
 import com.nanaios.polygonal_tech.container.interfaces.IIOMode;
 import net.minecraft.core.Direction;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumMap;
 
@@ -11,6 +12,7 @@ public abstract class BaseContainer<T> implements IContainer<T> {
     private final T input;
     private final T output;
     private final T defaultValue;
+    private boolean active = false;
 
     private final EnumMap<Direction, IIOMode> sideModes = new EnumMap<>(Direction.class);
 
@@ -18,31 +20,32 @@ public abstract class BaseContainer<T> implements IContainer<T> {
         this.input = input;
         this.output = output;
         this.defaultValue = defaultValue;
+
+        // 初期状態では全ての面が無効になるように設定
+        for(Direction dir : Direction.values()) {
+            sideModes.put(dir, IOMode.NONE);
+        }
     }
 
     @Override
     public boolean isActive() {
-        for(Direction side : Direction.values()) {
-            if (canInput(side) || canOutput(side)) {
-                return true;
-            }
-        }
-        return false;
+        return active;
     }
 
     @Override
     public boolean canInput(Direction side) {
-        return isActive() && (sideModes.get(side).equals(IOMode.INPUT) || sideModes.get(side).equals(IOMode.INPUT_OUTPUT));
+        return active && (sideModes.get(side).equals(IOMode.INPUT) || sideModes.get(side).equals(IOMode.INPUT_OUTPUT));
     }
 
     @Override
     public boolean canOutput(Direction side) {
-        return isActive() && (sideModes.get(side).equals(IOMode.OUTPUT) || sideModes.get(side).equals(IOMode.INPUT_OUTPUT));
+        return active && (sideModes.get(side).equals(IOMode.OUTPUT) || sideModes.get(side).equals(IOMode.INPUT_OUTPUT));
     }
 
     @Override
-    public void setSideMode(Direction side, IIOMode ioMode) {
+    public void setSideMode(Direction side, @NotNull IIOMode ioMode) {
         sideModes.put(side, ioMode);
+        updateActive();
     }
 
     @Override
@@ -53,5 +56,16 @@ public abstract class BaseContainer<T> implements IContainer<T> {
     @Override
     public T getOutput(Direction side) {
         return canOutput(side) ? output : defaultValue;
+    }
+
+    /// Containerのアクティブ状態を更新する。少なくとも1つの面が入力または出力に設定されていればアクティブになる。
+    public void updateActive() {
+        for(Direction side : Direction.values()) {
+            if(!sideModes.get(side).equals(IOMode.NONE)) {
+                active = true;
+                return;
+            }
+        }
+        active = false;
     }
 }
