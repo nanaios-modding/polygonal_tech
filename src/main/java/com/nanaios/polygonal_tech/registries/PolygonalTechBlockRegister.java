@@ -1,6 +1,6 @@
 package com.nanaios.polygonal_tech.registries;
 
-import com.nanaios.polygonal_tech.block.base.BaseEntityBlock;
+import com.nanaios.polygonal_tech.block.base.BaseGuiMachineBlock;
 import com.nanaios.polygonal_tech.registries.impl.DeferredBlockRegister;
 import com.nanaios.polygonal_tech.registries.impl.MultipleBlockRegister;
 import net.minecraft.world.level.block.Block;
@@ -15,6 +15,6 @@ public class PolygonalTechBlockRegister {
     static {
             PHOTOLYSIS_MACHINE = MACHINE_BLOCKS.register(
                     "photolysis_machine",
-                    () -> new BaseEntityBlock<>(PolygonalTechBlockEntityTypeRegister.PHOTOLYSIS_MACHINE));
+                    () -> new BaseGuiMachineBlock<>(PolygonalTechBlockEntityTypeRegister.PHOTOLYSIS_MACHINE));
     }
 }
