@@ -4,7 +4,7 @@ import com.nanaios.polygonal_tech.block_entity.base.BaseMachine;
 import com.nanaios.polygonal_tech.capability.interfaces.ILongEnergyStorage;
 import com.nanaios.polygonal_tech.container.ContainerBuilder;
 import com.nanaios.polygonal_tech.container.impl.EnergyContainer;
-import com.nanaios.polygonal_tech.registries.PolyTechBlockEntityTypeRegister;
+import com.nanaios.polygonal_tech.registries.PolygonalTechBlockEntityTypeRegister;
 import com.nanaios.polygonal_tech.util.Directions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -14,7 +14,7 @@ public class PhotolysisMachine extends BaseMachine<PhotolysisMachine> {
     public EnergyContainer energyContainer;
 
     public PhotolysisMachine(BlockPos pos, BlockState state) {
-        super(PolyTechBlockEntityTypeRegister.PHOTOLYSIS_MACHINE.get(), pos, state);
+        super(PolygonalTechBlockEntityTypeRegister.PHOTOLYSIS_MACHINE.get(), pos, state);
     }
 
     @Override

@@ -6,7 +6,7 @@ import com.nanaios.polygonal_tech.registries.impl.MultipleItemRegister;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.RegistryObject;
 
-public class PolyTechItemRegister {
+public class PolygonalTechItemRegister {
     public static final MultipleItemRegister ITEMS = new MultipleItemRegister();
     public static final DeferredItemRegister ELEMENTS = ITEMS.create();
     public static final DeferredItemRegister EASTER_EGGS = ITEMS.create();

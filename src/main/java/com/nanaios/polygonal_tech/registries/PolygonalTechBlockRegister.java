@@ -6,7 +6,7 @@ import com.nanaios.polygonal_tech.registries.impl.MultipleBlockRegister;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.registries.RegistryObject;
 
-public class PolyTechBlockRegister {
+public class PolygonalTechBlockRegister {
     public static MultipleBlockRegister BLOCKS = new MultipleBlockRegister();
     public static DeferredBlockRegister MACHINE_BLOCKS = BLOCKS.create();
 
@@ -15,6 +15,6 @@ public class PolyTechBlockRegister {
     static {
             PHOTOLYSIS_MACHINE = MACHINE_BLOCKS.register(
                     "photolysis_machine",
-                    () -> new BaseEntityBlock<>(PolyTechBlockEntityTypeRegister.PHOTOLYSIS_MACHINE));
+                    () -> new BaseEntityBlock<>(PolygonalTechBlockEntityTypeRegister.PHOTOLYSIS_MACHINE));
     }
 }

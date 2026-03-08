@@ -7,17 +7,17 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 
-public class PolyTechCreativeModeTabRegister {
+public class PolygonalTechCreativeModeTabRegister {
     public static final MultipleRegister<CreativeModeTab> CREATIVE_TABS = new MultipleRegister<>(Registries.CREATIVE_MODE_TAB);
     public static final WrapperDeferredRegister<CreativeModeTab> MAIN_TAB = CREATIVE_TABS.create();
 
     static {
         MAIN_TAB.register("main_tab", () -> CreativeModeTab.builder()
                 .title(PolygonalTechLang.MAIN_TAB.get())
-                .icon(() -> new ItemStack(PolyTechItemRegister.ELEMENT_3.get()))
+                .icon(() -> new ItemStack(PolygonalTechItemRegister.ELEMENT_3.get()))
                 .displayItems((parameters, output) -> {
-                    PolyTechItemRegister.ELEMENTS.display(output);
-                    PolyTechBlockRegister.MACHINE_BLOCKS.display(output);
+                    PolygonalTechItemRegister.ELEMENTS.display(output);
+                    PolygonalTechBlockRegister.MACHINE_BLOCKS.display(output);
                 })
                 .build());
     }

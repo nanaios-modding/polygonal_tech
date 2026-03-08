@@ -1,10 +1,10 @@
 package com.nanaios.polygonal_tech;
 
 import com.mojang.logging.LogUtils;
-import com.nanaios.polygonal_tech.registries.PolyTechBlockEntityTypeRegister;
-import com.nanaios.polygonal_tech.registries.PolyTechBlockRegister;
-import com.nanaios.polygonal_tech.registries.PolyTechCreativeModeTabRegister;
-import com.nanaios.polygonal_tech.registries.PolyTechItemRegister;
+import com.nanaios.polygonal_tech.registries.PolygonalTechBlockEntityTypeRegister;
+import com.nanaios.polygonal_tech.registries.PolygonalTechBlockRegister;
+import com.nanaios.polygonal_tech.registries.PolygonalTechCreativeModeTabRegister;
+import com.nanaios.polygonal_tech.registries.PolygonalTechItemRegister;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -19,9 +19,9 @@ public class PolygonalTech {
     public PolygonalTech(FMLJavaModLoadingContext context) {
         IEventBus bus = context.getModEventBus();
 
-        PolyTechItemRegister.ITEMS.register(bus);
-        PolyTechBlockRegister.BLOCKS.register(bus);
-        PolyTechBlockEntityTypeRegister.BLOCK_ENTITIES.register(bus);
-        PolyTechCreativeModeTabRegister.CREATIVE_TABS.register(bus);
+        PolygonalTechItemRegister.ITEMS.register(bus);
+        PolygonalTechBlockRegister.BLOCKS.register(bus);
+        PolygonalTechBlockEntityTypeRegister.BLOCK_ENTITIES.register(bus);
+        PolygonalTechCreativeModeTabRegister.CREATIVE_TABS.register(bus);
     }
 }
