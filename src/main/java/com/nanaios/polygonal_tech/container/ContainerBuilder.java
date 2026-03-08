@@ -9,11 +9,12 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.util.INBTSerializable;
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /// BaseContainerをProviderに登録するためのBuilderクラス
 public class ContainerBuilder<T extends INBTSerializable<CompoundTag>> {
-    private List<Pair<BaseContainer<T>, Directions>> containers;
+    private List<Pair<BaseContainer<T>, Directions>> containers = new ArrayList<>();
 
     public ContainerBuilder() {}
 
