@@ -8,6 +8,7 @@ import com.nanaios.polygonal_tech.registries.PolygonalTechBlockEntityTypeRegiste
 import com.nanaios.polygonal_tech.util.Directions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class PhotolysisMachine extends BaseMachine<PhotolysisMachine> {
@@ -15,6 +16,11 @@ public class PhotolysisMachine extends BaseMachine<PhotolysisMachine> {
 
     public PhotolysisMachine(BlockPos pos, BlockState state) {
         super(PolygonalTechBlockEntityTypeRegister.PHOTOLYSIS_MACHINE.get(), pos, state);
+    }
+
+    @Override
+    public boolean serverTick(Level level, BlockPos pos, BlockState state, PhotolysisMachine blockEntity) {
+        return super.serverTick(level, pos, state, blockEntity);
     }
 
     @Override

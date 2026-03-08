@@ -3,6 +3,7 @@ package com.nanaios.polygonal_tech.container.base;
 import com.nanaios.polygonal_tech.container.interfaces.ICombinedContainer;
 import com.nanaios.polygonal_tech.container.interfaces.IIOMode;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -14,6 +15,11 @@ public class CombinedContainer<T> implements ICombinedContainer<T> {
     public CombinedContainer(Direction side,List<BaseContainer<T>> containers) {
         this.containers = containers;
         this.side = side;
+    }
+
+    @Override
+    public int getContainerSize() {
+        return containers.size();
     }
 
     @Override
@@ -59,5 +65,15 @@ public class CombinedContainer<T> implements ICombinedContainer<T> {
             }
         }
         return false;
+    }
+
+    @Override
+    public CompoundTag serializeNBT() {
+        return null;
+    }
+
+    @Override
+    public void deserializeNBT(CompoundTag nbt) {
+
     }
 }

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /// BaseContainerをProviderに登録するためのBuilderクラス
-public class ContainerBuilder<T extends INBTSerializable<CompoundTag>> {
+public class ContainerBuilder<T> {
     private final List<Pair<BaseContainer<T>, Directions>> containers = new ArrayList<>();
 
     public ContainerBuilder() {}

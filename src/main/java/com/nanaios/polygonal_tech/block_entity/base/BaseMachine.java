@@ -39,8 +39,22 @@ public abstract class BaseMachine<M extends BaseMachine<M>> extends BaseBlockEnt
     }
 
     @Override
+    public void save(CompoundTag tag) {
+        super.save(tag);
+        tag.put(LongEnergyStorageProvider.NBT_KEY, energyStorageProvider.serializeNBT());
+        tag.put(LongFluidTankProvider.NBT_KEY, fluidTankProvider.serializeNBT());
+    }
+
+    @Override
     public void load(@NotNull CompoundTag tag) {
         super.load(tag);
+
+        if(tag.contains(LongEnergyStorageProvider.NBT_KEY)) {
+            energyStorageProvider.deserializeNBT(tag.getCompound(LongEnergyStorageProvider.NBT_KEY));
+        }
+        if(tag.contains(LongFluidTankProvider.NBT_KEY)) {
+            fluidTankProvider.deserializeNBT(tag.getCompound(LongFluidTankProvider.NBT_KEY));
+        }
     }
 
     @Override

@@ -9,14 +9,16 @@ import org.jetbrains.annotations.NotNull;
 import java.util.EnumMap;
 
 public abstract class BaseContainer<T> implements IContainer<T> {
-    private final T input;
-    private final T output;
-    private final T defaultValue;
-    private boolean active = false;
+    protected final T base;
+    protected final T input;
+    protected final T output;
+    protected final T defaultValue;
+    protected boolean active = false;
 
     private final EnumMap<Direction, IIOMode> sideModes = new EnumMap<>(Direction.class);
 
-    public BaseContainer(T input,T output,T defaultValue) {
+    public BaseContainer(T base,T input,T output,T defaultValue) {
+        this.base = base;
         this.input = input;
         this.output = output;
         this.defaultValue = defaultValue;

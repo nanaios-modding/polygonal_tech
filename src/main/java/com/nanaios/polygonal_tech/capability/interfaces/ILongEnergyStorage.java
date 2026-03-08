@@ -5,9 +5,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.energy.IEnergyStorage;
 
-public interface ILongEnergyStorage extends IEnergyStorage, INBTSerializable<CompoundTag> {
-    String ENERGY_STORED_KEY = "stored";
-
+public interface ILongEnergyStorage extends IEnergyStorage {
     long getLongEnergyStored();
 
     long getLongMaxEnergyStored();
@@ -35,21 +33,4 @@ public interface ILongEnergyStorage extends IEnergyStorage, INBTSerializable<Com
     default int getMaxEnergyStored() {
         return MathUtil.longToInt(getLongMaxEnergyStored());
     }
-
-    @Override
-    default CompoundTag serializeNBT() {
-        // エネルギー量をNBTタグに保存する
-        CompoundTag tag = new CompoundTag();
-        tag.putLong(ENERGY_STORED_KEY, getLongEnergyStored());
-        return tag;
-    };
-
-    @Override
-    default void deserializeNBT(CompoundTag nbt) {
-        // セーブデータにエネルギーが保存されていない場合は0を使用
-        long energy = nbt.contains(ENERGY_STORED_KEY)? nbt.getLong(ENERGY_STORED_KEY) : 0;
-
-        // エネルギーを搬入して、エネルギー量を更新する
-        receiveLongEnergy(energy, false);
-    };
 }

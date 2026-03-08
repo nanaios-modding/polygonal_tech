@@ -1,10 +1,13 @@
 package com.nanaios.polygonal_tech.capability.base;
 
+import com.nanaios.polygonal_tech.PolygonalTech;
 import com.nanaios.polygonal_tech.container.base.BaseContainer;
 import com.nanaios.polygonal_tech.container.interfaces.ICombinedContainer;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -12,7 +15,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class BaseProvider<T,C extends ICombinedContainer<T>> implements ICapabilityProvider {
+public abstract class BaseProvider<T,C extends ICombinedContainer<T>> implements ICapabilityProvider, INBTSerializable<CompoundTag> {
+    public static String CONTAINERS_SIZE_KEY = "containers_size";
+    public static String CONTAINER_KEY_PREFIX = "container_";
+
     protected final List<BaseContainer<T>> containers = new ArrayList<>();
 
     // 面ごとのコンテナ
@@ -84,6 +90,36 @@ public abstract class BaseProvider<T,C extends ICombinedContainer<T>> implements
 
     public void removeContainer(BaseContainer<T> container) {
         containers.remove(container);
+    }
+
+    @Override
+    public CompoundTag serializeNBT() {
+        CompoundTag tag = new CompoundTag();
+
+        tag.putInt(CONTAINERS_SIZE_KEY, containers.size());
+
+        for(int i = 0; i < containers.size(); i++) {
+            BaseContainer<T> container = containers.get(i);
+            tag.put(CONTAINER_KEY_PREFIX + i, container.serializeNBT());
+        }
+
+        return tag;
+    }
+
+    @Override
+    public void deserializeNBT(CompoundTag nbt) {
+        int size = nbt.getInt(CONTAINERS_SIZE_KEY);
+
+        // コンテナの数がNBTに保存されている数と異なる場合、少ない方に合わせる
+        if(size != containers.size()) {
+            PolygonalTech.LOGGER.error("Container size in NBT does not match the actual container size.");
+            size = Math.min(size, containers.size());
+        }
+
+        for(int i = 0; i < size; i++) {
+            CompoundTag containerTag = nbt.getCompound(CONTAINER_KEY_PREFIX + i);
+            containers.get(i).deserializeNBT(containerTag);
+        }
     }
 
     @FunctionalInterface
