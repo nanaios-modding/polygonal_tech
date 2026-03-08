@@ -4,7 +4,6 @@ import com.nanaios.polygonal_tech.capability.base.BaseProvider;
 import com.nanaios.polygonal_tech.container.base.BaseContainer;
 import com.nanaios.polygonal_tech.util.Directions;
 
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.util.INBTSerializable;
 import org.apache.commons.lang3.tuple.Pair;
@@ -14,7 +13,7 @@ import java.util.List;
 
 /// BaseContainerをProviderに登録するためのBuilderクラス
 public class ContainerBuilder<T extends INBTSerializable<CompoundTag>> {
-    private List<Pair<BaseContainer<T>, Directions>> containers = new ArrayList<>();
+    private final List<Pair<BaseContainer<T>, Directions>> containers = new ArrayList<>();
 
     public ContainerBuilder() {}
 
