@@ -60,6 +60,28 @@ public class LongFluidTank implements ILongFluidTank {
     }
 
     @Override
+    public int getTanks() {
+        return 1;
+    }
+
+    public @NotNull LongFluidStack drain(LongFluidStack resource, FluidAction action) {
+        if (resource.isEmpty() || !resource.isFluidEqual(getFluid())) return LongFluidStack.EMPTY;
+        return drain(resource.getLongAmount(), action);
+    }
+
+    @Override
+    @NotNull
+    public LongFluidStack drain(int maxDrain, FluidAction action) {
+        return drain((long) maxDrain, action);
+    }
+
+
+    @Override
+    public boolean isFluidValid(int tank, @NotNull FluidStack stack) {
+        return isFluidValid(stack);
+    }
+
+    @Override
     public @NotNull LongFluidStack getFluid() {
         return fluid;
     }
@@ -108,5 +130,29 @@ public class LongFluidTank implements ILongFluidTank {
     public long getSpace()
     {
         return Math.max(0, capacity.getAsLong() - fluid.getAmount());
+    }
+
+    public static class InputOnly extends LongFluidTank {
+        public InputOnly(LongFluidTank base) {
+            super(base.capacity, base.validator);
+            this.fluid = base.fluid;
+        }
+
+        @Override
+        public LongFluidStack drain(long maxDrain, FluidAction action) {
+            return LongFluidStack.EMPTY;
+        }
+    }
+
+    public static class OutputOnly extends LongFluidTank {
+        public OutputOnly(LongFluidTank base) {
+            super(base.capacity, base.validator);
+            this.fluid = base.fluid;
+        }
+
+        @Override
+        public long fillLong(LongFluidStack resource, FluidAction action) {
+            return 0;
+        }
     }
 }

@@ -18,16 +18,19 @@ public interface ILongFluidTank extends IFluidTank, IFluidHandler {
 
     LongFluidStack drain(long maxDrain, FluidAction action);
 
-    default int getTanks() {
-        return 1;
-    }
-
     default int getFluidAmount() {
         return MathUtil.longToInt(getFluidLongAmount());
     }
 
     @NotNull LongFluidStack getFluidInTank(int tank);
+    @NotNull LongFluidStack drain(LongFluidStack resource, FluidAction action);
+    @NotNull LongFluidStack drain(int maxDrain, FluidAction action);
 
+    @Override
+    default @NotNull LongFluidStack drain(FluidStack resource, FluidAction action) {
+        if (resource.isEmpty() || !resource.isFluidEqual(getFluid())) return LongFluidStack.EMPTY;
+        return drain(LongFluidStack.of(resource), action);
+    }
 
     @Override
     default int getTankCapacity(int tank) {
@@ -39,29 +42,7 @@ public interface ILongFluidTank extends IFluidTank, IFluidHandler {
     }
 
     @Override
-    default boolean isFluidValid(int tank, @NotNull FluidStack stack) {
-        return isFluidValid(stack);
-    }
-
-    @Override
     default int fill(FluidStack resource, FluidAction action) {
         return MathUtil.longToInt(fillLong(LongFluidStack.of(resource), action));
-    }
-
-    @Override
-    default @NotNull LongFluidStack drain(FluidStack resource, FluidAction action) {
-        if (resource.isEmpty() || !resource.isFluidEqual(getFluid())) return LongFluidStack.EMPTY;
-        return drain((long) resource.getAmount(), action);
-    }
-
-    default @NotNull LongFluidStack drain(LongFluidStack resource, FluidAction action) {
-        if (resource.isEmpty() || !resource.isFluidEqual(getFluid())) return LongFluidStack.EMPTY;
-        return drain(resource.getLongAmount(), action);
-    }
-
-    @Override
-    @NotNull
-    default LongFluidStack drain(int maxDrain, FluidAction action) {
-        return drain((long) maxDrain, action);
     }
 }

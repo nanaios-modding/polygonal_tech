@@ -7,14 +7,14 @@ import com.nanaios.polygonal_tech.capability.interfaces.ILongEnergyStorage;
 
 import java.util.function.LongSupplier;
 
-public class EnergyContainer extends BaseContainer<ILongEnergyStorage> {
-    public EnergyContainer(ILongEnergyStorage input, ILongEnergyStorage output) {
+public class LongEnergyContainer extends BaseContainer<ILongEnergyStorage> {
+    public LongEnergyContainer(ILongEnergyStorage input, ILongEnergyStorage output) {
         super(input, output, EmptyLongEnergyStorage.INSTANCE);
     }
 
-    public static EnergyContainer create(LongSupplier capacity) {
+    public static LongEnergyContainer create(LongSupplier capacity) {
         LongEnergyStorage base = new LongEnergyStorage(capacity, () -> true, () -> true);
-        return new EnergyContainer(
+        return new LongEnergyContainer(
                 new LongEnergyStorage.InputOnly(base),
                 new LongEnergyStorage.OutputOnly(base)
         );

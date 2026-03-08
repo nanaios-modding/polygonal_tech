@@ -17,7 +17,7 @@ public class CombinedLongEnergyContainer extends CombinedContainer<ILongEnergySt
     public long getLongEnergyStored() {
         long totalEnergy = 0;
         for (BaseContainer<ILongEnergyStorage> container : containers) {
-            if (container.isActive()) continue;
+            if (!container.isActive()) continue;
             ILongEnergyStorage storage = container.getInput(side);
             long energy = storage.getLongEnergyStored();
             totalEnergy = MathUtil.addExact(totalEnergy, energy);

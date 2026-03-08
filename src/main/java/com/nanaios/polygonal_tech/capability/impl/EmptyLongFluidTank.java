@@ -6,6 +6,8 @@ import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 
 public class EmptyLongFluidTank implements ILongFluidTank {
+    public static final EmptyLongFluidTank INSTANCE = new EmptyLongFluidTank();
+
     @Override
     public long getFluidLongAmount() {
         return 0;
@@ -33,11 +35,31 @@ public class EmptyLongFluidTank implements ILongFluidTank {
 
     @Override
     public LongFluidStack drain(long maxDrain, FluidAction action) {
-        return null;
+        return LongFluidStack.EMPTY;
+    }
+
+    @Override
+    public int getTanks() {
+        return 0;
     }
 
     @Override
     public @NotNull LongFluidStack getFluidInTank(int tank) {
+        return LongFluidStack.EMPTY;
+    }
+
+    @Override
+    public boolean isFluidValid(int tank, @NotNull FluidStack stack) {
+        return false;
+    }
+
+    @Override
+    public @NotNull LongFluidStack drain(LongFluidStack resource, FluidAction action) {
+        return LongFluidStack.EMPTY;
+    }
+
+    @Override
+    public @NotNull LongFluidStack drain(int maxDrain, FluidAction action) {
         return LongFluidStack.EMPTY;
     }
 }
