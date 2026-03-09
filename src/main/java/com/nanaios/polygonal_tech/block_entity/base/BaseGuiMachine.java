@@ -2,22 +2,33 @@ package com.nanaios.polygonal_tech.block_entity.base;
 
 import com.nanaios.polygonal_tech.menu.base.BaseMenu;
 import com.nanaios.polygonal_tech.registries.PolygonalTechBlockEntityTypeRegister;
+import com.nanaios.polygonal_tech.registries.PolygonalTechMenuTypeRegister;
+import com.nanaios.polygonal_tech.util.NamedToken;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class BaseGuiMachine<M extends BaseGuiMachine<M>> extends BaseMachine<M> implements MenuProvider {
-    private final BlockEntityType<?> type;
-    public BaseGuiMachine(BlockEntityType<?> type, BlockPos pos, BlockState state) {
-        super(type, pos, state);
-        this.type = type;
+    protected final NamedToken token;
+
+    public BaseGuiMachine(RegistryObject<BlockEntityType<M>> type, BlockPos pos, BlockState state) {
+        super(type.get(), pos, state);
+
+        // RegistryObject<BlockEntityType<M>>はRegistryObject<BlockEntityType<?>>のサブクラスであるため、キャストが必要
+        token = PolygonalTechBlockEntityTypeRegister.MACHINE_BLOCK_ENTITIES.getToken(castType(type));
+    }
+
+
+    @SuppressWarnings("unchecked")
+    public static <M extends BaseGuiMachine<M>> RegistryObject<BlockEntityType<?>> castType(RegistryObject<BlockEntityType<M>> type) {
+        return ((RegistryObject<BlockEntityType<?>>) (Object) type);
     }
 
     @Override
@@ -25,10 +36,8 @@ public abstract class BaseGuiMachine<M extends BaseGuiMachine<M>> extends BaseMa
         return Component.literal("Base Machine");
     }
 
-    abstract protected MenuType<?> getMenuType();
-
     @Override
     public @Nullable AbstractContainerMenu createMenu(int id, Inventory inv, Player player) {
-        return new BaseMenu<>(getMenuType(),id, inv, this.worldPosition);
+        return new BaseMenu<>(PolygonalTechMenuTypeRegister.MACHINE_GUI.getRegistry(token).get(), id, inv, this.worldPosition);
     }
 }

@@ -17,7 +17,7 @@ public class PhotolysisMachine extends BaseGuiMachine<PhotolysisMachine> {
     public LongEnergyContainer longEnergyContainer;
 
     public PhotolysisMachine(BlockPos pos, BlockState state) {
-        super(PolygonalTechBlockEntityTypeRegister.PHOTOLYSIS_MACHINE.get(), pos, state);
+        super(PolygonalTechBlockEntityTypeRegister.PHOTOLYSIS_MACHINE, pos, state);
     }
 
     @Override
@@ -34,10 +34,5 @@ public class PhotolysisMachine extends BaseGuiMachine<PhotolysisMachine> {
         );
 
         return builder;
-    }
-
-    @Override
-    protected MenuType<?> getMenuType() {
-        return PolygonalTechMenuTypeRegister.PHOTOLYSIS_MACHINE_MENU.get();
     }
 }
