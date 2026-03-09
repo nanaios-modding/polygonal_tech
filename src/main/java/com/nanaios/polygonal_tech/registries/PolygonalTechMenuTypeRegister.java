@@ -7,6 +7,7 @@ import com.nanaios.polygonal_tech.registries.impl.MultipleMenuTypeRegister;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.registries.RegistryObject;
 
@@ -19,16 +20,11 @@ public class PolygonalTechMenuTypeRegister {
     static {
         BASE_MACHINE_MENU = MACHINE_GUI.register(
                 "base_machine_menu",
-                () -> IForgeMenuType.create((windowId, inv, data) -> {
+                () -> IForgeMenuType.create((id, inv, buf) -> {
 
-                    BlockPos pos = data.readBlockPos();
-                    Level level = inv.player.level();
+                    BlockPos pos = buf.readBlockPos();
 
-                    return new BaseMenu<BaseGuiMachine<?>>(
-                            (BaseGuiMachine<?>) level.getBlockEntity(pos),
-                            inv,
-                            windowId
-                    );
+                    return new BaseMenu<>(id, inv, pos);
                 })
         );
     }

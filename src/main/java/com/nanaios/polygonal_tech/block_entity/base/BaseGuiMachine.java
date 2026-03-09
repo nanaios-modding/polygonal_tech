@@ -18,11 +18,11 @@ public abstract class BaseGuiMachine<M extends BaseGuiMachine<M>> extends BaseMa
 
     @Override
     public Component getDisplayName() {
-        return null;
+        return Component.literal("Base Machine");
     }
 
     @Override
     public @Nullable AbstractContainerMenu createMenu(int id, Inventory inv, Player player) {
-        return new BaseMenu<>(this, inv, id);
+        return new BaseMenu<>(id, inv, this.worldPosition);
     }
 }
