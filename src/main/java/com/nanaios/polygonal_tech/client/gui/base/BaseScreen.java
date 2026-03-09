@@ -15,7 +15,14 @@ public class BaseScreen extends AbstractContainerScreen<BaseMenu<?>> {
     }
 
     @Override
-    protected void renderBg(GuiGraphics p_283065_, float p_97788_, int p_97789_, int p_97790_) {
+    protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
 
+    }
+
+    @Override
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+        this.renderBackground(graphics);
+        super.render(graphics, mouseX, mouseY, partialTick);
+        this.renderTooltip(graphics, mouseX, mouseY);
     }
 }
