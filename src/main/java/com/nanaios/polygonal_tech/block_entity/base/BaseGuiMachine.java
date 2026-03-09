@@ -1,5 +1,6 @@
 package com.nanaios.polygonal_tech.block_entity.base;
 
+import com.nanaios.polygonal_tech.menu.base.BaseMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
@@ -21,7 +22,7 @@ public abstract class BaseGuiMachine<M extends BaseGuiMachine<M>> extends BaseMa
     }
 
     @Override
-    public @Nullable AbstractContainerMenu createMenu(int p_39954_, Inventory p_39955_, Player p_39956_) {
-        return null;
+    public @Nullable AbstractContainerMenu createMenu(int id, Inventory inv, Player player) {
+        return new BaseMenu<>(this, inv, id);
     }
 }

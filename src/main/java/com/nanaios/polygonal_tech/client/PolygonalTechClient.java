@@ -14,16 +14,6 @@ import net.minecraftforge.registries.RegistryObject;
 public class PolygonalTechClient {
     @SubscribeEvent
     public static void clientSetup(FMLClientSetupEvent event) {
-        event.enqueueWork(PolygonalTechClient::setRenderTypes);
-    }
-
-    @SuppressWarnings("removal")
-    private static void setRenderTypes() {
-        for(RegistryObject<Block> block : PolygonalTechBlockRegister.MACHINE_BLOCKS.getEntries()) {
-            ItemBlockRenderTypes.setRenderLayer(
-                    block.get(),
-                    RenderType.cutout()
-            );
-        }
+        event.enqueueWork(PolygonalTechRenderType::setRenderTypes);
     }
 }
