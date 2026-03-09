@@ -24,38 +24,6 @@ public class DeferredBlockRegister extends WrapperDeferredRegister<Block> implem
     }
 
     @Override
-    public <I extends Block> RegistryObject<I> register(String name, Supplier<? extends I> sup) {
-        RegistryObject<I> blockRegistryObject = super.register(name, sup);
-
-        blockItemDeferredRegister.register(
-                name,
-                () -> new BlockItem(blockRegistryObject.get(), new Item.Properties())
-        );
-
-        return blockRegistryObject;
-    }
-
-    @SuppressWarnings("unchecked")
-    public <I extends Block> RegistryObject<I> registerMachine(String name, BlockSupplier<I> sup) {
-        RegistryObject<I>[] pointer = new RegistryObject[1];
-        RegistryObject<I> blockRegistryObject = super.register(name, () -> sup.create(pointer[0]));
-
-        pointer[0] = blockRegistryObject;
-
-        blockItemDeferredRegister.register(
-                name,
-                () -> new BlockItem(blockRegistryObject.get(), new Item.Properties())
-        );
-
-        return blockRegistryObject;
-    }
-
-    @FunctionalInterface
-    public interface BlockSupplier<T extends Block> {
-        T create(RegistryObject<T> block);
-    }
-
-    @Override
     public void display(CreativeModeTab.Output output) {
         for(RegistryObject<Item> item : blockItemDeferredRegister.getEntries()) {
             output.accept(item.get());

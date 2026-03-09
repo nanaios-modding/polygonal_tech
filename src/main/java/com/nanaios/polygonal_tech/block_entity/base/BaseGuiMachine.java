@@ -7,6 +7,7 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
@@ -21,8 +22,10 @@ public abstract class BaseGuiMachine<M extends BaseGuiMachine<M>> extends BaseMa
         return Component.literal("Base Machine");
     }
 
+    abstract protected MenuType<?> getMenuType();
+
     @Override
     public @Nullable AbstractContainerMenu createMenu(int id, Inventory inv, Player player) {
-        return new BaseMenu<>(id, inv, this.worldPosition);
+        return new BaseMenu<>(getMenuType(),id, inv, this.worldPosition);
     }
 }

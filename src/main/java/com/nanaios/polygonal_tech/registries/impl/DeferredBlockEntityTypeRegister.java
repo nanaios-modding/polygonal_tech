@@ -15,19 +15,4 @@ public class DeferredBlockEntityTypeRegister extends WrapperDeferredRegister<Blo
     public DeferredBlockEntityTypeRegister(DeferredRegister<BlockEntityType<?>> deferredRegister) {
         super(deferredRegister);
     }
-
-    @SuppressWarnings("unchecked")
-    public <T extends BlockEntity> RegistryObject<BlockEntityType<T>> register(
-            String name,
-            BlockEntityType.BlockEntitySupplier<T> supplier,
-            Supplier<Block> blocks
-    ) {
-        // ビルドして登録する
-
-        return super.register(name, () ->
-                BlockEntityType.Builder.of(
-                        supplier,
-                        blocks.get()
-                ).build(null));
-    }
 }
