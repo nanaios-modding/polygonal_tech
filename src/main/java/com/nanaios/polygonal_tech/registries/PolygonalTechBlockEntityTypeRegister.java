@@ -14,7 +14,7 @@ public class PolygonalTechBlockEntityTypeRegister {
 
     static {
         PHOTOLYSIS_MACHINE = MACHINE_BLOCK_ENTITIES.register(
-                "photolysis_machine",
+                PolygonalTechNamedTokens.PHOTOLYSIS_MACHINE,
                 PhotolysisMachine::new,
                 PolygonalTechBlockRegister.PHOTOLYSIS_MACHINE
         );

@@ -1,6 +1,7 @@
 package com.nanaios.polygonal_tech.block_entity.base;
 
 import com.nanaios.polygonal_tech.menu.base.BaseMenu;
+import com.nanaios.polygonal_tech.registries.PolygonalTechBlockEntityTypeRegister;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
@@ -13,8 +14,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class BaseGuiMachine<M extends BaseGuiMachine<M>> extends BaseMachine<M> implements MenuProvider {
+    private final BlockEntityType<?> type;
     public BaseGuiMachine(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
+        this.type = type;
     }
 
     @Override

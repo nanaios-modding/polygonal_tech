@@ -1,16 +1,18 @@
 package com.nanaios.polygonal_tech.registries.base;
 
 import com.nanaios.polygonal_tech.PolygonalTech;
+import com.nanaios.polygonal_tech.util.NamedToken;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MultipleRegister<T> {
+public abstract class MultipleRegister<T> {
     protected final ResourceKey<? extends Registry<T>> registryKey;
     protected final String modid;
     private final List<DeferredRegister<T>> deferredRegisters = new ArrayList<>();
@@ -40,9 +42,7 @@ public class MultipleRegister<T> {
         return deferredRegister;
     }
 
-    public WrapperDeferredRegister<T> create() {
-        return new WrapperDeferredRegister<>(createDeferredRegister());
-    }
+    public abstract WrapperDeferredRegister<T> create();
 
     public void register(IEventBus bus) {
         for (DeferredRegister<T> deferredRegister : deferredRegisters) {

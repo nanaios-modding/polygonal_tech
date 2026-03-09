@@ -1,32 +1,44 @@
 package com.nanaios.polygonal_tech.registries.impl;
 
+import com.nanaios.polygonal_tech.block.base.BaseGuiMachineBlock;
+import com.nanaios.polygonal_tech.registries.PolygonalTechBlockEntityTypeRegister;
 import com.nanaios.polygonal_tech.registries.base.WrapperDeferredRegister;
-import com.nanaios.polygonal_tech.registries.interfaces.IDisplayable;
-import net.minecraft.core.BlockPos;
+import com.nanaios.polygonal_tech.util.NamedToken;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Supplier;
+import java.util.HashMap;
+import java.util.Map;
 
-public class DeferredBlockRegister extends WrapperDeferredRegister<Block> implements IDisplayable {
-    private final DeferredRegister<Item> blockItemDeferredRegister;
+public class DeferredBlockRegister extends WrapperDeferredRegister<Block> {
+    private static final Map<NamedToken, RegistryObject<Block>> REGISTRY_OBJECT_MAP = new HashMap<>();
+    private static final Map<RegistryObject<Block>, NamedToken> REVERSE_REGISTRY_OBJECT_MAP = new HashMap<>();
 
-    public DeferredBlockRegister(DeferredRegister<Block> blockDeferredRegister, DeferredRegister<Item> blockItemDeferredRegister) {
-        super(blockDeferredRegister);
-        this.blockItemDeferredRegister = blockItemDeferredRegister;
+    protected @Nullable DeferredItemRegister itemRegister = null;
+
+    public DeferredBlockRegister(DeferredRegister<Block> blockDeferredRegister) {
+        super(blockDeferredRegister, REGISTRY_OBJECT_MAP, REVERSE_REGISTRY_OBJECT_MAP);
     }
 
-    @Override
-    public void display(CreativeModeTab.Output output) {
-        for(RegistryObject<Item> item : blockItemDeferredRegister.getEntries()) {
-            output.accept(item.get());
+    public RegistryObject<Block> registerGuiMachine(NamedToken token) {
+        RegistryObject<Block> registryObject = super.register(
+                token,
+                () -> new BaseGuiMachineBlock<>(PolygonalTechBlockEntityTypeRegister.MACHINE_BLOCK_ENTITIES.getRegistry(token))
+        );
+
+        if (itemRegister != null) {
+            itemRegister.register(token, () -> new BlockItem(registryObject.get(), new Item.Properties()));
         }
+
+        return registryObject;
+    }
+
+    public DeferredBlockRegister setBlockItemRegister(DeferredItemRegister itemRegister) {
+        this.itemRegister = itemRegister;
+        return this;
     }
 }

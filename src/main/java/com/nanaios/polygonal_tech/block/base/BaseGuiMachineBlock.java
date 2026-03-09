@@ -14,8 +14,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.registries.RegistryObject;
 
-public class BaseGuiMachineBlock<M extends BaseGuiMachine<?>> extends BaseMachineBlock<M>{
-    public BaseGuiMachineBlock(RegistryObject<BlockEntityType<M>> blockEntityType) {
+public class BaseGuiMachineBlock<M extends BaseGuiMachine<?>> extends BaseMachineBlock {
+    public BaseGuiMachineBlock(RegistryObject<BlockEntityType<?>> blockEntityType) {
         super(blockEntityType);
     }
 

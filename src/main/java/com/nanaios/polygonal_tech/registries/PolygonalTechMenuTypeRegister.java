@@ -14,6 +14,6 @@ public class PolygonalTechMenuTypeRegister {
     public static RegistryObject<MenuType<BaseMenu<PhotolysisMachine>>> PHOTOLYSIS_MACHINE_MENU;
 
     static {
-        PHOTOLYSIS_MACHINE_MENU = MACHINE_GUI.register("photolysis_machine_menu", PhotolysisMachine.class);
+        PHOTOLYSIS_MACHINE_MENU = MACHINE_GUI.register(PolygonalTechNamedTokens.PHOTOLYSIS_MACHINE);
     }
 }

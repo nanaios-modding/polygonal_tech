@@ -10,6 +10,7 @@ public class PolygonalTechItemRegister {
     public static final MultipleItemRegister ITEMS = new MultipleItemRegister();
     public static final DeferredItemRegister ELEMENTS = ITEMS.create();
     public static final DeferredItemRegister EASTER_EGGS = ITEMS.create();
+    public static final DeferredItemRegister BLOCK_ITEMS = ITEMS.create();
 
     // 角素アイテム
     public static final RegistryObject<Item> ELEMENT_3;
