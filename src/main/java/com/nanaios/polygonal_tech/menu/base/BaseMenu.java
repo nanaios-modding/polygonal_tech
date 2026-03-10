@@ -19,6 +19,7 @@ public class BaseMenu<M extends BaseGuiMachine<M>> extends AbstractContainerMenu
     protected final BlockPos pos;
     protected final Inventory inventory;
     protected final ContainerLevelAccess access;
+    protected int machineSlots = 0;
 
     public BaseMenu(MenuType<?> type, int id, Inventory inv, BlockPos pos) {
         super(type, id);
@@ -30,18 +31,33 @@ public class BaseMenu<M extends BaseGuiMachine<M>> extends AbstractContainerMenu
         broadcastChanges();
 
         M machine = getMachine();
-        if (machine != null) {
-            int i = 0;
-            ItemSlotProvider slotProvider = machine.itemSlotProvider;
-            for(BaseContainer<IItemSlot> itemSlot: slotProvider.getContainers()) {
-                IItemSlot base = itemSlot.getBase();
-                addSlot(new SlotItemHandler(base,i,base.getX(),base.getY()));
-                i++;
-            }
+        if (machine == null) return;
+
+        int i = 0;
+        ItemSlotProvider slotProvider = machine.itemSlotProvider;
+        machineSlots = slotProvider.getContainers().size();
+        for (BaseContainer<IItemSlot> itemSlot : slotProvider.getContainers()) {
+            IItemSlot base = itemSlot.getBase();
+            addSlot(new SlotItemHandler(base, i, base.getX(), base.getY()));
+            i++;
         }
 
         addPlayerInventory(inv);
         addPlayerHotbar(inv);
+
+        if(!inv.player.level().isClientSide) {
+            machine.addOpenPlayer();
+        }
+    }
+
+    @Override
+    public void removed(Player player) {
+        super.removed(player);
+        if(!player.level().isClientSide) {
+            M machine = getMachine();
+            if (machine == null) return;
+            machine.removeOpenPlayer();
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -55,8 +71,40 @@ public class BaseMenu<M extends BaseGuiMachine<M>> extends AbstractContainerMenu
     }
 
     @Override
-    public ItemStack quickMoveStack(Player player, int slot) {
-        return null;
+    public ItemStack quickMoveStack(Player player, int index) {
+        Slot slot = this.slots.get(index);
+
+        if (!slot.hasItem()) {
+            return ItemStack.EMPTY;
+        }
+
+        ItemStack stack = slot.getItem();
+        ItemStack copy = stack.copy();
+
+        if (index < machineSlots) {
+
+            // machine -> player
+            if (!moveItemStackTo(stack, machineSlots, slots.size(), true)) {
+                return ItemStack.EMPTY;
+            }
+
+        } else {
+
+            // player -> machine
+            if (!moveItemStackTo(stack, 0, machineSlots, false)) {
+                return ItemStack.EMPTY;
+            }
+
+        }
+
+        if (stack.isEmpty()) {
+            slot.set(ItemStack.EMPTY);
+        } else {
+            slot.setChanged();
+        }
+
+        return copy;
+
     }
 
     protected int getInventoryYOffset() {
@@ -86,7 +134,7 @@ public class BaseMenu<M extends BaseGuiMachine<M>> extends AbstractContainerMenu
 
     private void addPlayerHotbar(Inventory playerInv) {
         int xOffset = getInventoryXOffset();
-        int yOffset = getInventoryYOffset() +58;
+        int yOffset = getInventoryYOffset() + 58;
 
         for (int col = 0; col < 9; col++) {
 

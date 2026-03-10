@@ -62,4 +62,14 @@ public class LongEnergyStorage implements ILongEnergyStorage {
     public boolean canReceive() {
         return canReceive.getAsBoolean();
     }
+
+    @Override
+    public boolean canOutput() {
+        return canExtract.getAsBoolean();
+    }
+
+    @Override
+    public boolean canInput() {
+        return canReceive.getAsBoolean();
+    }
 }

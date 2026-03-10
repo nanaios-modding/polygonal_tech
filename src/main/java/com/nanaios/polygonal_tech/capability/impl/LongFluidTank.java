@@ -96,4 +96,14 @@ public class LongFluidTank implements ILongFluidTank {
     protected void onContentsChanged() {
 
     }
+
+    @Override
+    public boolean canInput() {
+        return getLongCapacity() - getFluidLongAmount() > 0;
+    }
+
+    @Override
+    public boolean canOutput() {
+        return getFluidLongAmount() > 0;
+    }
 }

@@ -79,4 +79,14 @@ public class ItemSlot implements IItemSlot {
     public boolean isItemValid(@NotNull ItemStack stack) {
         return validator.test(stack);
     }
+
+    @Override
+    public boolean canInput() {
+        return stack.isEmpty();
+    }
+
+    @Override
+    public boolean canOutput() {
+        return !stack.isEmpty();
+    }
 }
