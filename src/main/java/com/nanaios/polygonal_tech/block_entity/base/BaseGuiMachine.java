@@ -1,5 +1,6 @@
 package com.nanaios.polygonal_tech.block_entity.base;
 
+import com.nanaios.polygonal_tech.PolygonalTech;
 import com.nanaios.polygonal_tech.menu.base.BaseMenu;
 import com.nanaios.polygonal_tech.registries.PolygonalTechBlockEntityTypeRegister;
 import com.nanaios.polygonal_tech.registries.PolygonalTechMenuTypeRegister;
@@ -21,7 +22,7 @@ public abstract class BaseGuiMachine<M extends BaseGuiMachine<M>> extends BaseMa
     public BaseGuiMachine(RegistryObject<BlockEntityType<M>> type, BlockPos pos, BlockState state) {
         super(type.get(), pos, state);
 
-        // RegistryObject<BlockEntityType<M>>はRegistryObject<BlockEntityType<?>>のサブクラスであるため、キャストが必要
+        // RegistryObject<BlockEntityType<M>>はRegistryObject<BlockEntityType<?>>のサブクラスであるため、キャスト可能
         token = PolygonalTechBlockEntityTypeRegister.MACHINE_BLOCK_ENTITIES.getToken(castType(type));
     }
 
@@ -33,7 +34,7 @@ public abstract class BaseGuiMachine<M extends BaseGuiMachine<M>> extends BaseMa
 
     @Override
     public Component getDisplayName() {
-        return Component.literal("Base Machine");
+        return Component.translatable("block.%1$s.%2$s".formatted(PolygonalTech.MODID,token.name()));
     }
 
     @Override

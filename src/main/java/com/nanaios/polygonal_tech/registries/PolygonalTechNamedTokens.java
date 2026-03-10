@@ -9,5 +9,5 @@ public class PolygonalTechNamedTokens {
     public static final NamedToken MAIN_TAB = new NamedToken("main_tab");
 
     //機械
-    public static final NamedToken PHOTOLYSIS_MACHINE = new NamedToken("photolysis_machine");
+    public static final NamedToken PHOTOLYSIS_MACHINE_MK1 = new NamedToken("photolysis_machine_mk1");
 }

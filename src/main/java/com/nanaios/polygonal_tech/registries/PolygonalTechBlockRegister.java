@@ -11,9 +11,9 @@ public class PolygonalTechBlockRegister {
             PolygonalTechItemRegister.BLOCK_ITEMS
     );
 
-    public static RegistryObject<Block> PHOTOLYSIS_MACHINE;
+    public static RegistryObject<Block> PHOTOLYSIS_MACHINE_MK1;
 
     static {
-            PHOTOLYSIS_MACHINE = MACHINE_BLOCKS.registerGuiMachine(PolygonalTechNamedTokens.PHOTOLYSIS_MACHINE);
+            PHOTOLYSIS_MACHINE_MK1 = MACHINE_BLOCKS.registerGuiMachine(PolygonalTechNamedTokens.PHOTOLYSIS_MACHINE_MK1);
     }
 }

@@ -17,12 +17,19 @@ public class BaseScreen<M extends BaseGuiMachine<M>> extends AbstractContainerSc
     }
 
     @Override
+    protected void init() {
+        super.init();
+
+        this.titleLabelX = (imageWidth - font.width(title)) / 2;
+        this.titleLabelY = 5;
+    }
+
+    @Override
     protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
         int x = this.leftPos;
         int y = this.topPos;
 
         graphics.blit(BACK_GROUND, x, y, 0, 0, this.imageWidth, this.imageHeight);
-
     }
 
     @Override
