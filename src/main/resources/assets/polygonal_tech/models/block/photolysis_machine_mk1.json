@@ -4,8 +4,8 @@
 	"parent": "block/cube_all",
 	"texture_size": [128, 128],
 	"textures": {
-		"0": "polygonal_tech:block/photolysis_machine",
-		"particle": "polygonal_tech:block/photolysis_machine"
+		"0": "polygonal_tech:block/photolysis_machine_mk1",
+		"particle": "polygonal_tech:block/photolysis_machine_mk1"
 	},
 	"elements": [
 		{
