@@ -34,5 +34,8 @@ public class ContainerBuilder<T> {
 
             provider.addContainer(container);
         }
+
+        // コンテナの登録が完了したらProviderをロックする
+        provider.lock();
     }
 }

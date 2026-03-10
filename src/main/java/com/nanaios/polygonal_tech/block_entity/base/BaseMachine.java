@@ -20,9 +20,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class BaseMachine<M extends BaseMachine<M>> extends BaseBlockEntity<M> {
-    private final LongEnergyStorageProvider energyStorageProvider = new LongEnergyStorageProvider();
-    private final LongFluidTankProvider fluidTankProvider = new LongFluidTankProvider();
-    private final ItemSlotProvider itemSlotProvider = new ItemSlotProvider();
+    public final LongEnergyStorageProvider energyStorageProvider = new LongEnergyStorageProvider();
+    public final LongFluidTankProvider fluidTankProvider = new LongFluidTankProvider();
+    public final ItemSlotProvider itemSlotProvider = new ItemSlotProvider();
 
     public BaseMachine(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
