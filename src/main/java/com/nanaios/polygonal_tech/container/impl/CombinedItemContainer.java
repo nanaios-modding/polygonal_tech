@@ -22,26 +22,39 @@ public class CombinedItemContainer extends CombinedContainer<IItemSlot> implemen
 
     @Override
     public @NotNull ItemStack getStackInSlot(int slot) {
-        return null;
+        BaseContainer<IItemSlot> container = containers.get(slot);
+        IItemSlot itemSlot = container.getBase();
+        return itemSlot.getStack();
     }
 
     @Override
     public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
-        return null;
+        BaseContainer<IItemSlot> container = containers.get(slot);
+        IItemSlot itemSlot = container.getInput(side);
+        if(itemSlot == null) return stack;
+        return itemSlot.insertItem(stack, simulate);
     }
 
     @Override
     public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate) {
-        return null;
+        BaseContainer<IItemSlot> container = containers.get(slot);
+        IItemSlot itemSlot = container.getOutput(side);
+        if(itemSlot == null) return ItemStack.EMPTY;
+        return itemSlot.extractItem(amount, simulate);
     }
 
     @Override
     public int getSlotLimit(int slot) {
-        return 0;
+        BaseContainer<IItemSlot> container = containers.get(slot);
+        IItemSlot itemSlot = container.getBase();
+        return itemSlot.getSlotLimit();
     }
 
     @Override
     public boolean isItemValid(int slot, @NotNull ItemStack stack) {
-        return false;
+        BaseContainer<IItemSlot> container = containers.get(slot);
+        IItemSlot itemSlot = container.getInput(side);
+        if(itemSlot == null) return false;
+        return itemSlot.isItemValid(stack);
     }
 }
