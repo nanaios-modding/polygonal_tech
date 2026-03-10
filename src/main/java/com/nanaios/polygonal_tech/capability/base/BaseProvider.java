@@ -1,6 +1,7 @@
 package com.nanaios.polygonal_tech.capability.base;
 
 import com.nanaios.polygonal_tech.PolygonalTech;
+import com.nanaios.polygonal_tech.capability.interfaces.IHasIOStatus;
 import com.nanaios.polygonal_tech.container.base.BaseContainer;
 import com.nanaios.polygonal_tech.container.interfaces.ICombinedContainer;
 import net.minecraft.core.Direction;
@@ -16,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class BaseProvider<T,C extends ICombinedContainer<T>> implements ICapabilityProvider, INBTSerializable<CompoundTag> {
+public abstract class BaseProvider<T extends IHasIOStatus,C extends ICombinedContainer<T>> implements ICapabilityProvider, INBTSerializable<CompoundTag> {
     public static String CONTAINERS_SIZE_KEY = "containers_size";
     public static String CONTAINER_KEY_PREFIX = "container_";
 
@@ -149,7 +150,7 @@ public abstract class BaseProvider<T,C extends ICombinedContainer<T>> implements
     }
 
     @FunctionalInterface
-    public interface ContainerSupplier<T,R> {
+    public interface ContainerSupplier<T extends IHasIOStatus,R> {
         R create(Direction side,List<BaseContainer<T>> containers);
     }
 }

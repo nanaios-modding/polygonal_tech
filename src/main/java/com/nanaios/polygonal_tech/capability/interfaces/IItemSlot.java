@@ -1,21 +1,28 @@
 package com.nanaios.polygonal_tech.capability.interfaces;
 
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.NotNull;
 
-public interface IItemSlot extends IItemHandler {
+public interface IItemSlot extends IItemHandlerModifiable ,IHasIOStatus{
     @NotNull ItemStack getStack();
+    void setStack(@NotNull ItemStack stack);
     @NotNull ItemStack insertItem(@NotNull ItemStack stack, boolean simulate);
     @NotNull ItemStack extractItem(int amount, boolean simulate);
     int getSlotLimit();
     boolean isItemValid(@NotNull ItemStack stack);
+    int getX();
+    int getY();
 
     default int getSlots() {
         return 1;
     }
     default @NotNull ItemStack getStackInSlot(int slot) {
         return slot == 0 ? getStack() : ItemStack.EMPTY;
+    }
+
+    default void setStackInSlot(int slot, @NotNull ItemStack stack) {
+        if (slot == 0) setStack(stack);
     }
 
     default @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {

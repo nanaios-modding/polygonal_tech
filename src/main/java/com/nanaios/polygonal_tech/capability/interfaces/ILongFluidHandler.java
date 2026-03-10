@@ -6,7 +6,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.NotNull;
 
-public interface ILongFluidHandler extends IFluidHandler {
+public interface ILongFluidHandler extends IFluidHandler{
     @Override
     @NotNull LongFluidStack getFluidInTank(int tank);
     long getTankLongCapacity(int tank);

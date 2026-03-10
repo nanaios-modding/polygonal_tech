@@ -1,6 +1,7 @@
 package com.nanaios.polygonal_tech.container;
 
 import com.nanaios.polygonal_tech.capability.base.BaseProvider;
+import com.nanaios.polygonal_tech.capability.interfaces.IHasIOStatus;
 import com.nanaios.polygonal_tech.container.base.BaseContainer;
 import com.nanaios.polygonal_tech.util.Directions;
 
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /// BaseContainerをProviderに登録するためのBuilderクラス
-public class ContainerBuilder<T> {
+public class ContainerBuilder<T extends IHasIOStatus> {
     private final List<Pair<BaseContainer<T>, Directions>> containers = new ArrayList<>();
 
     public ContainerBuilder() {}

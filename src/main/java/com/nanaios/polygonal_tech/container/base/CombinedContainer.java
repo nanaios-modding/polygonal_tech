@@ -1,5 +1,6 @@
 package com.nanaios.polygonal_tech.container.base;
 
+import com.nanaios.polygonal_tech.capability.interfaces.IHasIOStatus;
 import com.nanaios.polygonal_tech.container.interfaces.ICombinedContainer;
 import com.nanaios.polygonal_tech.container.interfaces.IIOMode;
 import net.minecraft.core.Direction;
@@ -8,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class CombinedContainer<T> implements ICombinedContainer<T> {
+public class CombinedContainer<T extends IHasIOStatus> implements ICombinedContainer<T> {
     protected final List<BaseContainer<T>> containers;
     protected final Direction side;
 

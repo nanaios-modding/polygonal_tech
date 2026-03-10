@@ -14,6 +14,9 @@ public class BaseScreen<M extends BaseGuiMachine<M>> extends AbstractContainerSc
 
     public BaseScreen(BaseMenu<M> baseMenu, Inventory inventory, Component component) {
         super(baseMenu, inventory, component);
+
+        this.imageWidth = 176;
+        this.imageHeight = 166;
     }
 
     @Override

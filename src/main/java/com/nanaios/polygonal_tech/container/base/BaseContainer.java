@@ -1,5 +1,6 @@
 package com.nanaios.polygonal_tech.container.base;
 
+import com.nanaios.polygonal_tech.capability.interfaces.IHasIOStatus;
 import com.nanaios.polygonal_tech.container.impl.IOMode;
 import com.nanaios.polygonal_tech.container.interfaces.IContainer;
 import com.nanaios.polygonal_tech.container.interfaces.IIOMode;
@@ -9,19 +10,13 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
 
-public abstract class BaseContainer<T> implements IContainer<T> {
+public abstract class BaseContainer<T extends IHasIOStatus> implements IContainer<T> , IHasIOStatus {
     protected final T base;
-    protected final T input;
-    protected final T output;
-    protected final T defaultValue;
     private final EnumMap<Direction, IIOMode> sideModes = new EnumMap<>(Direction.class);
     protected boolean active = false;
 
-    public BaseContainer(T base, T input, T output, T defaultValue) {
+    public BaseContainer(T base) {
         this.base = base;
-        this.input = input;
-        this.output = output;
-        this.defaultValue = defaultValue;
 
         // 初期状態では全ての面が無効になるように設定
         for (Direction dir : Direction.values()) {
@@ -57,12 +52,22 @@ public abstract class BaseContainer<T> implements IContainer<T> {
 
     @Override
     public @Nullable T getInput(Direction side) {
-        return canInput(side) ? input : null;
+        return canInput(side) ? base : null;
+    }
+
+    @Override
+    public boolean canInput() {
+        return base.canInput();
+    }
+
+    @Override
+    public boolean canOutput() {
+        return base.canOutput();
     }
 
     @Override
     public T getOutput(Direction side) {
-        return canOutput(side) ? output : null;
+        return canOutput(side) ? base : null;
     }
 
     /// Containerのアクティブ状態を更新する。少なくとも1つの面が入力または出力に設定されていればアクティブになる。

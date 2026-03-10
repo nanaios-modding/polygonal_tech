@@ -13,22 +13,22 @@ import java.util.function.Predicate;
 public class ItemContainer extends BaseContainer<IItemSlot> implements IItemSlot{
     public static String STORED_ITEM_KEY = "stored";
 
-    public ItemContainer(IItemSlot base, IItemSlot input, IItemSlot output) {
-        super(base, input, output, EmptyItemSlot.INSTANCE);
+    public ItemContainer(IItemSlot base) {
+        super(base);
     }
 
-    public static ItemContainer create(Predicate<ItemStack> validator) {
-        ItemSlot base = new ItemSlot(validator);
-        return new ItemContainer(
-                base,
-                new ItemSlot.InputOnly(base),
-                new ItemSlot.OutputOnly(base)
-        );
+    public static ItemContainer create(Predicate<ItemStack> validator,int x, int y) {
+        return new ItemContainer(new ItemSlot(validator, x, y));
     }
 
     @Override
     public @NotNull ItemStack getStack() {
         return base.getStack();
+    }
+
+    @Override
+    public void setStack(@NotNull ItemStack stack) {
+        base.setStack(stack);
     }
 
     @Override
@@ -51,6 +51,16 @@ public class ItemContainer extends BaseContainer<IItemSlot> implements IItemSlot
         return base.isItemValid(stack);
     }
 
+    @Override
+    public int getX() {
+        return 0;
+    }
+
+    @Override
+    public int getY() {
+        return 0;
+    }
+
 
     @Override
     public CompoundTag serializeNBT() {
@@ -63,7 +73,7 @@ public class ItemContainer extends BaseContainer<IItemSlot> implements IItemSlot
     public void deserializeNBT(CompoundTag nbt) {
         if (nbt.contains(STORED_ITEM_KEY)) {
             ItemStack stack = ItemStack.of(nbt.getCompound(STORED_ITEM_KEY));
-            base.insertItem(stack, false);
+            base.setStack(stack);
         }
     }
 }

@@ -13,6 +13,11 @@ public class EmptyItemSlot implements IItemSlot {
     }
 
     @Override
+    public void setStack(@NotNull ItemStack stack) {
+
+    }
+
+    @Override
     public @NotNull ItemStack insertItem(@NotNull ItemStack stack, boolean simulate) {
         return stack;
     }
@@ -30,5 +35,15 @@ public class EmptyItemSlot implements IItemSlot {
     @Override
     public boolean isItemValid(@NotNull ItemStack stack) {
         return false;
+    }
+
+    @Override
+    public int getX() {
+        return 0;
+    }
+
+    @Override
+    public int getY() {
+        return 0;
     }
 }

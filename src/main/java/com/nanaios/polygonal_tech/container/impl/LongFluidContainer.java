@@ -1,6 +1,5 @@
 package com.nanaios.polygonal_tech.container.impl;
 
-import com.nanaios.polygonal_tech.capability.impl.EmptyLongFluidTank;
 import com.nanaios.polygonal_tech.capability.impl.LongFluidTank;
 import com.nanaios.polygonal_tech.capability.interfaces.ILongFluidTank;
 import com.nanaios.polygonal_tech.container.base.BaseContainer;
@@ -16,17 +15,12 @@ import java.util.function.Predicate;
 public class LongFluidContainer extends BaseContainer<ILongFluidTank> implements ILongFluidTank{
     public static String STORED_FLUID_KEY = "stored";
 
-    public LongFluidContainer(ILongFluidTank base, ILongFluidTank input, ILongFluidTank output) {
-        super(base, input, output, EmptyLongFluidTank.INSTANCE);
+    public LongFluidContainer(ILongFluidTank base) {
+        super(base);
     }
 
     public static LongFluidContainer create(LongSupplier capacity, Predicate<FluidStack> validator) {
-        LongFluidTank base = new LongFluidTank(capacity, validator);
-        return new LongFluidContainer(
-                base,
-                new LongFluidTank.InputOnly(base),
-                new LongFluidTank.OutputOnly(base)
-        );
+        return new LongFluidContainer(new LongFluidTank(capacity, validator));
     }
 
     @Override

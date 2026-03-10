@@ -7,7 +7,7 @@ import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import org.jetbrains.annotations.NotNull;
 
-public interface ILongFluidTank extends IFluidTank {
+public interface ILongFluidTank extends IFluidTank ,IHasIOStatus{
     long getFluidLongAmount();
 
     long getLongCapacity();

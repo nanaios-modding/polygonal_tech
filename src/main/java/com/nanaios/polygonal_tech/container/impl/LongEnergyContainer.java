@@ -11,17 +11,12 @@ import java.util.function.LongSupplier;
 public class LongEnergyContainer extends BaseContainer<ILongEnergyStorage> implements ILongEnergyStorage {
     public static String STORED_ENERGY_KEY = "stored";
 
-    public LongEnergyContainer(ILongEnergyStorage base,ILongEnergyStorage input, ILongEnergyStorage output) {
-        super(base,input, output, EmptyLongEnergyStorage.INSTANCE);
+    public LongEnergyContainer(ILongEnergyStorage base) {
+        super(base);
     }
 
     public static LongEnergyContainer create(LongSupplier capacity) {
-        LongEnergyStorage base = new LongEnergyStorage(capacity, () -> true, () -> true);
-        return new LongEnergyContainer(
-                base,
-                new LongEnergyStorage.InputOnly(base),
-                new LongEnergyStorage.OutputOnly(base)
-        );
+        return new LongEnergyContainer(new LongEnergyStorage(capacity, () -> true, () -> true));
     }
 
     @Override

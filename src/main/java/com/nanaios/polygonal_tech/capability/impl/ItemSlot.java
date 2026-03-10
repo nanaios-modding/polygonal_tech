@@ -9,14 +9,30 @@ import java.util.function.Predicate;
 public class ItemSlot implements IItemSlot {
     protected final Predicate<ItemStack> validator;
     protected ItemStack stack = ItemStack.EMPTY;
+    protected int x, y;
 
-    public ItemSlot(Predicate<ItemStack> validator) {
+    public ItemSlot(Predicate<ItemStack> validator,int x, int y) {
         this.validator = validator;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
     }
 
     @Override
     public @NotNull ItemStack getStack() {
         return stack;
+    }
+
+    @Override
+    public void setStack(@NotNull ItemStack stack) {
+        if (isItemValid(stack)) {
+            this.stack = stack;
+        }
     }
 
     @Override
@@ -62,71 +78,5 @@ public class ItemSlot implements IItemSlot {
     @Override
     public boolean isItemValid(@NotNull ItemStack stack) {
         return validator.test(stack);
-    }
-
-    public static class InputOnly extends ItemSlot {
-        protected final IItemSlot base;
-        public InputOnly(ItemSlot slot) {
-            super(slot.validator);
-            this.base = slot;
-        }
-
-        @Override
-        public boolean isItemValid(@NotNull ItemStack stack) {
-            return base.isItemValid(stack);
-        }
-
-        @Override
-        public int getSlotLimit() {
-            return base.getSlotLimit();
-        }
-
-        @Override
-        public @NotNull ItemStack getStack() {
-            return base.getStack();
-        }
-
-        @Override
-        public @NotNull ItemStack insertItem(@NotNull ItemStack stack, boolean simulate) {
-            return base.insertItem(stack, simulate);
-        }
-
-        @Override
-        public @NotNull ItemStack extractItem(int amount, boolean simulate) {
-            return ItemStack.EMPTY;
-        }
-    }
-
-    public static class OutputOnly extends ItemSlot {
-        protected final IItemSlot base;
-        public OutputOnly(ItemSlot slot) {
-            super(slot.validator);
-            this.base = slot;
-        }
-
-        @Override
-        public boolean isItemValid(@NotNull ItemStack stack) {
-            return false;
-        }
-
-        @Override
-        public int getSlotLimit() {
-            return base.getSlotLimit();
-        }
-
-        @Override
-        public @NotNull ItemStack getStack() {
-            return base.getStack();
-        }
-
-        @Override
-        public @NotNull ItemStack insertItem(@NotNull ItemStack stack, boolean simulate) {
-            return stack;
-        }
-
-        @Override
-        public @NotNull ItemStack extractItem(int amount, boolean simulate) {
-            return base.extractItem(amount, simulate);
-        }
     }
 }

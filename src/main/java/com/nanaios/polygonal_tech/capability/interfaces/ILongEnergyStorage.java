@@ -3,7 +3,7 @@ package com.nanaios.polygonal_tech.capability.interfaces;
 import com.nanaios.polygonal_tech.util.MathUtil;
 import net.minecraftforge.energy.IEnergyStorage;
 
-public interface ILongEnergyStorage extends IEnergyStorage {
+public interface ILongEnergyStorage extends IEnergyStorage ,IHasIOStatus{
     long getLongEnergyStored();
 
     long getLongMaxEnergyStored();
