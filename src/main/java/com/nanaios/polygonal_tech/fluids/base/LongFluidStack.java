@@ -27,7 +27,7 @@ public class LongFluidStack extends FluidStack {
         this(stack.getFluid(), longAmount, stack.getTag());
     }
 
-    public static LongFluidStack of(FluidStack stack) {
+    public static LongFluidStack from(FluidStack stack) {
         return new LongFluidStack(stack, stack.getAmount());
     }
 

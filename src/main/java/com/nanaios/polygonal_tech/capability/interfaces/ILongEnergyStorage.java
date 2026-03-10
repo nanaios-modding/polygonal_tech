@@ -1,8 +1,6 @@
 package com.nanaios.polygonal_tech.capability.interfaces;
 
 import com.nanaios.polygonal_tech.util.MathUtil;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.energy.IEnergyStorage;
 
 public interface ILongEnergyStorage extends IEnergyStorage {

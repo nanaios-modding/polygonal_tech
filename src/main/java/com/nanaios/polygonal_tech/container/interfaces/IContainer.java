@@ -4,12 +4,14 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public interface IContainer<T> extends INBTSerializable<CompoundTag> {
     boolean canInput(Direction side);
     boolean canOutput(Direction side);
     void setSideMode(Direction side,@NotNull IIOMode ioMode);
-    T getInput(Direction side);
-    T getOutput(Direction side);
+    @Nullable T getInput(Direction side);
+    @Nullable T getOutput(Direction side);
+    T getBase();
     boolean isActive();
 }

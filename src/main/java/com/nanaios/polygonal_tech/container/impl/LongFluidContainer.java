@@ -8,6 +8,7 @@ import com.nanaios.polygonal_tech.fluids.base.LongFluidStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
+import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
 import java.util.function.LongSupplier;
 import java.util.function.Predicate;
@@ -56,21 +57,6 @@ public class LongFluidContainer extends BaseContainer<ILongFluidTank> implements
     @Override
     public LongFluidStack drain(long maxDrain, FluidAction action) {
         return base.drain(maxDrain, action);
-    }
-
-    @Override
-    public int getTanks() {
-        return base.getTanks();
-    }
-
-    @Override
-    public @NotNull LongFluidStack getFluidInTank(int tank) {
-        return base.getFluidInTank(tank);
-    }
-
-    @Override
-    public boolean isFluidValid(int tank, @NotNull FluidStack stack) {
-        return base.isFluidValid(tank, stack);
     }
 
     @Override

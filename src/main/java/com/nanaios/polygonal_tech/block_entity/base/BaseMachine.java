@@ -35,6 +35,10 @@ public abstract class BaseMachine<M extends BaseMachine<M>> extends BaseBlockEnt
         if(cap == ForgeCapabilities.ENERGY || cap == PolygonalTechCapabilities.LONG_ENERGY) {
             return energyStorageProvider.getCapability(cap, side);
         }
+        if(cap == ForgeCapabilities.FLUID_HANDLER || cap == PolygonalTechCapabilities.LONG_FLUID_HANDLER) {
+            return fluidTankProvider.getCapability(cap, side);
+        }
+        if(cap == ForgeCapabilities.ITEM_HANDLER) {}
         return super.getCapability(cap, side);
     }
 

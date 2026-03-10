@@ -58,6 +58,11 @@ public class CombinedContainer<T> implements ICombinedContainer<T> {
     }
 
     @Override
+    public T getBase() {
+        return null;
+    }
+
+    @Override
     public boolean isActive() {
         for(BaseContainer<T> container : containers) {
             if(container.isActive()) {

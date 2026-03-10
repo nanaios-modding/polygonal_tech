@@ -1,17 +1,17 @@
 package com.nanaios.polygonal_tech.container.impl;
 
+import com.nanaios.polygonal_tech.capability.interfaces.ILongFluidHandler;
 import com.nanaios.polygonal_tech.capability.interfaces.ILongFluidTank;
 import com.nanaios.polygonal_tech.container.base.BaseContainer;
 import com.nanaios.polygonal_tech.container.base.CombinedContainer;
 import com.nanaios.polygonal_tech.fluids.base.LongFluidStack;
-import com.nanaios.polygonal_tech.util.MathUtil;
 import net.minecraft.core.Direction;
 import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class CombinedLongFluidContainer extends CombinedContainer<ILongFluidTank> implements ILongFluidTank {
+public class CombinedLongFluidContainer extends CombinedContainer<ILongFluidTank> implements ILongFluidHandler {
     public CombinedLongFluidContainer(Direction side, List<BaseContainer<ILongFluidTank>> baseContainers) {
         super(side, baseContainers);
     }
@@ -22,105 +22,72 @@ public class CombinedLongFluidContainer extends CombinedContainer<ILongFluidTank
     }
 
     @Override
-    public long getFluidLongAmount() {
-        long totalAmount = 0;
-        for (BaseContainer<ILongFluidTank> container : containers) {
-            if (!container.isActive()) continue;
-            ILongFluidTank tank = container.getInput(side);
-            long amount = tank.getFluidLongAmount();
-            totalAmount = MathUtil.addExact(totalAmount, amount);
-        }
-        return totalAmount;
+    public @NotNull LongFluidStack getFluidInTank(int tank) {
+        BaseContainer<ILongFluidTank> container = containers.get(tank);
+        if(!container.isActive()) return LongFluidStack.EMPTY;
+        return container.getBase().getFluid();
     }
 
     @Override
-    public long getLongCapacity() {
+    public boolean isFluidValid(int tank, @NotNull FluidStack stack) {
+        BaseContainer<ILongFluidTank> container = containers.get(tank);
+        if(!container.isActive()) return false;
+        return container.getBase().isFluidValid(stack);
+    }
+
+    @Override
+    public long getTankLongCapacity(int tank) {
         long totalCapacity = 0;
-        for (BaseContainer<ILongFluidTank> container : containers) {
+        for(BaseContainer<ILongFluidTank> container : containers) {
             if(!container.isActive()) continue;
-            ILongFluidTank tank = container.getInput(side);
-            long capacity = tank.getLongCapacity();
-            totalCapacity = MathUtil.addExact(totalCapacity, capacity);
+            ILongFluidTank fluidTank = container.getBase();
+            totalCapacity += fluidTank.getLongCapacity();
         }
         return totalCapacity;
     }
 
     @Override
+    public @NotNull LongFluidStack drainLong(LongFluidStack resource, FluidAction action) {
+        long wantDrain = resource.getLongAmount();
+        for (BaseContainer<ILongFluidTank> container : containers) {
+            if(!container.isActive()) continue;
+            ILongFluidTank fluidTank = container.getInput(side);
+            if(fluidTank == null) continue;
+
+            if (fluidTank.isFluidValid(resource)) {
+                LongFluidStack drained = fluidTank.drain(wantDrain, action);
+                wantDrain -= drained.getLongAmount();
+                if (wantDrain <= 0) break;
+            }
+        }
+        return new LongFluidStack(resource, resource.getLongAmount() - wantDrain);
+    }
+
+    @Override
+    public @NotNull LongFluidStack drainLong(long maxDrain, FluidAction action) {
+        for(BaseContainer<ILongFluidTank> container : containers) {
+            if(!container.isActive()) continue;
+            ILongFluidTank fluidTank = container.getInput(side);
+            if(fluidTank == null) continue;
+            LongFluidStack drained = fluidTank.drain(maxDrain, action);
+            if (!drained.isEmpty()) return drained;
+        }
+        return LongFluidStack.EMPTY;
+    }
+
+    @Override
     public long fillLong(LongFluidStack resource, FluidAction action) {
-        long totalFilled = 0;
+        long wantFill = resource.getLongAmount();
         for (BaseContainer<ILongFluidTank> container : containers) {
-            if (!container.isActive()) continue;
-            ILongFluidTank tank = container.getInput(side);
-
-            long filled = tank.fillLong(resource, action);
-            totalFilled = MathUtil.addExact(totalFilled, filled);
-            if (totalFilled >= resource.getLongAmount()) {
-                break;
+            if(!container.isActive()) continue;
+            ILongFluidTank fluidTank = container.getOutput(side);
+            if(fluidTank == null) continue;
+            if (fluidTank.isFluidValid(resource)) {
+                long filled = fluidTank.fillLong(resource, action);
+                wantFill -= filled;
+                if (wantFill <= 0) break;
             }
         }
-        return totalFilled;
-    }
-
-    @Override
-    public @NotNull LongFluidStack getFluid() {
-        return LongFluidStack.EMPTY;
-    }
-
-    @Override
-    public boolean isFluidValid(FluidStack stack) {
-        for (BaseContainer<ILongFluidTank> container : containers) {
-            if (!container.isActive()) continue;
-            ILongFluidTank tank = container.getInput(side);
-            if (tank.isFluidValid(stack)) return true;
-        }
-        return false;
-    }
-
-    /// どのスタックかわからないため、空のスタックを返す
-    @Override
-    public LongFluidStack drain(long maxDrain, FluidAction action) {
-        return LongFluidStack.EMPTY;
-    }
-
-    @Override
-    public @NotNull LongFluidStack getFluidInTank(int tank) {
-        if (tank < 0 || tank >= containers.size()) return LongFluidStack.EMPTY;
-        BaseContainer<ILongFluidTank> container = containers.get(tank);
-        if (!container.isActive()) return LongFluidStack.EMPTY;
-        ILongFluidTank tankCapability = container.getInput(side);
-        return tankCapability.getFluidInTank(0);
-    }
-
-    @Override
-    public @NotNull LongFluidStack drain(LongFluidStack resource, FluidAction action) {
-        long totalDrained = 0;
-        for (BaseContainer<ILongFluidTank> container : containers) {
-            if (!container.isActive()) continue;
-            ILongFluidTank tank = container.getInput(side);
-
-            if(!tank.isFluidValid(resource)) continue;
-
-            LongFluidStack drained = tank.drain(resource, action);
-            totalDrained = MathUtil.addExact(totalDrained, drained.getLongAmount());
-            if (totalDrained >= resource.getLongAmount()) {
-                break;
-            }
-        }
-        return LongFluidStack.of(getFluid());
-    }
-
-    /// どのスタックかわからないため、空のスタックを返す
-    @Override
-    public @NotNull LongFluidStack drain(int maxDrain, FluidAction action) {
-        return LongFluidStack.EMPTY;
-    }
-
-    @Override
-    public boolean isFluidValid(int tank, @NotNull FluidStack stack) {
-        if (tank < 0 || tank >= containers.size()) return false;
-        BaseContainer<ILongFluidTank> container = containers.get(tank);
-        if (!container.isActive()) return false;
-        ILongFluidTank tankCapability = container.getInput(side);
-        return tankCapability.isFluidValid(stack);
+        return resource.getLongAmount() - wantFill;
     }
 }

@@ -5,6 +5,7 @@ import com.nanaios.polygonal_tech.container.interfaces.IContainer;
 import com.nanaios.polygonal_tech.container.interfaces.IIOMode;
 import net.minecraft.core.Direction;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
 
@@ -13,18 +14,17 @@ public abstract class BaseContainer<T> implements IContainer<T> {
     protected final T input;
     protected final T output;
     protected final T defaultValue;
+    private final EnumMap<Direction, IIOMode> sideModes = new EnumMap<>(Direction.class);
     protected boolean active = false;
 
-    private final EnumMap<Direction, IIOMode> sideModes = new EnumMap<>(Direction.class);
-
-    public BaseContainer(T base,T input,T output,T defaultValue) {
+    public BaseContainer(T base, T input, T output, T defaultValue) {
         this.base = base;
         this.input = input;
         this.output = output;
         this.defaultValue = defaultValue;
 
         // 初期状態では全ての面が無効になるように設定
-        for(Direction dir : Direction.values()) {
+        for (Direction dir : Direction.values()) {
             sideModes.put(dir, IOMode.NONE);
         }
     }
@@ -51,19 +51,24 @@ public abstract class BaseContainer<T> implements IContainer<T> {
     }
 
     @Override
-    public T getInput(Direction side) {
-        return canInput(side) ? input : defaultValue;
+    public T getBase() {
+        return base;
+    }
+
+    @Override
+    public @Nullable T getInput(Direction side) {
+        return canInput(side) ? input : null;
     }
 
     @Override
     public T getOutput(Direction side) {
-        return canOutput(side) ? output : defaultValue;
+        return canOutput(side) ? output : null;
     }
 
     /// Containerのアクティブ状態を更新する。少なくとも1つの面が入力または出力に設定されていればアクティブになる。
     public void updateActive() {
-        for(Direction side : Direction.values()) {
-            if(!sideModes.get(side).equals(IOMode.NONE)) {
+        for (Direction side : Direction.values()) {
+            if (!sideModes.get(side).equals(IOMode.NONE)) {
                 active = true;
                 return;
             }

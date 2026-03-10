@@ -18,7 +18,7 @@ public class CombinedLongEnergyContainer extends CombinedContainer<ILongEnergySt
         long totalEnergy = 0;
         for (BaseContainer<ILongEnergyStorage> container : containers) {
             if (!container.isActive()) continue;
-            ILongEnergyStorage storage = container.getInput(side);
+            ILongEnergyStorage storage = container.getBase();
             long energy = storage.getLongEnergyStored();
             totalEnergy = MathUtil.addExact(totalEnergy, energy);
         }
@@ -29,7 +29,7 @@ public class CombinedLongEnergyContainer extends CombinedContainer<ILongEnergySt
     public long getLongMaxEnergyStored() {
         long totalMaxEnergy = 0;
         for (BaseContainer<ILongEnergyStorage> container : containers) {
-            ILongEnergyStorage storage = container.getInput(side);
+            ILongEnergyStorage storage = container.getBase();
             long maxEnergy = storage.getLongMaxEnergyStored();
             totalMaxEnergy = MathUtil.addExact(totalMaxEnergy, maxEnergy);
         }
@@ -41,12 +41,9 @@ public class CombinedLongEnergyContainer extends CombinedContainer<ILongEnergySt
         long totalReceived = 0;
         for (BaseContainer<ILongEnergyStorage> container : containers) {
             ILongEnergyStorage storage = container.getInput(side);
-
-            long received = storage.receiveLongEnergy(maxReceive - totalReceived, simulate);
-            totalReceived = MathUtil.addExact(totalReceived, received);
-            if (totalReceived >= maxReceive) {
-                break;
-            }
+            if(storage == null) continue;
+            totalReceived += storage.receiveLongEnergy(maxReceive - totalReceived, simulate);
+            if (totalReceived >= maxReceive) break;
         }
         return totalReceived;
     }
@@ -55,13 +52,11 @@ public class CombinedLongEnergyContainer extends CombinedContainer<ILongEnergySt
     public long extractLongEnergy(long maxExtract, boolean simulate) {
         long totalExtracted = 0;
         for (BaseContainer<ILongEnergyStorage> container : containers) {
-            ILongEnergyStorage storage = container.getInput(side);
+            ILongEnergyStorage storage = container.getOutput(side);
+            if(storage == null) continue;
 
-            long extracted = storage.extractLongEnergy(maxExtract - totalExtracted, simulate);
-            totalExtracted = MathUtil.addExact(totalExtracted, extracted);
-            if (totalExtracted >= maxExtract) {
-                break;
-            }
+            totalExtracted += storage.extractLongEnergy(maxExtract - totalExtracted, simulate);
+            if (totalExtracted >= maxExtract) break;
         }
         return totalExtracted;
     }
