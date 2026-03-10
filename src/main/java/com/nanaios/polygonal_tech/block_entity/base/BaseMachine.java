@@ -5,6 +5,7 @@ import com.nanaios.polygonal_tech.capability.interfaces.ILongEnergyStorage;
 import com.nanaios.polygonal_tech.capability.provider.LongEnergyStorageProvider;
 import com.nanaios.polygonal_tech.capability.provider.LongFluidTankProvider;
 import com.nanaios.polygonal_tech.container.ContainerBuilder;
+import com.nanaios.polygonal_tech.container.impl.LongFluidContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;

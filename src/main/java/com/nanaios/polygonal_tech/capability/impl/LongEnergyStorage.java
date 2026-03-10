@@ -1,7 +1,6 @@
 package com.nanaios.polygonal_tech.capability.impl;
 
 import com.nanaios.polygonal_tech.capability.interfaces.ILongEnergyStorage;
-import net.minecraftforge.energy.EnergyStorage;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.LongSupplier;
@@ -65,7 +64,7 @@ public class LongEnergyStorage implements ILongEnergyStorage {
     }
 
     public static class InputOnly extends LongEnergyStorage {
-        private final LongEnergyStorage baseStorage;
+        private final ILongEnergyStorage baseStorage;
         public InputOnly(LongEnergyStorage baseStorage) {
             super(baseStorage::getLongMaxEnergyStored, baseStorage::canReceive, () -> false);
             this.baseStorage = baseStorage;
@@ -80,10 +79,15 @@ public class LongEnergyStorage implements ILongEnergyStorage {
         public long receiveLongEnergy(long maxReceive, boolean simulate) {
             return baseStorage.receiveLongEnergy(maxReceive, simulate);
         }
+
+        @Override
+        public long extractLongEnergy(long maxExtract, boolean simulate) {
+            return 0;
+        }
     }
 
     public static class OutputOnly extends LongEnergyStorage {
-        private final LongEnergyStorage baseStorage;
+        private final ILongEnergyStorage baseStorage;
 
         public OutputOnly(LongEnergyStorage baseStorage) {
             super(baseStorage::getLongMaxEnergyStored, () -> false, baseStorage::canExtract);
@@ -93,6 +97,11 @@ public class LongEnergyStorage implements ILongEnergyStorage {
         @Override
         public long getLongEnergyStored() {
             return baseStorage.getLongEnergyStored();
+        }
+
+        @Override
+        public long receiveLongEnergy(long maxReceive, boolean simulate) {
+            return 0;
         }
 
         @Override

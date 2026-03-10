@@ -65,19 +65,10 @@ public class LongFluidTank implements ILongFluidTank {
         return drain(resource.getLongAmount(), action);
     }
 
-    @Override
-    public @NotNull LongFluidStack drain(int maxDrain, FluidAction action) {
-        return drain((long) maxDrain, action);
-    }
-
 
     @Override
     public @NotNull LongFluidStack getFluid() {
         return fluid;
-    }
-
-    public void setFluid(LongFluidStack stack) {
-        this.fluid = stack;
     }
 
     @Override
@@ -106,35 +97,69 @@ public class LongFluidTank implements ILongFluidTank {
 
     }
 
-    public boolean isEmpty() {
-        return fluid.isEmpty();
-    }
-
-    public long getSpace() {
-        return Math.max(0, capacity.getAsLong() - fluid.getAmount());
-    }
-
     public static class InputOnly extends LongFluidTank {
+        protected final ILongFluidTank base;
         public InputOnly(LongFluidTank base) {
             super(base.capacity, base.validator);
-            this.fluid = base.fluid;
+            this.base = base;
+        }
+
+        @Override
+        public long getFluidLongAmount() {
+            return base.getFluidLongAmount();
+        }
+
+        @Override
+        public @NotNull LongFluidStack getFluid() {
+            return base.getFluid();
         }
 
         @Override
         public LongFluidStack drain(long maxDrain, FluidAction action) {
             return LongFluidStack.EMPTY;
         }
+
+        @Override
+        public long fillLong(LongFluidStack resource, FluidAction action) {
+            return base.fillLong(resource, action);
+        }
+
+        @Override
+        public boolean isFluidValid(FluidStack stack) {
+            return base.isFluidValid(stack);
+        }
     }
 
     public static class OutputOnly extends LongFluidTank {
+        protected final ILongFluidTank base;
         public OutputOnly(LongFluidTank base) {
             super(base.capacity, base.validator);
-            this.fluid = base.fluid;
+            this.base = base;
+        }
+
+        @Override
+        public long getFluidLongAmount() {
+            return base.getFluidLongAmount();
+        }
+
+        @Override
+        public @NotNull LongFluidStack getFluid() {
+            return base.getFluid();
+        }
+
+        @Override
+        public LongFluidStack drain(long maxDrain, FluidAction action) {
+            return base.drain(maxDrain, action);
         }
 
         @Override
         public long fillLong(LongFluidStack resource, FluidAction action) {
             return 0;
+        }
+
+        @Override
+        public boolean isFluidValid(FluidStack stack) {
+            return false;
         }
     }
 }
