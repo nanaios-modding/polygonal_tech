@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class BaseProvider<T extends IHasIOStatus,C extends ICombinedContainer<T>> implements ICapabilityProvider, INBTSerializable<CompoundTag> {
+public abstract class BaseProvider<T extends IHasIOStatus, C extends ICombinedContainer<T>> implements ICapabilityProvider, INBTSerializable<CompoundTag> {
     public static String CONTAINERS_SIZE_KEY = "containers_size";
     public static String CONTAINER_KEY_PREFIX = "container_";
 
@@ -41,7 +41,7 @@ public abstract class BaseProvider<T extends IHasIOStatus,C extends ICombinedCon
     protected LazyOptional<C> westLazy;
     protected LazyOptional<C> eastLazy;
 
-    public BaseProvider(ContainerSupplier<T,C> containerSupplier) {
+    public BaseProvider(ContainerSupplier<T, C> containerSupplier) {
         this.up = containerSupplier.create(Direction.UP, __containers__);
         this.down = containerSupplier.create(Direction.DOWN, __containers__);
         this.north = containerSupplier.create(Direction.NORTH, __containers__);
@@ -77,7 +77,7 @@ public abstract class BaseProvider<T extends IHasIOStatus,C extends ICombinedCon
 
     @Override
     public @NotNull <I> LazyOptional<I> getCapability(@NotNull Capability<I> cap, @Nullable Direction side) {
-        if(side == null) return LazyOptional.empty();
+        if (side == null) return LazyOptional.empty();
         return switch (side) {
             case UP -> up.isActive() ? upLazy.cast() : LazyOptional.empty();
             case DOWN -> down.isActive() ? downLazy.cast() : LazyOptional.empty();
@@ -89,7 +89,7 @@ public abstract class BaseProvider<T extends IHasIOStatus,C extends ICombinedCon
     }
 
     public void addContainer(BaseContainer<T> container) {
-        if(locked) {
+        if (locked) {
             PolygonalTech.LOGGER.warn("Attempted to add a container while the provider is locked. This operation is not allowed.");
             return;
         }
@@ -110,7 +110,7 @@ public abstract class BaseProvider<T extends IHasIOStatus,C extends ICombinedCon
     }
 
     public void removeContainer(BaseContainer<T> container) {
-        if(locked) {
+        if (locked) {
             PolygonalTech.LOGGER.warn("Attempted to remove a container while the provider is locked. This operation is not allowed.");
             return;
         }
@@ -123,7 +123,7 @@ public abstract class BaseProvider<T extends IHasIOStatus,C extends ICombinedCon
 
         tag.putInt(CONTAINERS_SIZE_KEY, __containers__.size());
 
-        for(int i = 0; i < __containers__.size(); i++) {
+        for (int i = 0; i < __containers__.size(); i++) {
             BaseContainer<T> container = __containers__.get(i);
             tag.put(CONTAINER_KEY_PREFIX + i, container.serializeNBT());
         }
@@ -136,12 +136,12 @@ public abstract class BaseProvider<T extends IHasIOStatus,C extends ICombinedCon
         int size = nbt.getInt(CONTAINERS_SIZE_KEY);
 
         // コンテナの数がNBTに保存されている数と異なる場合、少ない方に合わせる
-        if(size != __containers__.size()) {
+        if (size != __containers__.size()) {
             PolygonalTech.LOGGER.error("Container size in NBT does not match the actual container size.");
             size = Math.min(size, __containers__.size());
         }
 
-        for(int i = 0; i < size; i++) {
+        for (int i = 0; i < size; i++) {
             CompoundTag containerTag = nbt.getCompound(CONTAINER_KEY_PREFIX + i);
             __containers__.get(i).deserializeNBT(containerTag);
         }
@@ -150,7 +150,13 @@ public abstract class BaseProvider<T extends IHasIOStatus,C extends ICombinedCon
     /// コンテナのリストを返す\
     /// 安全のため、{@link #lock()}によってロックされるまでは空のリストを返す
     public List<BaseContainer<T>> getContainers() {
-        return locked? __containers__:List.of();
+        return locked ? __containers__ : List.of();
+    }
+
+    /// インデックスに対応するコンテナを返す
+    /// 安全のため、{@link #lock()}によってロックされるまではnullを返す
+    public @Nullable BaseContainer<T> getContainer(int index) {
+        return locked ? __containers__.get(index) : null;
     }
 
     public boolean isLocked() {
@@ -164,7 +170,7 @@ public abstract class BaseProvider<T extends IHasIOStatus,C extends ICombinedCon
     }
 
     @FunctionalInterface
-    public interface ContainerSupplier<T extends IHasIOStatus,R> {
-        R create(Direction side,List<BaseContainer<T>> containers);
+    public interface ContainerSupplier<T extends IHasIOStatus, R> {
+        R create(Direction side, List<BaseContainer<T>> containers);
     }
 }

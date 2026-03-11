@@ -1,6 +1,7 @@
 package com.nanaios.polygonal_tech.block_entity.base;
 
 import com.nanaios.polygonal_tech.capability.PolygonalTechCapabilities;
+import com.nanaios.polygonal_tech.capability.base.BaseProvider;
 import com.nanaios.polygonal_tech.capability.interfaces.IItemSlot;
 import com.nanaios.polygonal_tech.capability.interfaces.ILongEnergyStorage;
 import com.nanaios.polygonal_tech.capability.interfaces.ILongFluidTank;
@@ -42,6 +43,19 @@ public abstract class BaseMachine<M extends BaseMachine<M>> extends BaseBlockEnt
 
     protected ContainerBuilder<IItemSlot> initItemContainer() {
         return new ContainerBuilder<>();
+    }
+
+    public int getProviderCount() {
+        return 3;
+    }
+
+    public BaseProvider<?,?> getProvider(int index) {
+        return switch (index) {
+            case 0 -> energyStorageProvider;
+            case 1 -> fluidTankProvider;
+            case 2 -> itemSlotProvider;
+            default -> null;
+        };
     }
 
     @Override

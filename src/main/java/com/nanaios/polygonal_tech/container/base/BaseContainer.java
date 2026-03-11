@@ -13,13 +13,13 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public abstract class BaseContainer<T extends IHasIOStatus> implements IContainer<T>, IHasIOStatus, IEventHandler {
     protected final T base;
     private final EnumMap<Direction, IIOMode> sideModes = new EnumMap<>(Direction.class);
     protected boolean active = false;
     protected Map<IEvent, List<Consumer<IEvent>>> listeners = new HashMap<>();
+    private boolean isMarkUpdate = false;
 
     public BaseContainer(T base) {
         this.base = base;
@@ -49,6 +49,14 @@ public abstract class BaseContainer<T extends IHasIOStatus> implements IContaine
     public void setSideMode(Direction side, @NotNull IIOMode ioMode) {
         sideModes.put(side, ioMode);
         updateActive();
+    }
+
+    public boolean isMarkUpdate() {
+        return isMarkUpdate;
+    }
+
+    public void setMarkUpdate(boolean mark) {
+        isMarkUpdate = mark;
     }
 
     @Override

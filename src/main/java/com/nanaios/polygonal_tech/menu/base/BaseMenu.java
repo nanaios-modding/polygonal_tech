@@ -1,6 +1,7 @@
 package com.nanaios.polygonal_tech.menu.base;
 
 import com.nanaios.polygonal_tech.block_entity.base.BaseGuiMachine;
+import com.nanaios.polygonal_tech.capability.base.BaseProvider;
 import com.nanaios.polygonal_tech.capability.interfaces.IItemSlot;
 import com.nanaios.polygonal_tech.capability.provider.ItemSlotProvider;
 import com.nanaios.polygonal_tech.container.base.BaseContainer;
@@ -48,16 +49,33 @@ public class BaseMenu<M extends BaseGuiMachine<M>> extends AbstractContainerMenu
 
         addPlayerInventory(inv);
         addPlayerHotbar(inv);
-
-
-
-        if(inventory.player.level().isClientSide) return;
-        ServerPlayer player = (ServerPlayer) inventory.player;
     }
 
     @Override
     public void broadcastChanges() {
         super.broadcastChanges();
+
+        // クライアント側での処理は不要
+        if(inventory.player.level().isClientSide) return;
+
+        M machine = getMachine();
+        if (machine == null) return;
+
+        // クライアントにNBTを送信
+        for(int i = 0;i < machine.getProviderCount();i++) {
+            BaseProvider<?,?> provider = machine.getProvider(i);
+            int containerIndex = 0;
+            for(BaseContainer<?> container : provider.getContainers()) {
+                if(container.isMarkUpdate()) {
+                    PolygonalTechNetwork.CHANNEL.send(
+                            PacketDistributor.PLAYER.with(() -> (ServerPlayer) inventory.player),
+                            new ContainerNBTSyncPacket(i,containerIndex, pos, container.serializeNBT())
+                    );
+                    container.setMarkUpdate(false);
+                }
+                containerIndex++;
+            }
+        }
     }
 
     @SuppressWarnings("unchecked")

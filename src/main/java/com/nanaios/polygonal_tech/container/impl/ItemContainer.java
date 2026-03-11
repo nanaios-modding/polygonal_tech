@@ -1,6 +1,5 @@
 package com.nanaios.polygonal_tech.container.impl;
 
-import com.nanaios.polygonal_tech.capability.impl.EmptyItemSlot;
 import com.nanaios.polygonal_tech.capability.impl.ItemSlot;
 import com.nanaios.polygonal_tech.capability.interfaces.IItemSlot;
 import com.nanaios.polygonal_tech.container.base.BaseContainer;
@@ -60,7 +59,6 @@ public class ItemContainer extends BaseContainer<IItemSlot> implements IItemSlot
     public int getY() {
         return 0;
     }
-
 
     @Override
     public CompoundTag serializeNBT() {
