@@ -4,6 +4,7 @@ import com.nanaios.polygonal_tech.PolygonalTech;
 import com.nanaios.polygonal_tech.capability.interfaces.IHasIOStatus;
 import com.nanaios.polygonal_tech.container.base.BaseContainer;
 import com.nanaios.polygonal_tech.container.interfaces.ICombinedContainer;
+import com.nanaios.polygonal_tech.util.impl.Events;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.capabilities.Capability;
@@ -93,6 +94,19 @@ public abstract class BaseProvider<T extends IHasIOStatus,C extends ICombinedCon
             return;
         }
         __containers__.add(container);
+
+        container.addListener(Events.CONTAINER_UPDATE, (event) -> updateActive());
+
+        updateActive();
+    }
+
+    public void updateActive() {
+        up.updateActive();
+        down.updateActive();
+        north.updateActive();
+        south.updateActive();
+        west.updateActive();
+        east.updateActive();
     }
 
     public void removeContainer(BaseContainer<T> container) {

@@ -14,4 +14,5 @@ public interface IContainer<T> extends INBTSerializable<CompoundTag> {
     @Nullable T getOutput(Direction side);
     T getBase();
     boolean isActive();
+    void updateActive();
 }

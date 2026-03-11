@@ -4,16 +4,22 @@ import com.nanaios.polygonal_tech.capability.interfaces.IHasIOStatus;
 import com.nanaios.polygonal_tech.container.impl.IOMode;
 import com.nanaios.polygonal_tech.container.interfaces.IContainer;
 import com.nanaios.polygonal_tech.container.interfaces.IIOMode;
+import com.nanaios.polygonal_tech.util.impl.Events;
+import com.nanaios.polygonal_tech.util.interfaces.IEvent;
+import com.nanaios.polygonal_tech.util.interfaces.IEventHandler;
 import net.minecraft.core.Direction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.EnumMap;
+import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
-public abstract class BaseContainer<T extends IHasIOStatus> implements IContainer<T> , IHasIOStatus {
+public abstract class BaseContainer<T extends IHasIOStatus> implements IContainer<T>, IHasIOStatus, IEventHandler {
     protected final T base;
     private final EnumMap<Direction, IIOMode> sideModes = new EnumMap<>(Direction.class);
     protected boolean active = false;
+    protected Map<IEvent, List<Consumer<IEvent>>> listeners = new HashMap<>();
 
     public BaseContainer(T base) {
         this.base = base;
@@ -72,12 +78,37 @@ public abstract class BaseContainer<T extends IHasIOStatus> implements IContaine
 
     /// Containerのアクティブ状態を更新する。少なくとも1つの面が入力または出力に設定されていればアクティブになる。
     public void updateActive() {
+        boolean before = active;
         for (Direction side : Direction.values()) {
             if (!sideModes.get(side).equals(IOMode.NONE)) {
                 active = true;
+                if(!before) triggerEvent(Events.CONTAINER_UPDATE);
                 return;
             }
         }
         active = false;
+        if(before) triggerEvent(Events.CONTAINER_UPDATE);
+    }
+
+    public  <E extends IEvent> void triggerEvent(E event) {
+        List<Consumer<IEvent>> eventListeners = listeners.get(event);
+        if (eventListeners != null) {
+            for (Consumer<IEvent> listener : eventListeners) {
+                listener.accept(event);
+            }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public <E extends IEvent> void addListener(E type, Consumer<E> listener) {
+        List<Consumer<IEvent>> eventListeners = listeners.getOrDefault(type, new ArrayList<>());
+        eventListeners.add((Consumer<IEvent>) listener);
+    }
+
+    public <E extends IEvent> void removeListener(E type, Consumer<E> listener) {
+        List<Consumer<IEvent>> eventListeners = listeners.get(type);
+        if (eventListeners != null) {
+            eventListeners.remove(listener);
+        }
     }
 }

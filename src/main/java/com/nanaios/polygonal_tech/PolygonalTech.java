@@ -1,10 +1,12 @@
 package com.nanaios.polygonal_tech;
 
 import com.mojang.logging.LogUtils;
+import com.nanaios.polygonal_tech.network.PolygonalTechNetwork;
 import com.nanaios.polygonal_tech.registries.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
 
@@ -22,6 +24,12 @@ public class PolygonalTech {
         PolygonalTechBlockEntityTypeRegister.BLOCK_ENTITIES.register(bus);
         PolygonalTechCreativeModeTabRegister.CREATIVE_TABS.register(bus);
         PolygonalTechMenuTypeRegister.MENU_TYPES.register(bus);
+
+        bus.addListener(this::commonSetup);
+    }
+
+    public void commonSetup(final FMLCommonSetupEvent event) {
+        event.enqueueWork(PolygonalTechNetwork::register);
     }
 
     public static ResourceLocation rl(String path) {

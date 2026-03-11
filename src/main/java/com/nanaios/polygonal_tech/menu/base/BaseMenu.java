@@ -4,7 +4,10 @@ import com.nanaios.polygonal_tech.block_entity.base.BaseGuiMachine;
 import com.nanaios.polygonal_tech.capability.interfaces.IItemSlot;
 import com.nanaios.polygonal_tech.capability.provider.ItemSlotProvider;
 import com.nanaios.polygonal_tech.container.base.BaseContainer;
+import com.nanaios.polygonal_tech.network.PolygonalTechNetwork;
+import com.nanaios.polygonal_tech.network.packet.ContainerNBTSyncPacket;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -13,6 +16,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
+import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
 public class BaseMenu<M extends BaseGuiMachine<M>> extends AbstractContainerMenu {
@@ -45,19 +49,15 @@ public class BaseMenu<M extends BaseGuiMachine<M>> extends AbstractContainerMenu
         addPlayerInventory(inv);
         addPlayerHotbar(inv);
 
-        if(!inv.player.level().isClientSide) {
-            machine.addOpenPlayer();
-        }
+
+
+        if(inventory.player.level().isClientSide) return;
+        ServerPlayer player = (ServerPlayer) inventory.player;
     }
 
     @Override
-    public void removed(Player player) {
-        super.removed(player);
-        if(!player.level().isClientSide) {
-            M machine = getMachine();
-            if (machine == null) return;
-            machine.removeOpenPlayer();
-        }
+    public void broadcastChanges() {
+        super.broadcastChanges();
     }
 
     @SuppressWarnings("unchecked")

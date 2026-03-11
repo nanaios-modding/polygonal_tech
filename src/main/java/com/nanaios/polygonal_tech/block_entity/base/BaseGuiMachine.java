@@ -20,7 +20,6 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class BaseGuiMachine<M extends BaseGuiMachine<M>> extends BaseMachine<M> implements MenuProvider {
     protected final NamedToken token;
-    protected int openPlayers = 0;
 
     public BaseGuiMachine(RegistryObject<BlockEntityType<M>> type, BlockPos pos, BlockState state) {
         super(type.get(), pos, state);
@@ -33,15 +32,6 @@ public abstract class BaseGuiMachine<M extends BaseGuiMachine<M>> extends BaseMa
     @SuppressWarnings("unchecked")
     public static <M extends BaseGuiMachine<M>> RegistryObject<BlockEntityType<?>> castType(RegistryObject<BlockEntityType<M>> type) {
         return ((RegistryObject<BlockEntityType<?>>) (Object) type);
-    }
-
-    public void addOpenPlayer() {
-        openPlayers++;
-    }
-
-    ///
-    public void removeOpenPlayer() {
-        openPlayers--;
     }
 
     @Override

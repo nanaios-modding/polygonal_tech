@@ -12,8 +12,10 @@ import java.util.List;
 public class CombinedContainer<T extends IHasIOStatus> implements ICombinedContainer<T> {
     protected final List<BaseContainer<T>> containers;
     protected final Direction side;
+    protected int activeInputContainerCount = 0;
+    protected int activeOutputContainerCount = 0;
 
-    public CombinedContainer(Direction side,List<BaseContainer<T>> containers) {
+    public CombinedContainer(Direction side, List<BaseContainer<T>> containers) {
         this.containers = containers;
         this.side = side;
     }
@@ -25,22 +27,26 @@ public class CombinedContainer<T extends IHasIOStatus> implements ICombinedConta
 
     @Override
     public boolean canInput(Direction side) {
-        for(BaseContainer<T> container : containers) {
-            if(container.canInput(side)) {
-                return true;
-            }
-        }
-        return false;
+        return activeInputContainerCount > 0;
     }
 
     @Override
     public boolean canOutput(Direction side) {
-        for(BaseContainer<T> container : containers) {
-            if(container.canOutput(side)) {
-                return true;
+        return activeOutputContainerCount > 0;
+    }
+
+    public void updateActive() {
+        int input = 0, output = 0;
+        for (BaseContainer<T> container : containers) {
+            if (container.canInput(side)) {
+                input++;
+            }
+            if (container.canOutput(side)) {
+                output++;
             }
         }
-        return false;
+        activeInputContainerCount = input;
+        activeOutputContainerCount = output;
     }
 
     @Override
@@ -65,8 +71,8 @@ public class CombinedContainer<T extends IHasIOStatus> implements ICombinedConta
 
     @Override
     public boolean isActive() {
-        for(BaseContainer<T> container : containers) {
-            if(container.isActive()) {
+        for (BaseContainer<T> container : containers) {
+            if (container.isActive()) {
                 return true;
             }
         }
