@@ -1,4 +1,4 @@
-package com.nanaios.polygonal_tech.capability.impl;
+package com.nanaios.polygonal_tech.capability;
 
 import com.nanaios.polygonal_tech.capability.interfaces.ILongEnergyStorage;
 

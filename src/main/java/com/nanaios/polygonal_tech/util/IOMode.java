@@ -1,6 +1,6 @@
-package com.nanaios.polygonal_tech.container.impl;
+package com.nanaios.polygonal_tech.util;
 
-import com.nanaios.polygonal_tech.container.interfaces.IIOMode;
+import com.nanaios.polygonal_tech.util.interfaces.IIOMode;
 
 public class IOMode {
     public static final IIOMode INPUT = new Impl("input");

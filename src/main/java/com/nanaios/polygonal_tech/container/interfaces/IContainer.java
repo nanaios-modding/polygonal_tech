@@ -1,5 +1,6 @@
 package com.nanaios.polygonal_tech.container.interfaces;
 
+import com.nanaios.polygonal_tech.util.interfaces.IIOMode;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.util.INBTSerializable;

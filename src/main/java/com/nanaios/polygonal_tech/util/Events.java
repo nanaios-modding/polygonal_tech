@@ -1,4 +1,4 @@
-package com.nanaios.polygonal_tech.util.impl;
+package com.nanaios.polygonal_tech.util;
 
 import com.nanaios.polygonal_tech.PolygonalTech;
 import com.nanaios.polygonal_tech.util.interfaces.IEvent;

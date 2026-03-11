@@ -1,8 +1,7 @@
-package com.nanaios.polygonal_tech.container.impl;
+package com.nanaios.polygonal_tech.container;
 
-import com.nanaios.polygonal_tech.capability.impl.EmptyLongEnergyStorage;
 import com.nanaios.polygonal_tech.container.base.BaseContainer;
-import com.nanaios.polygonal_tech.capability.impl.LongEnergyStorage;
+import com.nanaios.polygonal_tech.capability.LongEnergyStorage;
 import com.nanaios.polygonal_tech.capability.interfaces.ILongEnergyStorage;
 import net.minecraft.nbt.CompoundTag;
 

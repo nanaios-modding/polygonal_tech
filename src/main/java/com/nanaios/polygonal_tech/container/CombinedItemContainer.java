@@ -1,4 +1,4 @@
-package com.nanaios.polygonal_tech.container.impl;
+package com.nanaios.polygonal_tech.container;
 
 import com.nanaios.polygonal_tech.capability.interfaces.IItemSlot;
 import com.nanaios.polygonal_tech.container.base.BaseContainer;

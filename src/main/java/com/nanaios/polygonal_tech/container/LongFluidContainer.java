@@ -1,6 +1,6 @@
-package com.nanaios.polygonal_tech.container.impl;
+package com.nanaios.polygonal_tech.container;
 
-import com.nanaios.polygonal_tech.capability.impl.LongFluidTank;
+import com.nanaios.polygonal_tech.capability.LongFluidTank;
 import com.nanaios.polygonal_tech.capability.interfaces.ILongFluidTank;
 import com.nanaios.polygonal_tech.container.base.BaseContainer;
 import com.nanaios.polygonal_tech.fluids.base.LongFluidStack;

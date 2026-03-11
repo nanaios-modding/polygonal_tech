@@ -1,8 +1,7 @@
 package com.nanaios.polygonal_tech.util;
 
 import com.nanaios.polygonal_tech.container.base.BaseContainer;
-import com.nanaios.polygonal_tech.container.impl.IOMode;
-import com.nanaios.polygonal_tech.container.interfaces.IIOMode;
+import com.nanaios.polygonal_tech.util.interfaces.IIOMode;
 import net.minecraft.core.Direction;
 
 import java.util.EnumMap;

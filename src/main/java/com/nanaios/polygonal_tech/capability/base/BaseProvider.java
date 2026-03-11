@@ -4,7 +4,7 @@ import com.nanaios.polygonal_tech.PolygonalTech;
 import com.nanaios.polygonal_tech.capability.interfaces.IHasIOStatus;
 import com.nanaios.polygonal_tech.container.base.BaseContainer;
 import com.nanaios.polygonal_tech.container.interfaces.ICombinedContainer;
-import com.nanaios.polygonal_tech.util.impl.Events;
+import com.nanaios.polygonal_tech.util.Events;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.capabilities.Capability;

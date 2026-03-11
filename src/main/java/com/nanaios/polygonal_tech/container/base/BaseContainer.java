@@ -1,10 +1,10 @@
 package com.nanaios.polygonal_tech.container.base;
 
 import com.nanaios.polygonal_tech.capability.interfaces.IHasIOStatus;
-import com.nanaios.polygonal_tech.container.impl.IOMode;
+import com.nanaios.polygonal_tech.util.IOMode;
 import com.nanaios.polygonal_tech.container.interfaces.IContainer;
-import com.nanaios.polygonal_tech.container.interfaces.IIOMode;
-import com.nanaios.polygonal_tech.util.impl.Events;
+import com.nanaios.polygonal_tech.util.interfaces.IIOMode;
+import com.nanaios.polygonal_tech.util.Events;
 import com.nanaios.polygonal_tech.util.interfaces.IEvent;
 import com.nanaios.polygonal_tech.util.interfaces.IEventHandler;
 import com.nanaios.polygonal_tech.util.interfaces.IUpdatable;
