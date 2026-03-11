@@ -3,6 +3,7 @@ package com.nanaios.polygonal_tech.container.base;
 import com.nanaios.polygonal_tech.capability.interfaces.IHasIOStatus;
 import com.nanaios.polygonal_tech.container.interfaces.ICombinedContainer;
 import com.nanaios.polygonal_tech.container.interfaces.IIOMode;
+import com.nanaios.polygonal_tech.util.interfaces.IUpdatable;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import org.jetbrains.annotations.NotNull;

@@ -125,6 +125,7 @@ public abstract class BaseProvider<T extends IHasIOStatus, C extends ICombinedCo
 
         for (int i = 0; i < __containers__.size(); i++) {
             BaseContainer<T> container = __containers__.get(i);
+            PolygonalTech.LOGGER.info("Serializing container {}: {}", i, container);
             tag.put(CONTAINER_KEY_PREFIX + i, container.serializeNBT());
         }
 
@@ -143,6 +144,7 @@ public abstract class BaseProvider<T extends IHasIOStatus, C extends ICombinedCo
 
         for (int i = 0; i < size; i++) {
             CompoundTag containerTag = nbt.getCompound(CONTAINER_KEY_PREFIX + i);
+            PolygonalTech.LOGGER.debug("Deserializing container {}: {}", i, containerTag);
             __containers__.get(i).deserializeNBT(containerTag);
         }
     }

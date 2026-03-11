@@ -1,5 +1,6 @@
 package com.nanaios.polygonal_tech.container.impl;
 
+import com.nanaios.polygonal_tech.PolygonalTech;
 import com.nanaios.polygonal_tech.capability.impl.ItemSlot;
 import com.nanaios.polygonal_tech.capability.interfaces.IItemSlot;
 import com.nanaios.polygonal_tech.container.base.BaseContainer;
@@ -63,14 +64,18 @@ public class ItemContainer extends BaseContainer<IItemSlot> implements IItemSlot
     @Override
     public CompoundTag serializeNBT() {
         CompoundTag nbt = new CompoundTag();
-        nbt.put(STORED_ITEM_KEY, base.getStack().save(new CompoundTag()));
+        nbt.put(STORED_ITEM_KEY, base.getStack().serializeNBT());
+        PolygonalTech.LOGGER.debug("Serialized ItemContainer with item: {}", base.getStack());
+        PolygonalTech.LOGGER.debug("NBT data: {}", nbt);
         return nbt;
     }
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
         if (nbt.contains(STORED_ITEM_KEY)) {
-            ItemStack stack = ItemStack.of(nbt.getCompound(STORED_ITEM_KEY));
+            CompoundTag itemTag = nbt.getCompound(STORED_ITEM_KEY);
+            PolygonalTech.LOGGER.debug("Deserializing ItemContainer with item tag: {}", itemTag);
+            ItemStack stack = ItemStack.of(itemTag);
             base.setStack(stack);
         }
     }

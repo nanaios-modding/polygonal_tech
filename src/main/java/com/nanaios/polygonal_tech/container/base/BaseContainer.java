@@ -7,6 +7,7 @@ import com.nanaios.polygonal_tech.container.interfaces.IIOMode;
 import com.nanaios.polygonal_tech.util.impl.Events;
 import com.nanaios.polygonal_tech.util.interfaces.IEvent;
 import com.nanaios.polygonal_tech.util.interfaces.IEventHandler;
+import com.nanaios.polygonal_tech.util.interfaces.IUpdatable;
 import net.minecraft.core.Direction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -14,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
 
-public abstract class BaseContainer<T extends IHasIOStatus> implements IContainer<T>, IHasIOStatus, IEventHandler {
+public abstract class BaseContainer<T extends IHasIOStatus> implements IContainer<T>, IHasIOStatus, IEventHandler, IUpdatable {
     protected final T base;
     private final EnumMap<Direction, IIOMode> sideModes = new EnumMap<>(Direction.class);
     protected boolean active = false;
@@ -90,15 +91,15 @@ public abstract class BaseContainer<T extends IHasIOStatus> implements IContaine
         for (Direction side : Direction.values()) {
             if (!sideModes.get(side).equals(IOMode.NONE)) {
                 active = true;
-                if(!before) triggerEvent(Events.CONTAINER_UPDATE);
+                if (!before) triggerEvent(Events.CONTAINER_UPDATE);
                 return;
             }
         }
         active = false;
-        if(before) triggerEvent(Events.CONTAINER_UPDATE);
+        if (before) triggerEvent(Events.CONTAINER_UPDATE);
     }
 
-    public  <E extends IEvent> void triggerEvent(E event) {
+    public <E extends IEvent> void triggerEvent(E event) {
         List<Consumer<IEvent>> eventListeners = listeners.get(event);
         if (eventListeners != null) {
             for (Consumer<IEvent> listener : eventListeners) {

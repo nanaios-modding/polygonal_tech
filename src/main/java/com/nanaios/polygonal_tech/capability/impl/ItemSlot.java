@@ -1,5 +1,6 @@
 package com.nanaios.polygonal_tech.capability.impl;
 
+import com.nanaios.polygonal_tech.PolygonalTech;
 import com.nanaios.polygonal_tech.capability.interfaces.IItemSlot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -30,6 +31,7 @@ public class ItemSlot implements IItemSlot {
 
     @Override
     public void setStack(@NotNull ItemStack stack) {
+        PolygonalTech.LOGGER.debug("now stack: {}, inserting stack: {}", this.stack, stack);
         if (isItemValid(stack)) {
             this.stack = stack;
         }
@@ -55,6 +57,7 @@ public class ItemSlot implements IItemSlot {
             remainder.shrink(toInsert);
             return remainder;
         }
+
         return stack;
     }
 

@@ -33,8 +33,6 @@ public class BaseMenu<M extends BaseGuiMachine<M>> extends AbstractContainerMenu
         this.pos = pos;
         this.access = ContainerLevelAccess.create(inv.player.level(), pos);
 
-        broadcastChanges();
-
         M machine = getMachine();
         if (machine == null) return;
 
