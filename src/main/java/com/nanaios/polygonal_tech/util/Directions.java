@@ -1,6 +1,5 @@
 package com.nanaios.polygonal_tech.util;
 
-import com.nanaios.polygonal_tech.container.base.BaseContainer;
 import com.nanaios.polygonal_tech.util.interfaces.IIOMode;
 import net.minecraft.core.Direction;
 
@@ -30,11 +29,5 @@ public class Directions {
 
     public IIOMode getMode(Direction direction) {
         return sideModes.getOrDefault(direction, IOMode.NONE);
-    }
-
-    public void applyToContainer(BaseContainer<?> container) {
-        for(Direction direction : Direction.values()) {
-            container.setSideMode(direction, getMode(direction));
-        }
     }
 }

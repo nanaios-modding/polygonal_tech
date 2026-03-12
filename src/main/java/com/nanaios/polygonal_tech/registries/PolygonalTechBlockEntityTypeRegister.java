@@ -1,8 +1,8 @@
 package com.nanaios.polygonal_tech.registries;
 
 import com.nanaios.polygonal_tech.block_entity.PhotolysisMachineMk1;
-import com.nanaios.polygonal_tech.registries.impl.MultipleBlockEntityTypeRegister;
-import com.nanaios.polygonal_tech.registries.impl.DeferredBlockEntityTypeRegister;
+import com.nanaios.polygonal_tech.registration.impl.MultipleBlockEntityTypeRegister;
+import com.nanaios.polygonal_tech.registration.impl.DeferredBlockEntityTypeRegister;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.registries.RegistryObject;
 

@@ -2,8 +2,8 @@ package com.nanaios.polygonal_tech.registries;
 
 import com.nanaios.polygonal_tech.block_entity.PhotolysisMachineMk1;
 import com.nanaios.polygonal_tech.menu.base.BaseMenu;
-import com.nanaios.polygonal_tech.registries.impl.DeferredMenuTypeRegister;
-import com.nanaios.polygonal_tech.registries.impl.MultipleMenuTypeRegister;
+import com.nanaios.polygonal_tech.registration.impl.DeferredMenuTypeRegister;
+import com.nanaios.polygonal_tech.registration.impl.MultipleMenuTypeRegister;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.registries.RegistryObject;
 

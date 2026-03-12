@@ -1,10 +1,7 @@
-package com.nanaios.polygonal_tech.registries.impl;
+package com.nanaios.polygonal_tech.registration.impl;
 
-import com.nanaios.polygonal_tech.registries.base.MultipleRegister;
-import net.minecraft.world.item.Item;
+import com.nanaios.polygonal_tech.registration.base.MultipleRegister;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class MultipleBlockRegister extends MultipleRegister<Block> {

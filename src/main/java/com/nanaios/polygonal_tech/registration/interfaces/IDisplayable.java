@@ -1,4 +1,4 @@
-package com.nanaios.polygonal_tech.registries.interfaces;
+package com.nanaios.polygonal_tech.registration.interfaces;
 
 import net.minecraft.world.item.CreativeModeTab;
 

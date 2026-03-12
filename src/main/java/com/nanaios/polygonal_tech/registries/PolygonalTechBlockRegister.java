@@ -1,7 +1,7 @@
 package com.nanaios.polygonal_tech.registries;
 
-import com.nanaios.polygonal_tech.registries.impl.DeferredBlockRegister;
-import com.nanaios.polygonal_tech.registries.impl.MultipleBlockRegister;
+import com.nanaios.polygonal_tech.registration.impl.DeferredBlockRegister;
+import com.nanaios.polygonal_tech.registration.impl.MultipleBlockRegister;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.registries.RegistryObject;
 

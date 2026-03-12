@@ -1,6 +1,6 @@
-package com.nanaios.polygonal_tech.registries.impl;
+package com.nanaios.polygonal_tech.registration.impl;
 
-import com.nanaios.polygonal_tech.registries.base.WrapperDeferredRegister;
+import com.nanaios.polygonal_tech.registration.base.WrapperDeferredRegister;
 import com.nanaios.polygonal_tech.util.NamedToken;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraftforge.registries.DeferredRegister;

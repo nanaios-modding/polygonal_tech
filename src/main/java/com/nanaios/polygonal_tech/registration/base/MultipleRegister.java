@@ -1,13 +1,11 @@
-package com.nanaios.polygonal_tech.registries.base;
+package com.nanaios.polygonal_tech.registration.base;
 
 import com.nanaios.polygonal_tech.PolygonalTech;
-import com.nanaios.polygonal_tech.util.NamedToken;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.RegistryObject;
 
 import java.util.ArrayList;
 import java.util.List;

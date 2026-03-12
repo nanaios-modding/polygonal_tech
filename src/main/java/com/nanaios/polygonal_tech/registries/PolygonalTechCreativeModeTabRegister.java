@@ -1,11 +1,8 @@
 package com.nanaios.polygonal_tech.registries;
 
 import com.nanaios.polygonal_tech.PolygonalTechLang;
-import com.nanaios.polygonal_tech.registries.base.MultipleRegister;
-import com.nanaios.polygonal_tech.registries.base.WrapperDeferredRegister;
-import com.nanaios.polygonal_tech.registries.impl.DeferredCreativeModeTabRegister;
-import com.nanaios.polygonal_tech.registries.impl.MultipleCreativeModeTabRegister;
-import net.minecraft.core.registries.Registries;
+import com.nanaios.polygonal_tech.registration.impl.DeferredCreativeModeTabRegister;
+import com.nanaios.polygonal_tech.registration.impl.MultipleCreativeModeTabRegister;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 

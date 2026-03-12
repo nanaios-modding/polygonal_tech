@@ -1,11 +1,10 @@
-package com.nanaios.polygonal_tech.registries.base;
+package com.nanaios.polygonal_tech.registration.base;
 
 import com.nanaios.polygonal_tech.util.NamedToken;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 
 public class WrapperDeferredRegister<T> {

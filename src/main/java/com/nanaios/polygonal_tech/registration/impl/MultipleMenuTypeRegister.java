@@ -1,6 +1,6 @@
-package com.nanaios.polygonal_tech.registries.impl;
+package com.nanaios.polygonal_tech.registration.impl;
 
-import com.nanaios.polygonal_tech.registries.base.MultipleRegister;
+import com.nanaios.polygonal_tech.registration.base.MultipleRegister;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.registries.ForgeRegistries;
 

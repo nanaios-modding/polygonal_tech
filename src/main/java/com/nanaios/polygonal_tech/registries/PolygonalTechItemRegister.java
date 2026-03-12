@@ -1,8 +1,8 @@
 package com.nanaios.polygonal_tech.registries;
 
 import com.nanaios.polygonal_tech.item.ElementItem;
-import com.nanaios.polygonal_tech.registries.impl.DeferredItemRegister;
-import com.nanaios.polygonal_tech.registries.impl.MultipleItemRegister;
+import com.nanaios.polygonal_tech.registration.impl.DeferredItemRegister;
+import com.nanaios.polygonal_tech.registration.impl.MultipleItemRegister;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.RegistryObject;
 
