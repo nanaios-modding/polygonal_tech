@@ -1,29 +1,19 @@
-package com.nanaios.polygonal_tech.capability;
+package com.nanaios.polygonal_tech.capability.energy;
 
 import com.nanaios.polygonal_tech.capability.base.BaseCapability;
 import com.nanaios.polygonal_tech.capability.interfaces.ILongEnergyStorage;
 import com.nanaios.polygonal_tech.event.CapabilityUpdateEvent;
 import com.nanaios.polygonal_tech.event.PolygonalTechEventType;
-import com.nanaios.polygonal_tech.util.interfaces.IEvent;
-import com.nanaios.polygonal_tech.util.interfaces.IEventType;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.BooleanSupplier;
-import java.util.function.Consumer;
 import java.util.function.LongSupplier;
 
 public class LongEnergyStorage extends BaseCapability implements ILongEnergyStorage {
     private final LongSupplier capacity;
-    private final BooleanSupplier canReceive;
-    private final BooleanSupplier canExtract;
     private long energy;
 
-    public LongEnergyStorage(LongSupplier capacity, BooleanSupplier canReceive, BooleanSupplier canExtract) {
-        super(canReceive.getAsBoolean(), canExtract.getAsBoolean());
+    public LongEnergyStorage(boolean arrowInput, boolean arrowOutput, LongSupplier capacity) {
+        super(arrowInput, arrowOutput);
         this.capacity = capacity;
-        this.canReceive = canReceive;
-        this.canExtract = canExtract;
     }
 
     @Override
@@ -62,11 +52,11 @@ public class LongEnergyStorage extends BaseCapability implements ILongEnergyStor
 
     @Override
     public boolean canExtract() {
-        return canExtract.getAsBoolean();
+        return arrowOutput;
     }
 
     @Override
     public boolean canReceive() {
-        return canReceive.getAsBoolean();
+        return arrowInput;
     }
 }

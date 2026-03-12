@@ -1,9 +1,13 @@
-package com.nanaios.polygonal_tech.capability;
+package com.nanaios.polygonal_tech.capability.item;
 
 import com.nanaios.polygonal_tech.capability.interfaces.IItemSlot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+/// IItemSlotの空実装。常に空のアイテムスタックを返し、アイテムの挿入や抽出を受け付けません。
+/// ifPresentのデフォルト値として使用できます。
+/// 例えば、アイテムスロットが存在しない場合にこのクラスのインスタンスを返すことで、呼び出し側はnullチェックをせずに安全にアイテムスロットを操作できます。
+/// このクラスはシングルトンパターンで実装されており、INSTANCEフィールドを通じて唯一のインスタンスにアクセスできます。
 public class EmptyItemSlot implements IItemSlot {
     public static IItemSlot INSTANCE = new EmptyItemSlot();
 

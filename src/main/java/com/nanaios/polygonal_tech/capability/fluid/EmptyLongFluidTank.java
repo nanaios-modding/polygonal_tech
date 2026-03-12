@@ -1,4 +1,4 @@
-package com.nanaios.polygonal_tech.capability;
+package com.nanaios.polygonal_tech.capability.fluid;
 
 import com.nanaios.polygonal_tech.capability.interfaces.ILongFluidTank;
 import com.nanaios.polygonal_tech.fluids.base.LongFluidStack;
@@ -6,6 +6,10 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import org.jetbrains.annotations.NotNull;
 
+/// ILongFluidTankの空実装。常に空の流体スタックを返し、流体の挿入や抽出を受け付けません。
+/// ifPresentのデフォルト値として使用できます。
+/// 例えば、流体タンクが存在しない場合にこのクラスのインスタンスを返すことで、呼び出し側はnullチェックをせずに安全に流体タンクを操作できます。
+/// このクラスはシングルトンパターンで実装されており、INSTANCEフィールドを通じて唯一のインスタンスにアクセスできます。
 public class EmptyLongFluidTank implements ILongFluidTank {
     public static final EmptyLongFluidTank INSTANCE = new EmptyLongFluidTank();
 

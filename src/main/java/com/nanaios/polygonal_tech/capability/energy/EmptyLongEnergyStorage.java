@@ -1,13 +1,11 @@
-package com.nanaios.polygonal_tech.capability;
+package com.nanaios.polygonal_tech.capability.energy;
 
 import com.nanaios.polygonal_tech.capability.interfaces.ILongEnergyStorage;
-import com.nanaios.polygonal_tech.util.interfaces.IEvent;
-import com.nanaios.polygonal_tech.util.interfaces.IEventType;
 
-import java.util.function.Consumer;
-
-/// 空のEnergyStorage。nullチェックを回避するために使用される。
-/// 常に0を返し、エネルギーの受け取りや抽出を行わない。
+/// ILongEnergyStorageの空実装。常に0を返し、エネルギーの挿入や抽出を受け付けません。
+/// ifPresentのデフォルト値として使用できます。
+/// 例えば、エネルギー貯蔵が存在しない場合にこのクラスのインスタンスを返すことで、呼び出し側はnullチェックをせずに安全にエネルギー貯蔵を操作できます。
+/// このクラスはシングルトンパターンで実装されており、INSTANCEフィールドを通じて唯一のインスタンスにアクセスできます。
 public class EmptyLongEnergyStorage implements ILongEnergyStorage {
     public static final EmptyLongEnergyStorage INSTANCE = new EmptyLongEnergyStorage();
 

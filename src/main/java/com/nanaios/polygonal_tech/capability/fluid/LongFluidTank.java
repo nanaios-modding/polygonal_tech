@@ -1,4 +1,4 @@
-package com.nanaios.polygonal_tech.capability;
+package com.nanaios.polygonal_tech.capability.fluid;
 
 import com.nanaios.polygonal_tech.capability.base.BaseCapability;
 import com.nanaios.polygonal_tech.capability.interfaces.ILongFluidTank;

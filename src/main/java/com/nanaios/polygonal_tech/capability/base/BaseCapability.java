@@ -1,8 +1,6 @@
 package com.nanaios.polygonal_tech.capability.base;
 
-import com.nanaios.polygonal_tech.capability.ItemSlot;
 import com.nanaios.polygonal_tech.capability.interfaces.ICapability;
-import com.nanaios.polygonal_tech.capability.interfaces.IItemSlot;
 import com.nanaios.polygonal_tech.event.CapabilityUpdateEvent;
 import com.nanaios.polygonal_tech.event.PolygonalTechEventType;
 import com.nanaios.polygonal_tech.util.IOMode;
@@ -16,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+/// ICapabilityの基本実装。入出力の管理とイベントリスナーの管理を提供します。
+/// このクラスは、特定の機能を持つCapabilityの基底クラスとして使用されることを想定しています。
 public abstract class BaseCapability implements ICapability {
     protected final List<Consumer<CapabilityUpdateEvent>> listeners = new ArrayList<>();
     protected IOMode[] ioModes = {IOMode.NONE, IOMode.NONE, IOMode.NONE, IOMode.NONE, IOMode.NONE, IOMode.NONE};

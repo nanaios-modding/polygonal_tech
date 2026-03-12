@@ -11,12 +11,12 @@ public interface ICapability extends IEventTarget {
     /// このCapabilityが入力可能かどうか
     /// @param side 入力方向。nullの場合は入力が可能な任意の方向を意味する
     default boolean canInput(@Nullable Direction side) {
-        return true;
+        return false;
     };
     /// このCapabilityが出力可能かどうか]
     /// @param side 出力方向。nullの場合は出力が可能な任意の方向を意味する
     default boolean canOutput(@Nullable Direction side) {
-        return true;
+        return false;
     };
 
     /// 指定された方向のIOModeを設定する。
