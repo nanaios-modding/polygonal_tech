@@ -41,7 +41,7 @@ public class BaseMenu<M extends BaseGuiMachine<M>> extends AbstractContainerMenu
         machineSlots = slotProvider.getContainers().size();
         for (BaseContainer<IItemSlot> itemSlot : slotProvider.getContainers()) {
             IItemSlot base = itemSlot.getBase();
-            addSlot(new SlotItemHandler(base, i, base.getX(), base.getY()));
+            addSlot(new SlotItemHandler(base, i, base.getMenuX(), base.getMenuY()));
             i++;
         }
 
