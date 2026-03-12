@@ -1,6 +1,5 @@
 package com.nanaios.polygonal_tech.network.packet;
 
-import com.nanaios.polygonal_tech.PolygonalTech;
 import com.nanaios.polygonal_tech.block_entity.base.BaseMachine;
 import com.nanaios.polygonal_tech.container.base.BaseContainer;
 import com.nanaios.polygonal_tech.network.base.BasePacket;

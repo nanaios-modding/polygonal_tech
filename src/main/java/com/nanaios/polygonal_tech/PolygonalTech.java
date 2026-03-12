@@ -12,26 +12,30 @@ import org.slf4j.Logger;
 
 @Mod(PolygonalTech.MODID)
 public class PolygonalTech {
-
     public static final String MODID = "polygonal_tech";
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public PolygonalTech(FMLJavaModLoadingContext context) {
         IEventBus bus = context.getModEventBus();
 
+        // アイテムやブロックなどの登録
         PolygonalTechItemRegister.ITEMS.register(bus);
         PolygonalTechBlockRegister.BLOCKS.register(bus);
         PolygonalTechBlockEntityTypeRegister.BLOCK_ENTITIES.register(bus);
         PolygonalTechCreativeModeTabRegister.CREATIVE_TABS.register(bus);
         PolygonalTechMenuTypeRegister.MENU_TYPES.register(bus);
 
+        // commonSetupを登録
         bus.addListener(this::commonSetup);
     }
 
     public void commonSetup(final FMLCommonSetupEvent event) {
+        // ネットワーク・パケットの初期化
         event.enqueueWork(PolygonalTechNetwork::register);
     }
 
+    /// {@link ResourceLocation}を{@link PolygonalTech#MODID}付きで生成する
+    /// @param path ResourceLocationのパス
     public static ResourceLocation rl(String path) {
         return ResourceLocation.fromNamespaceAndPath(MODID, path);
     }
