@@ -4,7 +4,7 @@ import com.nanaios.polygonal_tech.util.MathUtil;
 import net.minecraftforge.energy.IEnergyStorage;
 
 /// long型のエネルギー量を扱うためのインターフェース
-public interface ILongEnergyStorage extends IEnergyStorage {
+public interface ILongEnergyStorage extends IEnergyStorage,ICapability {
     /// 現在のエネルギー量をlong型で取得します。
     long getLongEnergyStored();
 

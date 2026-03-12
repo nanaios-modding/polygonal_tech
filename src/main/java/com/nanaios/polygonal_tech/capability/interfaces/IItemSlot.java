@@ -5,7 +5,7 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.NotNull;
 
 /// 単一のItemStackスロットを表すインターフェース
-public interface IItemSlot extends IItemHandlerModifiable {
+public interface IItemSlot extends IItemHandlerModifiable ,ICapability{
     /// ItemStackを取得するメソッド
     /// @return スロットにあるItemStack。スロットが空の場合はItemStack.EMPTYを返す。
     @NotNull

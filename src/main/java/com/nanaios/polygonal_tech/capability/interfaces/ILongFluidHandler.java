@@ -6,7 +6,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.NotNull;
 
-/// Long型の流体量を扱うためのインターフェース
+/// long型の流体量を扱うためのインターフェース
 public interface ILongFluidHandler extends IFluidHandler {
     /// タンク内の流体をLongFluidStackで取得します。
     ///
