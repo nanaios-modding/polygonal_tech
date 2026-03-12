@@ -2,6 +2,7 @@ package com.nanaios.polygonal_tech.capability.base;
 
 import com.nanaios.polygonal_tech.capability.interfaces.ICapability;
 import com.nanaios.polygonal_tech.event.CapabilityUpdateEvent;
+import com.nanaios.polygonal_tech.event.IOModeUpdateEvent;
 import com.nanaios.polygonal_tech.event.PolygonalTechEventType;
 import com.nanaios.polygonal_tech.util.IOMode;
 import com.nanaios.polygonal_tech.util.interfaces.IEvent;
@@ -17,7 +18,8 @@ import java.util.function.Consumer;
 /// ICapabilityの基本実装。入出力の管理とイベントリスナーの管理を提供します。
 /// このクラスは、特定の機能を持つCapabilityの基底クラスとして使用されることを想定しています。
 public abstract class BaseCapability implements ICapability {
-    protected final List<Consumer<CapabilityUpdateEvent>> listeners = new ArrayList<>();
+    protected final List<Consumer<CapabilityUpdateEvent>> capabilityUpdateEventListener = new ArrayList<>();
+    protected final List<Consumer<IOModeUpdateEvent>> ioModeUpdateEventListener = new ArrayList<>();
     protected IOMode[] ioModes = {IOMode.NONE, IOMode.NONE, IOMode.NONE, IOMode.NONE, IOMode.NONE, IOMode.NONE};
     protected boolean arrowInput;
     protected boolean arrowOutput;
@@ -43,7 +45,12 @@ public abstract class BaseCapability implements ICapability {
 
     @Override
     public void setIOMode(@NotNull Direction side, IOMode mode) {
+        IOMode oldMode = ioModes[side.ordinal()];
         ioModes[side.ordinal()] = mode;
+        if(oldMode != mode) {
+            // IOModeが変更された場合、IOModeUpdateEventをトリガーします。
+            triggerEvent(PolygonalTechEventType.IO_MODE_UPDATE, new IOModeUpdateEvent(side));
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -51,7 +58,10 @@ public abstract class BaseCapability implements ICapability {
     public <E extends IEvent> boolean addListener(IEventType<E> type, Consumer<E> listener) {
         if (type == PolygonalTechEventType.CAPABILITY_UPDATE) {
             // この時点でEはCapabilityUpdateEventであることが保証されているため、キャストしてリストに追加します。
-            return listeners.add((Consumer<CapabilityUpdateEvent>) listener);
+            return capabilityUpdateEventListener.add((Consumer<CapabilityUpdateEvent>) listener);
+        } else if (type == PolygonalTechEventType.IO_MODE_UPDATE) {
+            // この時点でEはIOModeUpdateEventであることが保証されているため、キャストしてリストに追加します。
+            return ioModeUpdateEventListener.add((Consumer<IOModeUpdateEvent>) listener);
         }
         return false;
     }
@@ -60,7 +70,10 @@ public abstract class BaseCapability implements ICapability {
     public <E extends IEvent> boolean removeListener(IEventType<E> type, Consumer<E> listener) {
         if (type == PolygonalTechEventType.CAPABILITY_UPDATE) {
             // この時点でEはCapabilityUpdateEventであることが保証されているため、キャストしてリストに追加します。
-            return listeners.remove(listener);
+            return capabilityUpdateEventListener.remove(listener);
+        } else if (type == PolygonalTechEventType.IO_MODE_UPDATE) {
+            // この時点でEはIOModeUpdateEventであることが保証されているため、キャストしてリストに追加します。
+            return ioModeUpdateEventListener.remove(listener);
         }
         return false;
     }
@@ -69,8 +82,13 @@ public abstract class BaseCapability implements ICapability {
     public <E extends IEvent> void triggerEvent(IEventType<E> type, E event) {
         if (type == PolygonalTechEventType.CAPABILITY_UPDATE) {
             // この時点でEはCapabilityUpdateEventであることが保証されているため、キャストしてリストのリスナーにイベントを通知します。
-            for (Consumer<CapabilityUpdateEvent> listener : listeners) {
+            for (Consumer<CapabilityUpdateEvent> listener : capabilityUpdateEventListener) {
                 listener.accept((CapabilityUpdateEvent) event);
+            }
+        } else if (type == PolygonalTechEventType.IO_MODE_UPDATE) {
+            // この時点でEはIOModeUpdateEventであることが保証されているため、キャストしてリストのリスナーにイベントを通知します。
+            for (Consumer<IOModeUpdateEvent> listener : ioModeUpdateEventListener) {
+                listener.accept((IOModeUpdateEvent) event);
             }
         }
     }

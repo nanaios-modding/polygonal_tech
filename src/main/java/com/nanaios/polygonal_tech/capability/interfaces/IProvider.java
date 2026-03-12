@@ -1,4 +1,8 @@
 package com.nanaios.polygonal_tech.capability.interfaces;
 
-public interface IProvider<C> {
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+
+public interface IProvider<C extends ICapability> extends ICapabilityProvider {
+    void addCapability(C capability);
+    void removeCapability(C capability);
 }
