@@ -1,17 +1,25 @@
 package com.nanaios.polygonal_tech.util;
 
-import com.nanaios.polygonal_tech.util.interfaces.IIOMode;
+public enum IOMode {
+    INPUT("input"), OUTPUT("output"), INPUT_OUTPUT("input_output"), NONE("none");
 
-public class IOMode {
-    /// デフォルトのINPUTモード。通常は、入力が許可されることを示す。
-    public static final IIOMode INPUT = new Impl("input");
-    /// デフォルトのOUTPUTモード。通常は、出力が許可されることを示す。
-    public static final IIOMode OUTPUT = new Impl("output");
-    /// デフォルトのINPUT_OUTPUTモード。通常は、入出力の両方が許可されることを示す。
-    public static final IIOMode INPUT_OUTPUT = new Impl("input_output");
-    /// デフォルトのNONEモード。通常は、入出力を許可しないことを示す。
-    public static final IIOMode NONE = new Impl("none");
+    private final String name;
 
-    /// IOModeの単純な実装クラス。
-    public record Impl(String name) implements IIOMode { }
+    IOMode(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    /// 入力可能か
+    public boolean canInput() {
+        return this == INPUT || this == INPUT_OUTPUT;
+    }
+
+    /// 出力可能か
+    public boolean canOutput() {
+        return this == OUTPUT || this == INPUT_OUTPUT;
+    }
 }

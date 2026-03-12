@@ -2,13 +2,9 @@ package com.nanaios.polygonal_tech.capability;
 
 import com.nanaios.polygonal_tech.capability.interfaces.ILongFluidTank;
 import com.nanaios.polygonal_tech.fluids.base.LongFluidStack;
-import com.nanaios.polygonal_tech.util.interfaces.IEvent;
-import com.nanaios.polygonal_tech.util.interfaces.IEventType;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.function.Consumer;
 
 public class EmptyLongFluidTank implements ILongFluidTank {
     public static final EmptyLongFluidTank INSTANCE = new EmptyLongFluidTank();
@@ -49,15 +45,5 @@ public class EmptyLongFluidTank implements ILongFluidTank {
     @NotNull
     public LongFluidStack drain(LongFluidStack resource, FluidAction action) {
         return LongFluidStack.EMPTY;
-    }
-
-    @Override
-    public boolean canInput() {
-        return false;
-    }
-
-    @Override
-    public boolean canOutput() {
-        return false;
     }
 }

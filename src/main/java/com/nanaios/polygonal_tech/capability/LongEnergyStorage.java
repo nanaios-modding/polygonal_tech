@@ -1,21 +1,26 @@
 package com.nanaios.polygonal_tech.capability;
 
+import com.nanaios.polygonal_tech.capability.base.BaseCapability;
 import com.nanaios.polygonal_tech.capability.interfaces.ILongEnergyStorage;
+import com.nanaios.polygonal_tech.event.CapabilityUpdateEvent;
+import com.nanaios.polygonal_tech.event.PolygonalTechEventType;
+import com.nanaios.polygonal_tech.util.interfaces.IEvent;
+import com.nanaios.polygonal_tech.util.interfaces.IEventType;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.BooleanSupplier;
+import java.util.function.Consumer;
 import java.util.function.LongSupplier;
 
-public class LongEnergyStorage implements ILongEnergyStorage {
-    private long energy;
+public class LongEnergyStorage extends BaseCapability implements ILongEnergyStorage {
     private final LongSupplier capacity;
     private final BooleanSupplier canReceive;
     private final BooleanSupplier canExtract;
+    private long energy;
 
-    public LongEnergyStorage(
-            LongSupplier capacity,
-            BooleanSupplier canReceive,
-            BooleanSupplier canExtract
-    ) {
+    public LongEnergyStorage(LongSupplier capacity, BooleanSupplier canReceive, BooleanSupplier canExtract) {
+        super(canReceive.getAsBoolean(), canExtract.getAsBoolean());
         this.capacity = capacity;
         this.canReceive = canReceive;
         this.canExtract = canExtract;
@@ -33,23 +38,25 @@ public class LongEnergyStorage implements ILongEnergyStorage {
 
     @Override
     public long receiveLongEnergy(long maxReceive, boolean simulate) {
-        if (!canReceive())
-            return 0;
+        if (!canReceive()) return 0;
 
         long energyReceived = Math.min(capacity.getAsLong() - energy, maxReceive);
-        if (!simulate)
+        if (!simulate) {
             energy += energyReceived;
+            triggerEvent(PolygonalTechEventType.CAPABILITY_UPDATE, CapabilityUpdateEvent.DEFAULT);
+        }
         return energyReceived;
     }
 
     @Override
     public long extractLongEnergy(long maxExtract, boolean simulate) {
-        if (!canExtract())
-            return 0;
+        if (!canExtract()) return 0;
 
         long energyExtracted = Math.min(energy, maxExtract);
-        if (!simulate)
+        if (!simulate) {
             energy -= energyExtracted;
+            triggerEvent(PolygonalTechEventType.CAPABILITY_UPDATE, CapabilityUpdateEvent.DEFAULT);
+        }
         return energyExtracted;
     }
 
@@ -60,16 +67,6 @@ public class LongEnergyStorage implements ILongEnergyStorage {
 
     @Override
     public boolean canReceive() {
-        return canReceive.getAsBoolean();
-    }
-
-    @Override
-    public boolean canOutput() {
-        return canExtract.getAsBoolean();
-    }
-
-    @Override
-    public boolean canInput() {
         return canReceive.getAsBoolean();
     }
 }

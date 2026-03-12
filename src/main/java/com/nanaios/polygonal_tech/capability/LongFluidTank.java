@@ -1,6 +1,9 @@
 package com.nanaios.polygonal_tech.capability;
 
+import com.nanaios.polygonal_tech.capability.base.BaseCapability;
 import com.nanaios.polygonal_tech.capability.interfaces.ILongFluidTank;
+import com.nanaios.polygonal_tech.event.CapabilityUpdateEvent;
+import com.nanaios.polygonal_tech.event.PolygonalTechEventType;
 import com.nanaios.polygonal_tech.fluids.base.LongFluidStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
@@ -9,12 +12,13 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.LongSupplier;
 import java.util.function.Predicate;
 
-public class LongFluidTank implements ILongFluidTank {
+public class LongFluidTank extends BaseCapability implements ILongFluidTank {
     protected final LongSupplier capacity;
     protected final Predicate<FluidStack> validator;
     protected LongFluidStack fluid = LongFluidStack.EMPTY;
 
-    public LongFluidTank(LongSupplier capacity, Predicate<FluidStack> validator) {
+    public LongFluidTank(boolean arrowInput, boolean arrowOutput, LongSupplier capacity, Predicate<FluidStack> validator) {
+        super(arrowInput, arrowOutput);
         this.capacity = capacity;
         this.validator = validator;
     }
@@ -41,7 +45,7 @@ public class LongFluidTank implements ILongFluidTank {
 
         if (fluid.isEmpty()) {
             fluid = new LongFluidStack(resource, Math.min(capacity.getAsLong(), resource.getAmount()));
-            onContentsChanged();
+            triggerEvent(PolygonalTechEventType.CAPABILITY_UPDATE, CapabilityUpdateEvent.DEFAULT);
             return fluid.getLongAmount();
         }
 
@@ -56,7 +60,7 @@ public class LongFluidTank implements ILongFluidTank {
             fluid.setAmount(capacity.getAsLong());
         }
 
-        if (filled > 0) onContentsChanged();
+        if (filled > 0) triggerEvent(PolygonalTechEventType.CAPABILITY_UPDATE, CapabilityUpdateEvent.DEFAULT);
         return filled;
     }
 
@@ -77,6 +81,7 @@ public class LongFluidTank implements ILongFluidTank {
     }
 
     @Override
+    @NotNull
     public LongFluidStack drain(long maxDrain, FluidAction action) {
 
         long drained = maxDrain;
@@ -87,23 +92,9 @@ public class LongFluidTank implements ILongFluidTank {
         LongFluidStack stack = new LongFluidStack(fluid, drained);
         if (action.execute() && drained > 0) {
             fluid.shrink(drained);
-            onContentsChanged();
+            triggerEvent(PolygonalTechEventType.CAPABILITY_UPDATE, CapabilityUpdateEvent.DEFAULT);
         }
 
         return stack;
-    }
-
-    protected void onContentsChanged() {
-
-    }
-
-    @Override
-    public boolean canInput() {
-        return getLongCapacity() - getFluidLongAmount() > 0;
-    }
-
-    @Override
-    public boolean canOutput() {
-        return getFluidLongAmount() > 0;
     }
 }

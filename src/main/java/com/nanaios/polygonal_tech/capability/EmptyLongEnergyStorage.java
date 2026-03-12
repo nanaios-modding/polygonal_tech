@@ -40,14 +40,4 @@ public class EmptyLongEnergyStorage implements ILongEnergyStorage {
     public boolean canReceive() {
         return false;
     }
-
-    @Override
-    public boolean canInput() {
-        return false;
-    }
-
-    @Override
-    public boolean canOutput() {
-        return false;
-    }
 }
