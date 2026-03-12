@@ -1,10 +1,13 @@
 package com.nanaios.polygonal_tech.capability.interfaces;
 
 import com.nanaios.polygonal_tech.util.MathUtil;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.energy.IEnergyStorage;
 
 /// long型のエネルギー量を扱うためのインターフェース
 public interface ILongEnergyStorage extends IEnergyStorage,ICapability {
+    String NBT_STORED_ENERGY = "stored_energy";
+
     /// 現在のエネルギー量をlong型で取得します。
     long getLongEnergyStored();
 
@@ -22,6 +25,21 @@ public interface ILongEnergyStorage extends IEnergyStorage,ICapability {
     /// @param simulate trueの場合、実際にはエネルギーを抽出せず、抽出できるエネルギー量をシミュレートします。
     /// @return 実際に抽出したエネルギー量
     long extractLongEnergy(long maxExtract, boolean simulate);
+
+    @Override
+    default CompoundTag serializeNBT() {
+        CompoundTag tag = new CompoundTag();
+        tag.putLong(NBT_STORED_ENERGY, getLongEnergyStored());
+        return tag;
+    }
+
+    @Override
+    default void deserializeNBT(CompoundTag nbt) {
+        if (nbt.contains(NBT_STORED_ENERGY)) {
+            long energy = nbt.getLong(NBT_STORED_ENERGY);
+            receiveLongEnergy(energy, false);
+        }
+    }
 
     @Override
     default int receiveEnergy(int maxReceive, boolean simulate) {

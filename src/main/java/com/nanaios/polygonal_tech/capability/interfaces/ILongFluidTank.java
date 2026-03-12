@@ -2,6 +2,7 @@ package com.nanaios.polygonal_tech.capability.interfaces;
 
 import com.nanaios.polygonal_tech.fluids.base.LongFluidStack;
 import com.nanaios.polygonal_tech.util.MathUtil;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
@@ -9,6 +10,8 @@ import org.jetbrains.annotations.NotNull;
 
 /// long型の流体量を扱うためのインターフェース
 public interface ILongFluidTank extends IFluidTank ,ICapability{
+    String NBT_STORED_LONG_FLUID_STACK = "stored_long_fluid_stack";
+
     /// タンク内の流体量をlong型で取得します。
     long getFluidLongAmount();
 
@@ -44,6 +47,21 @@ public interface ILongFluidTank extends IFluidTank ,ICapability{
     /// @return 実際に抽出された流体の種類と量をLongFluidStackで返します。
     @NotNull
     LongFluidStack drain(LongFluidStack resource, FluidAction action);
+
+    @Override
+    default CompoundTag serializeNBT() {
+        CompoundTag tag = new CompoundTag();
+        tag.put(NBT_STORED_LONG_FLUID_STACK, getFluid().writeToNBT(tag));
+        return tag;
+    }
+
+    @Override
+    default void deserializeNBT(CompoundTag nbt) {
+        if (nbt.contains(NBT_STORED_LONG_FLUID_STACK)) {
+            LongFluidStack fluidStack = LongFluidStack.loadLongFluidStackFromNBT(nbt.getCompound(NBT_STORED_LONG_FLUID_STACK));
+            fillLong(fluidStack, FluidAction.EXECUTE);
+        }
+    }
 
     @NotNull
     default LongFluidStack drain(int maxDrain, FluidAction action) {

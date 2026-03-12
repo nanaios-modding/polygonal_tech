@@ -1,11 +1,14 @@
 package com.nanaios.polygonal_tech.capability.interfaces;
 
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.NotNull;
 
 /// 単一のItemStackスロットを表すインターフェース
 public interface IItemSlot extends IItemHandlerModifiable ,ICapability{
+    String NBT_STORED = "stored_item";
+
     /// ItemStackを取得するメソッド
     /// @return スロットにあるItemStack。スロットが空の場合はItemStack.EMPTYを返す。
     @NotNull
@@ -41,6 +44,22 @@ public interface IItemSlot extends IItemHandlerModifiable ,ICapability{
 
     /// {@link net.minecraft.world.inventory.AbstractContainerMenu}などで、スロットのy座標を指定するためのメソッド
     int getMenuY();
+
+    @Override
+    default CompoundTag serializeNBT() {
+        CompoundTag tag = new CompoundTag();
+        tag.put(NBT_STORED, getStack().serializeNBT());
+        return tag;
+    }
+
+    @Override
+    default void deserializeNBT(CompoundTag nbt) {
+        if (nbt.contains(NBT_STORED)) {
+            setStack(ItemStack.of(nbt.getCompound(NBT_STORED)));
+        } else {
+            setStack(ItemStack.EMPTY);
+        }
+    }
 
     @Override
     default int getSlots() {
