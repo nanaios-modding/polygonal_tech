@@ -120,6 +120,10 @@ public abstract class BaseProvider<T extends ICapability, C extends BaseCombined
         }
     }
 
+    public List<T> getCapabilities() {
+        return capabilities;
+    }
+
     private void updateCombinedCapabilityActive(IOModeUpdateEvent event) {
         // sideがnullの場合はinternalのみ更新する
         if (event.side() == null) {

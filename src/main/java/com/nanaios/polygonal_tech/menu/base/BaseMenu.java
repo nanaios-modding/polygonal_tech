@@ -1,14 +1,9 @@
 package com.nanaios.polygonal_tech.menu.base;
 
 import com.nanaios.polygonal_tech.block_entity.base.BaseGuiMachine;
-import com.nanaios.polygonal_tech.capability.base.BaseProvider;
 import com.nanaios.polygonal_tech.capability.interfaces.IItemSlot;
-import com.nanaios.polygonal_tech.capability.provider.ItemSlotProvider;
-import com.nanaios.polygonal_tech.container.base.BaseContainer;
-import com.nanaios.polygonal_tech.network.PolygonalTechNetwork;
-import com.nanaios.polygonal_tech.network.packet.ContainerNBTSyncPacket;
+import com.nanaios.polygonal_tech.capability.item.ItemSlotProvider;
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -17,7 +12,6 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
-import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
 public class BaseMenu<M extends BaseGuiMachine<M>> extends AbstractContainerMenu {
@@ -38,10 +32,9 @@ public class BaseMenu<M extends BaseGuiMachine<M>> extends AbstractContainerMenu
 
         int i = 0;
         ItemSlotProvider slotProvider = machine.itemSlotProvider;
-        machineSlots = slotProvider.getContainers().size();
-        for (BaseContainer<IItemSlot> itemSlot : slotProvider.getContainers()) {
-            IItemSlot base = itemSlot.getBase();
-            addSlot(new SlotItemHandler(base, i, base.getMenuX(), base.getMenuY()));
+        machineSlots = slotProvider.getCapabilities().size();
+        for(IItemSlot itemSlot : slotProvider.getCapabilities()) {
+            this.addSlot(new SlotItemHandler(itemSlot, i, itemSlot.getMenuX(), itemSlot.getMenuY()));
             i++;
         }
 
@@ -55,25 +48,6 @@ public class BaseMenu<M extends BaseGuiMachine<M>> extends AbstractContainerMenu
 
         // クライアント側での処理は不要
         if(inventory.player.level().isClientSide) return;
-
-        M machine = getMachine();
-        if (machine == null) return;
-
-        // クライアントにNBTを送信
-        for(int i = 0;i < machine.getProviderCount();i++) {
-            BaseProvider<?,?> provider = machine.getProvider(i);
-            int containerIndex = 0;
-            for(BaseContainer<?> container : provider.getContainers()) {
-                if(container.isMarkUpdate()) {
-                    PolygonalTechNetwork.CHANNEL.send(
-                            PacketDistributor.PLAYER.with(() -> (ServerPlayer) inventory.player),
-                            new ContainerNBTSyncPacket(i,containerIndex, pos, container.serializeNBT())
-                    );
-                    container.setMarkUpdate(false);
-                }
-                containerIndex++;
-            }
-        }
     }
 
     @SuppressWarnings("unchecked")

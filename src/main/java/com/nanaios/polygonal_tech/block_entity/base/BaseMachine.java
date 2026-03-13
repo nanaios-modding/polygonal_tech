@@ -2,6 +2,7 @@ package com.nanaios.polygonal_tech.block_entity.base;
 
 import com.nanaios.polygonal_tech.capability.energy.LongEnergyProvider;
 import com.nanaios.polygonal_tech.capability.fluid.LongFluidProvider;
+import com.nanaios.polygonal_tech.capability.item.ItemSlotProvider;
 import com.nanaios.polygonal_tech.event.CapabilityUpdateEvent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -13,11 +14,10 @@ import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Consumer;
-
 public abstract class BaseMachine<M extends BaseMachine<M>> extends BaseBlockEntity<M> {
-    protected LongEnergyProvider energyProvider = new LongEnergyProvider(this::capabilityUpdateListener);
-    protected LongFluidProvider fluidProvider = new LongFluidProvider(this::capabilityUpdateListener);
+    public final LongEnergyProvider energyProvider = new LongEnergyProvider(this::capabilityUpdateListener);
+    public final LongFluidProvider fluidProvider = new LongFluidProvider(this::capabilityUpdateListener);
+    public final ItemSlotProvider itemSlotProvider = new ItemSlotProvider(this::capabilityUpdateListener);
 
     public BaseMachine(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -38,6 +38,7 @@ public abstract class BaseMachine<M extends BaseMachine<M>> extends BaseBlockEnt
         super.save(tag);
         tag.put(LongEnergyProvider.NBT_LONG_ENERGY, energyProvider.serializeNBT());
         tag.put(LongFluidProvider.NBT_LONG_FLUID, fluidProvider.serializeNBT());
+        tag.put(ItemSlotProvider.NBT_ITEM_SLOTS, itemSlotProvider.serializeNBT());
     }
 
     @Override
@@ -48,6 +49,9 @@ public abstract class BaseMachine<M extends BaseMachine<M>> extends BaseBlockEnt
         }
         if (tag.contains(LongFluidProvider.NBT_LONG_FLUID)) {
             fluidProvider.deserializeNBT(tag.getCompound(LongFluidProvider.NBT_LONG_FLUID));
+        }
+        if (tag.contains(ItemSlotProvider.NBT_ITEM_SLOTS)) {
+            itemSlotProvider.deserializeNBT(tag.getCompound(ItemSlotProvider.NBT_ITEM_SLOTS));
         }
     }
 
