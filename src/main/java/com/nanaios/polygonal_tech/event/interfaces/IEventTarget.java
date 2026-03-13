@@ -1,4 +1,4 @@
-package com.nanaios.polygonal_tech.util.interfaces;
+package com.nanaios.polygonal_tech.event.interfaces;
 
 import java.util.function.Consumer;
 

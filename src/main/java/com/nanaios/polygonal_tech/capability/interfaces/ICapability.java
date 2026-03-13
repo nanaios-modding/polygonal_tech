@@ -1,7 +1,7 @@
 package com.nanaios.polygonal_tech.capability.interfaces;
 
 import com.nanaios.polygonal_tech.util.IOMode;
-import com.nanaios.polygonal_tech.util.interfaces.IEventTarget;
+import com.nanaios.polygonal_tech.event.interfaces.IEventTarget;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.util.INBTSerializable;

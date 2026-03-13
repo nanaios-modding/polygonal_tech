@@ -14,6 +14,7 @@ public abstract class BaseCombinedCapability<C extends ICapability> implements I
     public static final String NBT_CAPABILITY_COUNT = "capability_count";
     public static final String NBT_CAPABILITY_PREFIX = "capability_";
 
+    protected boolean isActive = false;
     @Nullable
     protected final Direction side;
     protected final List<C> capabilities;
@@ -25,6 +26,9 @@ public abstract class BaseCombinedCapability<C extends ICapability> implements I
 
     @Override
     public boolean canInput(@Nullable Direction side) {
+        // 指定された方向が、このCombinedCapabilityの方向と一致しない場合は、入力できないと判断する
+        if(side != this.side) return false;
+
         // capabilitiesの中に、指定された方向に対して入力可能なCapabilityがあるかどうかを確認する
         for (C capability : capabilities) {
             if (capability.canInput(side)) {
@@ -36,6 +40,9 @@ public abstract class BaseCombinedCapability<C extends ICapability> implements I
 
     @Override
     public boolean canOutput(@Nullable Direction side) {
+        // 指定された方向が、このCombinedCapabilityの方向と一致しない場合は、出力できないと判断する
+        if (side != this.side) return false;
+
         // capabilitiesの中に、指定された方向に対して出力可能なCapabilityがあるかどうかを確認する
         for (C capability : capabilities) {
             if (capability.canOutput(side)) {
@@ -45,32 +52,15 @@ public abstract class BaseCombinedCapability<C extends ICapability> implements I
         return false;
     }
 
-    @Override
-    public CompoundTag serializeNBT() {
-        CompoundTag tag = new CompoundTag();
-
-        // capabilitiesの数をNBTに保存する
-        tag.putInt(NBT_CAPABILITY_COUNT, capabilities.size());
-
-        // capabilitiesの各要素をNBTに保存する
-        for (int i = 0; i < capabilities.size(); i++) {
-            tag.put(NBT_CAPABILITY_PREFIX + i, capabilities.get(i).serializeNBT());
-        }
-        return tag;
+    /// このCombinedCapabilityの有効状態を更新する。
+    public boolean updateActive() {
+        // 有効な入力または出力があるかどうかを確認する
+        isActive = canInput(side) || canOutput(side);
+        return isActive;
     }
 
-
-    @Override
-    public void deserializeNBT(CompoundTag nbt) {
-        // capabilitiesの数をNBTから読み取る
-        int count = nbt.getInt(NBT_CAPABILITY_COUNT);
-
-        // capabilitiesの各要素をNBTから読み取る
-        for (int i = 0; i < count; i++) {
-            CompoundTag capabilityTag = nbt.getCompound(NBT_CAPABILITY_PREFIX + i);
-            if (i < capabilities.size()) {
-                capabilities.get(i).deserializeNBT(capabilityTag);
-            }
-        }
+    /// このCombinedCapabilityが有効かどうかを返す。
+    public boolean isActive() {
+        return isActive;
     }
 }

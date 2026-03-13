@@ -1,5 +1,8 @@
 package com.nanaios.polygonal_tech.block_entity.base;
 
+import com.nanaios.polygonal_tech.capability.energy.LongEnergyProvider;
+import com.nanaios.polygonal_tech.capability.fluid.LongFluidProvider;
+import com.nanaios.polygonal_tech.event.CapabilityUpdateEvent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -10,9 +13,19 @@ import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Consumer;
+
 public abstract class BaseMachine<M extends BaseMachine<M>> extends BaseBlockEntity<M> {
+    protected LongEnergyProvider energyProvider = new LongEnergyProvider(this::capabilityUpdateListener);
+    protected LongFluidProvider fluidProvider = new LongFluidProvider(this::capabilityUpdateListener);
+
     public BaseMachine(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
+    }
+
+    /// Capabilityの状態が更新されたときに呼び出されるリスナー。BlockEntityの状態を更新するためにsetChanged()を呼び出す。
+    public void capabilityUpdateListener(CapabilityUpdateEvent event) {
+        setChanged();
     }
 
     @Override
@@ -23,11 +36,19 @@ public abstract class BaseMachine<M extends BaseMachine<M>> extends BaseBlockEnt
     @Override
     public void save(CompoundTag tag) {
         super.save(tag);
+        tag.put(LongEnergyProvider.NBT_LONG_ENERGY, energyProvider.serializeNBT());
+        tag.put(LongFluidProvider.NBT_LONG_FLUID, fluidProvider.serializeNBT());
     }
 
     @Override
     public void load(@NotNull CompoundTag tag) {
         super.load(tag);
+        if (tag.contains(LongEnergyProvider.NBT_LONG_ENERGY)) {
+            energyProvider.deserializeNBT(tag.getCompound(LongEnergyProvider.NBT_LONG_ENERGY));
+        }
+        if (tag.contains(LongFluidProvider.NBT_LONG_FLUID)) {
+            fluidProvider.deserializeNBT(tag.getCompound(LongFluidProvider.NBT_LONG_FLUID));
+        }
     }
 
     @Override
