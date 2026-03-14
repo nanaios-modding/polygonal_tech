@@ -11,14 +11,15 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.SlotItemHandler;
 import org.jetbrains.annotations.Nullable;
+
+import java.lang.reflect.Field;
 
 public class BaseMenu<M extends BaseGuiMachine<M>> extends AbstractContainerMenu {
     protected final BlockPos pos;
     protected final Inventory inventory;
     protected final ContainerLevelAccess access;
-    protected int machineSlots = 0;
+    protected int machineSlots;
 
     public BaseMenu(MenuType<?> type, int id, Inventory inv, BlockPos pos) {
         super(type, id);
@@ -32,11 +33,12 @@ public class BaseMenu<M extends BaseGuiMachine<M>> extends AbstractContainerMenu
 
         int i = 0;
         ItemSlotProvider slotProvider = machine.itemSlotProvider;
-        machineSlots = slotProvider.getCapabilities().size();
         for(IItemSlot itemSlot : slotProvider.getCapabilities()) {
-            this.addSlot(new SlotItemHandler(itemSlot, i, itemSlot.getMenuX(), itemSlot.getMenuY()));
+            this.addSlot(new ItemSlotHandler(itemSlot,i));
             i++;
         }
+
+        machineSlots = i;
 
         addPlayerInventory(inv);
         addPlayerHotbar(inv);

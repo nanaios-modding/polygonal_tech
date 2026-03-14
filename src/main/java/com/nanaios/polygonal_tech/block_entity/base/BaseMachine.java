@@ -1,7 +1,11 @@
 package com.nanaios.polygonal_tech.block_entity.base;
 
+import com.nanaios.polygonal_tech.capability.CapabilityBuilder;
 import com.nanaios.polygonal_tech.capability.energy.LongEnergyProvider;
 import com.nanaios.polygonal_tech.capability.fluid.LongFluidProvider;
+import com.nanaios.polygonal_tech.capability.interfaces.IItemSlot;
+import com.nanaios.polygonal_tech.capability.interfaces.ILongEnergyStorage;
+import com.nanaios.polygonal_tech.capability.interfaces.ILongFluidTank;
 import com.nanaios.polygonal_tech.capability.item.ItemSlotProvider;
 import com.nanaios.polygonal_tech.event.CapabilityUpdateEvent;
 import net.minecraft.core.BlockPos;
@@ -21,6 +25,22 @@ public abstract class BaseMachine<M extends BaseMachine<M>> extends BaseBlockEnt
 
     public BaseMachine(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
+
+        initEnergyStorage().register(energyProvider);
+        initFluidTank().register(fluidProvider);
+        initItemSlot().register(itemSlotProvider);
+    }
+
+    public CapabilityBuilder<ILongEnergyStorage> initEnergyStorage() {
+        return new CapabilityBuilder<>();
+    }
+
+    public CapabilityBuilder<ILongFluidTank> initFluidTank() {
+        return new CapabilityBuilder<>();
+    }
+
+    public CapabilityBuilder<IItemSlot> initItemSlot() {
+        return new CapabilityBuilder<>();
     }
 
     /// Capabilityの状態が更新されたときに呼び出されるリスナー。BlockEntityの状態を更新するためにsetChanged()を呼び出す。
