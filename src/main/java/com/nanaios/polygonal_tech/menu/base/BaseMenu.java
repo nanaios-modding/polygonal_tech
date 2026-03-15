@@ -52,6 +52,10 @@ public class BaseMenu<M extends BaseGuiMachine<M>> extends AbstractContainerMenu
         if(inventory.player.level().isClientSide) return;
     }
 
+    public int getMachineSlots() {
+        return machineSlots;
+    }
+
     @SuppressWarnings("unchecked")
     public @Nullable M getMachine() {
         return (M) inventory.player.level().getBlockEntity(pos);

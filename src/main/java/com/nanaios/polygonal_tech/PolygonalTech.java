@@ -1,11 +1,13 @@
 package com.nanaios.polygonal_tech;
 
 import com.mojang.logging.LogUtils;
+import com.nanaios.polygonal_tech.config.PolygonalTechConfig;
 import com.nanaios.polygonal_tech.network.PolygonalTechNetwork;
 import com.nanaios.polygonal_tech.registries.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
@@ -17,6 +19,9 @@ public class PolygonalTech {
 
     public PolygonalTech(FMLJavaModLoadingContext context) {
         IEventBus bus = context.getModEventBus();
+
+        // コンフィグの登録
+        context.registerConfig(ModConfig.Type.COMMON, PolygonalTechConfig.register());
 
         // アイテムやブロックなどの登録
         PolygonalTechItemRegister.ITEMS.register(bus);

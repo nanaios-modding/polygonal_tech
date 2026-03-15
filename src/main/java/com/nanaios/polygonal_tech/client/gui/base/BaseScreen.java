@@ -2,15 +2,23 @@ package com.nanaios.polygonal_tech.client.gui.base;
 
 import com.nanaios.polygonal_tech.PolygonalTech;
 import com.nanaios.polygonal_tech.block_entity.base.BaseGuiMachine;
+import com.nanaios.polygonal_tech.client.gui.parts.IGuiPart;
 import com.nanaios.polygonal_tech.menu.base.BaseMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.Slot;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BaseScreen<M extends BaseGuiMachine<M>> extends AbstractContainerScreen<BaseMenu<M>> {
-    protected static final ResourceLocation BACK_GROUND = PolygonalTech.rl("textures/gui/background.png");
+    public static final ResourceLocation BACK_GROUND = PolygonalTech.rl("textures/gui/background.png");
+    public static final ResourceLocation SLOT = PolygonalTech.rl("textures/gui/slot.png");
+
+    protected List<IGuiPart> guiParts = new ArrayList<>();
 
     public BaseScreen(BaseMenu<M> baseMenu, Inventory inventory, Component component) {
         super(baseMenu, inventory, component);
@@ -33,6 +41,15 @@ public class BaseScreen<M extends BaseGuiMachine<M>> extends AbstractContainerSc
         int y = this.topPos;
 
         graphics.blit(BACK_GROUND, x, y, 0, 0, this.imageWidth, this.imageHeight);
+
+        for (int i = 0;i < menu.getMachineSlots();i++) {
+            Slot slot = menu.slots.get(i);
+            graphics.blit(SLOT, x + slot.x - 1, y + slot.y - 1, 0, 0, 18, 18,18,18);
+        }
+
+        for(IGuiPart part : guiParts) {
+            part.render(graphics, partialTick, mouseX, mouseY, x, y);
+        }
     }
 
     @Override

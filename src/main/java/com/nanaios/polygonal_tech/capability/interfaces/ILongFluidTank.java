@@ -51,7 +51,7 @@ public interface ILongFluidTank extends IFluidTank ,ICapability{
     @Override
     default CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
-        tag.put(NBT_STORED_LONG_FLUID_STACK, getFluid().writeToNBT(tag));
+        tag.put(NBT_STORED_LONG_FLUID_STACK, getFluid().writeToNBT(new CompoundTag()));
         return tag;
     }
 
