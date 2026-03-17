@@ -1,6 +1,6 @@
 package com.nanaios.polygonal_tech.util.sync;
 
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 
 import java.lang.reflect.Field;
 
@@ -10,12 +10,12 @@ public class SyncedLong extends SyncedValue<Long> {
     }
 
     @Override
-    public void writeToNBT(CompoundTag tag) {
-        tag.putLong(NBT_KEY, value);
+    public void writeToFriendlyByteBuf(FriendlyByteBuf tag) {
+        tag.writeLong(value);
     }
 
     @Override
-    public void readFromNBT(CompoundTag tag) {
-        setValue(tag.getLong(NBT_KEY));
+    public void readFromFriendlyByteBuf(FriendlyByteBuf tag) {
+        setValue(tag.readLong());
     }
 }

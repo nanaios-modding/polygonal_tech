@@ -13,6 +13,7 @@ import com.nanaios.polygonal_tech.util.sync.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -31,6 +32,7 @@ public abstract class BaseMachine<M extends BaseMachine<M>> extends BaseBlockEnt
     public final LongFluidProvider fluidProvider = new LongFluidProvider(this::capabilityUpdateListener);
     public final ItemSlotProvider itemSlotProvider = new ItemSlotProvider(this::capabilityUpdateListener);
     protected final List<Field> alwaysSyncFields;
+    @SuppressWarnings("rawtypes")
     protected final List<SyncedValue> syncedFields = new ArrayList<>();
     protected final boolean[] markedForSync;
 
@@ -42,11 +44,11 @@ public abstract class BaseMachine<M extends BaseMachine<M>> extends BaseBlockEnt
         for (Field field : alwaysSyncFields) {
             Class<?> fieldType = field.getType();
 
-            if(fieldType == int.class) {
+            if (fieldType == int.class) {
                 syncedFields.add(new SyncedInt(field, this));
-            } else if(fieldType == boolean.class) {
+            } else if (fieldType == boolean.class) {
                 syncedFields.add(new SyncedBoolean(field, this));
-            } else if(fieldType == long.class) {
+            } else if (fieldType == long.class) {
                 syncedFields.add(new SyncedLong(field, this));
             }
         }
@@ -59,20 +61,50 @@ public abstract class BaseMachine<M extends BaseMachine<M>> extends BaseBlockEnt
     }
 
     @Override
+    public void writeSyncData(FriendlyByteBuf buf) {
+        int size = 0;
+        for (int i = 0; i < syncedFields.size(); i++) {
+            if (markedForSync[i]) {
+                size++;
+            }
+        }
+
+        // 変更されたフィールドの数を最初に書き込む。これにより、クライアントは受信するフィールドの数を知ることができる。
+        buf.writeInt(size);
+
+        // 変更されたフィールドのインデックスと値を順番に書き込む。これにより、クライアントはどのフィールドが変更されたかを知ることができる。
+        for (int i = 0; i < syncedFields.size(); i++) {
+            if (markedForSync[i]) {
+                buf.writeInt(i);
+                syncedFields.get(i).writeToFriendlyByteBuf(buf);
+                markedForSync[i] = false;
+            }
+        }
+    }
+
+    @Override
+    public void readSyncData(FriendlyByteBuf buf) {
+        int size = buf.readInt();
+
+        for (int i = 0; i < size; i++) {
+            int index = buf.readInt();
+            syncedFields.get(index).readFromFriendlyByteBuf(buf);
+        }
+    }
+
+    @SuppressWarnings("rawtypes")
+    @Override
     public boolean afterServerTick(Level level, BlockPos pos, BlockState state, M blockEntity) {
+        boolean needsSync = false;
         // 同期対象のフィールドをチェックし、変更があった場合はmarkedForSyncを更新する。これにより、変更されたフィールドのみがクライアントに送信されるようになる。
         for (int i = 0; i < syncedFields.size(); i++) {
             SyncedValue value = syncedFields.get(i);
             if (value.isChanged()) {
+                needsSync = true;
                 markedForSync[i] = true;
             }
         }
-        return false;
-    }
-
-    @Override
-    public void saveSyncData(CompoundTag tag) {
-        super.saveSyncData(tag);
+        return needsSync;
     }
 
     public CapabilityBuilder<ILongEnergyStorage> initEnergyStorage() {

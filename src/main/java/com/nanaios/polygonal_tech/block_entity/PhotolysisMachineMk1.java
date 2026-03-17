@@ -13,7 +13,6 @@ import com.nanaios.polygonal_tech.util.sync.Synchronize;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
@@ -66,20 +65,6 @@ public class PhotolysisMachineMk1 extends BaseGuiMachine<PhotolysisMachineMk1> {
         super.load(tag);
         progress = tag.getLong("progress");
         canSeeSky = tag.getBoolean("can_see_sky");
-    }
-
-    @Override
-    public void writeSyncData(FriendlyByteBuf buf) {
-        super.writeSyncData(buf);
-        buf.writeVarLong(progress);
-        buf.writeBoolean(canSeeSky);
-    }
-
-    @Override
-    public void readSyncData(FriendlyByteBuf buf) {
-        super.readSyncData(buf);
-        progress = buf.readVarLong();
-        canSeeSky = buf.readBoolean();
     }
 
     @Override

@@ -1,7 +1,7 @@
 package com.nanaios.polygonal_tech.network;
 
 import com.nanaios.polygonal_tech.PolygonalTech;
-import com.nanaios.polygonal_tech.network.packet.ClientboundBlockEntityBufPacket;
+import com.nanaios.polygonal_tech.network.packet.ClientBoundBlockEntityBufPacket;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
 
@@ -22,10 +22,10 @@ public final class PolygonalTechNetwork {
     public static void registerMessages() {
         CHANNEL.registerMessage(
                 nextPacketId(),
-                ClientboundBlockEntityBufPacket.class,
-                ClientboundBlockEntityBufPacket::encode,
-                ClientboundBlockEntityBufPacket::decode,
-                ClientboundBlockEntityBufPacket::handle
+                ClientBoundBlockEntityBufPacket.class,
+                ClientBoundBlockEntityBufPacket::encode,
+                ClientBoundBlockEntityBufPacket::decode,
+                ClientBoundBlockEntityBufPacket::handle
         );
     }
 
