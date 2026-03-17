@@ -47,9 +47,6 @@ public class BaseMenu<M extends BaseGuiMachine<M>> extends AbstractContainerMenu
     @Override
     public void broadcastChanges() {
         super.broadcastChanges();
-
-        // クライアント側での処理は不要
-        if(inventory.player.level().isClientSide) return;
     }
 
     public int getMachineSlots() {

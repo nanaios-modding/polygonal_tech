@@ -20,6 +20,11 @@ public abstract class BaseProvider<T extends ICapability, C extends BaseCombined
     public static final String NBT_CAPABILITY_COUNT = "capability_count";
     public static final String NBT_CAPABILITY_PREFIX = "capability_";
 
+    private boolean isLocked = false;
+    /// lock後に初期化されることを想定しているため、ロック前はnullであることが許容される。\
+    /// lockの段階でcapabilitiesのサイズに合わせて初期化され、各capabilityの状態が更新されたかどうかを追跡するために使用される。
+    protected boolean[] markedForUpdate;
+
     protected List<T> capabilities = new ArrayList<>();
     protected Consumer<CapabilityUpdateEvent> capabilityUpdateListener;
 
@@ -55,16 +60,10 @@ public abstract class BaseProvider<T extends ICapability, C extends BaseCombined
 
     @Override
     public void addCapability(T capability) {
+        int index = capabilities.size();
         capability.addListener(PolygonalTechEventType.IO_MODE_UPDATE, this::updateCombinedCapabilityActive);
-        capability.addListener(PolygonalTechEventType.CAPABILITY_UPDATE, this::updateCapability);
+        capability.addListener(PolygonalTechEventType.CAPABILITY_UPDATE, (event) -> updateCapability(event, index));
         capabilities.add(capability);
-    }
-
-    @Override
-    public void removeCapability(T capability) {
-        capability.removeListener(PolygonalTechEventType.IO_MODE_UPDATE, this::updateCombinedCapabilityActive);
-        capability.removeListener(PolygonalTechEventType.CAPABILITY_UPDATE, this::updateCapability);
-        capabilities.remove(capability);
     }
 
     /// LazyOptionalを初期化するためのヘルパーメソッド。コンストラクタで呼び出され、各combined capabilityに対応するLazyOptionalを生成します。
@@ -121,6 +120,7 @@ public abstract class BaseProvider<T extends ICapability, C extends BaseCombined
     }
 
     public List<T> getCapabilities() {
+        if(!isLocked) return List.of();
         return capabilities;
     }
 
@@ -144,8 +144,13 @@ public abstract class BaseProvider<T extends ICapability, C extends BaseCombined
         }
     }
 
-    private void updateCapability(CapabilityUpdateEvent event) {
+    private void updateCapability(CapabilityUpdateEvent event,int index) {
+        // capabilityの更新を通知
         this.capabilityUpdateListener.accept(event);
+        // capabilityの状態が更新されたことをmarkedForUpdateに記録
+        // 安全のため、lock済みであることを確認する
+        if(!isLocked) return;
+        markedForUpdate[index] = true;
     }
 
     @Override
@@ -186,6 +191,18 @@ public abstract class BaseProvider<T extends ICapability, C extends BaseCombined
             CompoundTag capabilityTag = nbt.getCompound(NBT_CAPABILITY_PREFIX + i);
             capabilities.get(i).deserializeNBT(capabilityTag);
         }
+    }
+
+    /// providerをロックし、新規のcapabilityの追加を防止するためのメソッド。
+    /// ロックにより予期せぬcapabilityの追加を防止するとともに、サイズの固定をします。
+    /// これにより、メモリ効率の向上や、capabilityの同期を容易にします
+    public void lock() {
+        // 不変リストに変更
+        capabilities = List.copyOf(capabilities);
+        isLocked = true;
+        // markedForUpdateをcapabilitiesのサイズに合わせて初期化
+        // capabilitiesのサイズはロック前に固定されるため、ロック後にサイズが変わることはありません。したがって、markedForUpdateのサイズもロック前に固定されます。
+        markedForUpdate = new boolean[capabilities.size() - 1];
     }
 
     /// combined capabilityを生成するためのファクトリインターフェース

@@ -1,6 +1,5 @@
 package com.nanaios.polygonal_tech.block_entity;
 
-import com.nanaios.polygonal_tech.PolygonalTech;
 import com.nanaios.polygonal_tech.block_entity.base.BaseGuiMachine;
 import com.nanaios.polygonal_tech.capability.CapabilityBuilder;
 import com.nanaios.polygonal_tech.capability.fluid.LongFluidTank;
@@ -10,19 +9,27 @@ import com.nanaios.polygonal_tech.capability.item.ItemSlot;
 import com.nanaios.polygonal_tech.config.PolygonalTechMachineConfig;
 import com.nanaios.polygonal_tech.fluids.base.LongFluidStack;
 import com.nanaios.polygonal_tech.registries.PolygonalTechBlockEntityTypeRegister;
+import com.nanaios.polygonal_tech.util.sync.Synchronize;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import org.jetbrains.annotations.NotNull;
 
 public class PhotolysisMachineMk1 extends BaseGuiMachine<PhotolysisMachineMk1> {
+    @Synchronize(Synchronize.Type.MENU)
     private ItemSlot inputSlot;
+    @Synchronize(Synchronize.Type.MENU)
     private LongFluidTank outputTank;
+    @Synchronize(Synchronize.Type.MENU)
     private long progress = 0;
+    @Synchronize(Synchronize.Type.MENU)
+    private boolean canSeeSky = false;
 
     public PhotolysisMachineMk1(BlockPos pos, BlockState state) {
         super(PolygonalTechBlockEntityTypeRegister.PHOTOLYSIS_MACHINE_MK1, pos, state);
@@ -47,18 +54,32 @@ public class PhotolysisMachineMk1 extends BaseGuiMachine<PhotolysisMachineMk1> {
     }
 
     @Override
+    public void save(CompoundTag tag) {
+        super.save(tag);
+        tag.putLong("progress", progress);
+        tag.putBoolean("can_see_sky", canSeeSky);
+    }
+
+    @Override
+    public void load(@NotNull CompoundTag tag) {
+        super.load(tag);
+        progress = tag.getLong("progress");
+        canSeeSky = tag.getBoolean("can_see_sky");
+    }
+
+    @Override
     public boolean serverTick(Level level, BlockPos pos, BlockState state, PhotolysisMachineMk1 blockEntity) {
         boolean isChanged = super.serverTick(level, pos, state, blockEntity);
 
-        PolygonalTech.LOGGER.info("tick running. at pos:{}", pos);
-
-        // 前tickの進行度を保存
+        // 前tickのデータを保存
         long oldProgress = progress;
+        boolean oldCanSeeSky = canSeeSky;
 
         // 処理が可能かどうかをチェック
-        // ここでは、入力スロットにアイテムがあること、マシンが空に面していること、そして光レベルが十分であることを確認します
-        boolean canProcess = inputSlot.getStack() != ItemStack.EMPTY && level.canSeeSky(pos) && level.getBrightness(LightLayer.SKY, pos) > PolygonalTechMachineConfig.PHOTOLYSIS_MACHINE_MK1_PROCESS_LIGHT_LEVEL.get();
-        if(canProcess) {
+        boolean hasItem = inputSlot.getStack() != ItemStack.EMPTY;
+        canSeeSky = level.canSeeSky(pos.above()) && level.getBrightness(LightLayer.SKY, pos) >= PolygonalTechMachineConfig.PHOTOLYSIS_MACHINE_MK1_PROCESS_LIGHT_LEVEL.get();
+
+        if(hasItem && canSeeSky) {
             progress++;
             if(progress >= PolygonalTechMachineConfig.PHOTOLYSIS_MACHINE_MK1_PROCESS_TIME.get()) {
                 inputSlot.extractItem(1, false); // アイテムを1つ消費
@@ -69,6 +90,7 @@ public class PhotolysisMachineMk1 extends BaseGuiMachine<PhotolysisMachineMk1> {
             progress = 0; // 処理できない場合は進行度をリセット
         }
 
+        isChanged |= (oldCanSeeSky != canSeeSky); // 空が見える状態が変化した場合は状態が変化したとみなす
         isChanged |= (oldProgress != progress); // 進行度が変化した場合は状態が変化したとみなす
 
         return isChanged;

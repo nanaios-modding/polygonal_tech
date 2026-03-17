@@ -14,7 +14,7 @@ public class PhotolysisMachineMk1Screen extends BaseScreen<PhotolysisMachineMk1>
         super(baseMenu, inventory, component);
 
         guiParts.add(new ProgressBar(
-                60,33,
+                65,35,
                 () -> {
                     PhotolysisMachineMk1 machine = menu.getMachine();
                     if(machine == null) return 0;

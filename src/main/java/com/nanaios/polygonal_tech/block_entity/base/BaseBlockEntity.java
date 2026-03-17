@@ -1,6 +1,5 @@
 package com.nanaios.polygonal_tech.block_entity.base;
 
-import com.nanaios.polygonal_tech.PolygonalTech;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
@@ -18,6 +17,12 @@ import org.jetbrains.annotations.Nullable;
 public abstract class BaseBlockEntity<T extends BaseBlockEntity<T>> extends BlockEntity {
     public BaseBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
+    }
+
+    public void saveSyncData(CompoundTag tag) {
+    }
+
+    public void loadSyncData(CompoundTag tag) {
     }
 
     public void save(CompoundTag tag) {
@@ -43,6 +48,21 @@ public abstract class BaseBlockEntity<T extends BaseBlockEntity<T>> extends Bloc
                 baseBlockEntity.setChanged();
             }
         }
+    }
+
+    @Override
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
+        CompoundTag tag = pkt.getTag();
+        if (tag != null) {
+            loadSyncData(tag);
+        }
+    }
+
+    @Override
+    public CompoundTag getUpdateTag() {
+        CompoundTag tag = new CompoundTag();
+        saveSyncData(tag);
+        return tag;
     }
 
     @Override

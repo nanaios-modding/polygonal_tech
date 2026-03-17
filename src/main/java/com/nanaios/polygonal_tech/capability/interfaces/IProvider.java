@@ -6,5 +6,4 @@ import net.minecraftforge.common.util.INBTSerializable;
 
 public interface IProvider<C extends ICapability> extends ICapabilityProvider, INBTSerializable<CompoundTag> {
     void addCapability(C capability);
-    void removeCapability(C capability);
 }

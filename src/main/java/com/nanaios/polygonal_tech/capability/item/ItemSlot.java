@@ -80,6 +80,9 @@ public class ItemSlot extends BaseCapability implements IItemSlot {
         extracted.setCount(toExtract);
         if (!simulate) {
             stack.shrink(toExtract);
+            if(stack.getCount() <= 0) {
+                stack = ItemStack.EMPTY;
+            }
             // 変更を通知
             triggerEvent(PolygonalTechEventType.CAPABILITY_UPDATE, CapabilityUpdateEvent.DEFAULT);
         }

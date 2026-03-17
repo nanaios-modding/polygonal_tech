@@ -1,6 +1,7 @@
 package com.nanaios.polygonal_tech.block_entity.base;
 
 import com.nanaios.polygonal_tech.capability.CapabilityBuilder;
+import com.nanaios.polygonal_tech.capability.PolygonalTechCapabilities;
 import com.nanaios.polygonal_tech.capability.energy.LongEnergyProvider;
 import com.nanaios.polygonal_tech.capability.fluid.LongFluidProvider;
 import com.nanaios.polygonal_tech.capability.interfaces.IItemSlot;
@@ -14,6 +15,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -50,6 +52,15 @@ public abstract class BaseMachine<M extends BaseMachine<M>> extends BaseBlockEnt
 
     @Override
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
+        if(cap == ForgeCapabilities.ENERGY || cap == PolygonalTechCapabilities.LONG_ENERGY) {
+            return energyProvider.getCapability(cap,side);
+        }
+        if(cap == ForgeCapabilities.FLUID_HANDLER || cap == PolygonalTechCapabilities.LONG_FLUID_HANDLER) {
+            return fluidProvider.getCapability(cap, side);
+        }
+        if(cap == ForgeCapabilities.ITEM_HANDLER) {
+            return itemSlotProvider.getCapability(cap, side);
+        }
         return super.getCapability(cap, side);
     }
 
