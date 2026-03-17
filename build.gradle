@@ -1,3 +1,4 @@
+
 buildscript {
     repositories {
         maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
@@ -27,71 +28,6 @@ java {
     toolchain.languageVersion = JavaLanguageVersion.of(17)
 }
 
-// ============================================================
-// dev / prod 切り替え
-//   dev  (runClient/runServer): ./gradlew runClient
-//   prod (リリースビルド)      : ./gradlew build -Pprod
-// ============================================================
-def isProd = project.hasProperty('prod')
-println ">>> isProd = ${isProd}"
-
-// ============================================================
-// launchJar:
-//   launch パッケージと SPI ファイルだけを含む薄いJAR。
-//   dev環境で minecraft_classpath 経由で BOOT層に渡す。
-// ============================================================
-tasks.register('launchJar', Jar) {
-    dependsOn compileJava, processResources
-    archiveClassifier = 'launch'
-
-    from(sourceSets.main.output.classesDirs) {
-        include 'com/nanaios/polygonal_tech/launch/**'
-    }
-    from(sourceSets.main.output.resourcesDir) {
-        include 'META-INF/services/cpw.mods.modlauncher.serviceapi.ILaunchPluginService'
-    }
-}
-
-// ============================================================
-// stripLaunch:
-//   dev環境でのみ、build/classes と build/resources から
-//   launch パッケージと SPI ファイルを削除する。
-//   sourceSets.main を mods ブロックに渡している都合上、
-//   classes/resources が直接モジュールとして読まれるため
-//   launchJar とは別に classes 側でも除外が必要。
-// ============================================================
-tasks.register('stripLaunch') {
-    dependsOn 'launchJar'   // launchJar でJAR作成が完了してから削除
-    onlyIf { !isProd }
-
-    doLast {
-        // 1. launch クラスを削除
-        def launchDir = file("build/classes/java/main/com/nanaios/polygonal_tech/launch")
-        if (launchDir.exists()) {
-            delete launchDir
-            println ">>> Stripped launch package from classes"
-        }
-
-        // 2. SPI ファイルを削除 (これが残っていると本体モジュールも launch を提供しようとして衝突する)
-        def spiFile = file("build/resources/main/META-INF/services/cpw.mods.modlauncher.serviceapi.ILaunchPluginService")
-        if (spiFile.exists()) {
-            delete spiFile
-            println ">>> Stripped ILaunchPluginService SPI from resources"
-        }
-    }
-}
-
-// prepareRuns / runClient / runServer の直前に毎回 stripLaunch を実行
-// (runClient が compileJava に依存して launch が復活するのを毎回潰す)
-tasks.whenTaskAdded { task ->
-    if (task.name in ['prepareRuns', 'runClient', 'runServer']) {
-        task.dependsOn('stripLaunch')
-    }
-}
-
-// ============================================================
-// Minecraft / Forge 設定
-// ============================================================
 minecraft {
     mappings channel: mapping_channel, version: mapping_version
 
@@ -102,7 +38,9 @@ minecraft {
     runs {
         configureEach {
             workingDirectory project.file('run')
+
             property 'forge.logging.markers', 'REGISTRIES'
+
             property 'forge.logging.console.level', 'debug'
 
             mods {
@@ -114,20 +52,11 @@ minecraft {
 
         client {
             property 'forge.enabledGameTestNamespaces', mod_id
-
-            // dev環境: launchJar を BOOT層のクラスパスに追加
-            lazyToken('minecraft_classpath') {
-                tasks.launchJar.archiveFile.get().asFile.absolutePath
-            }
         }
 
         server {
             property 'forge.enabledGameTestNamespaces', mod_id
             args '--nogui'
-
-            lazyToken('minecraft_classpath') {
-                tasks.launchJar.archiveFile.get().asFile.absolutePath
-            }
         }
 
         gameTestServer {
@@ -136,26 +65,19 @@ minecraft {
 
         data {
             workingDirectory project.file('run-data')
-            args '--mod', mod_id, '--all',
-                    '--output', file('src/generated/resources/'),
-                    '--existing', file('src/main/resources/')
+            args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
         }
     }
 }
 
-// ============================================================
-// Mixin
-// ============================================================
 mixin {
     add sourceSets.main, "${mod_id}.refmap.json"
+
     config "${mod_id}.mixins.json"
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
-// ============================================================
-// リポジトリ / 依存関係
-// ============================================================
 repositories {
     maven {
         name "Modmaven"
@@ -173,23 +95,12 @@ dependencies {
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
 
-// ============================================================
-// リソース処理
-// ============================================================
 tasks.named('processResources', ProcessResources).configure {
-    var replaceProperties = [
-            minecraft_version      : minecraft_version,
-            minecraft_version_range: minecraft_version_range,
-            forge_version          : forge_version,
-            forge_version_range    : forge_version_range,
-            loader_version_range   : loader_version_range,
-            mod_id                 : mod_id,
-            mod_name               : mod_name,
-            mod_license            : mod_license,
-            mod_version            : mod_version,
-            mod_authors            : mod_authors,
-            mod_description        : mod_description,
-    ]
+    var replaceProperties = [minecraft_version   : minecraft_version, minecraft_version_range: minecraft_version_range,
+                             forge_version       : forge_version, forge_version_range: forge_version_range,
+                             loader_version_range: loader_version_range,
+                             mod_id              : mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
+                             mod_authors         : mod_authors, mod_description: mod_description,]
 
     inputs.properties replaceProperties
 
@@ -198,24 +109,19 @@ tasks.named('processResources', ProcessResources).configure {
     }
 }
 
-// ============================================================
-// JAR タスク
-// ============================================================
 jarJar {
     enable()
 }
 
 tasks.named('jar', Jar).configure {
     manifest {
-        attributes([
-                "Specification-Title"     : mod_id,
-                "Specification-Vendor"    : mod_authors,
-                "Specification-Version"   : "1",
-                "Implementation-Title"    : project.name,
-                "Implementation-Version"  : project.jar.archiveVersion,
-                "Implementation-Vendor"   : mod_authors,
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-        ])
+        attributes(["Specification-Title"     : mod_id,
+                    "Specification-Vendor"    : mod_authors,
+                    "Specification-Version"   : "1",
+                    "Implementation-Title"    : project.name,
+                    "Implementation-Version"  : project.jar.archiveVersion,
+                    "Implementation-Vendor"   : mod_authors,
+                    "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")])
     }
 
     finalizedBy 'reobfJar'
