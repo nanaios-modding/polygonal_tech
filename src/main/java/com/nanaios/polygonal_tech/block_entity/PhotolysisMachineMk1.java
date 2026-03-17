@@ -13,6 +13,7 @@ import com.nanaios.polygonal_tech.util.sync.Synchronize;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
@@ -22,13 +23,13 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.NotNull;
 
 public class PhotolysisMachineMk1 extends BaseGuiMachine<PhotolysisMachineMk1> {
-    @Synchronize(Synchronize.Type.IN_GUI)
+    @Synchronize(Synchronize.Type.ALWAYS)
     private ItemSlot inputSlot;
-    @Synchronize(Synchronize.Type.IN_GUI)
+    @Synchronize(Synchronize.Type.ALWAYS)
     private LongFluidTank outputTank;
-    @Synchronize(Synchronize.Type.IN_GUI)
+    @Synchronize(Synchronize.Type.ALWAYS)
     private long progress = 0;
-    @Synchronize(Synchronize.Type.IN_GUI)
+    @Synchronize(Synchronize.Type.ALWAYS)
     private boolean canSeeSky = false;
 
     public PhotolysisMachineMk1(BlockPos pos, BlockState state) {
@@ -68,12 +69,22 @@ public class PhotolysisMachineMk1 extends BaseGuiMachine<PhotolysisMachineMk1> {
     }
 
     @Override
+    public void writeSyncData(FriendlyByteBuf buf) {
+        super.writeSyncData(buf);
+        buf.writeVarLong(progress);
+        buf.writeBoolean(canSeeSky);
+    }
+
+    @Override
+    public void readSyncData(FriendlyByteBuf buf) {
+        super.readSyncData(buf);
+        progress = buf.readVarLong();
+        canSeeSky = buf.readBoolean();
+    }
+
+    @Override
     public boolean serverTick(Level level, BlockPos pos, BlockState state, PhotolysisMachineMk1 blockEntity) {
         boolean isChanged = super.serverTick(level, pos, state, blockEntity);
-
-        // 前tickのデータを保存
-        long oldProgress = progress;
-        boolean oldCanSeeSky = canSeeSky;
 
         // 処理が可能かどうかをチェック
         boolean hasItem = inputSlot.getStack() != ItemStack.EMPTY;
@@ -89,9 +100,6 @@ public class PhotolysisMachineMk1 extends BaseGuiMachine<PhotolysisMachineMk1> {
         } else {
             progress = 0; // 処理できない場合は進行度をリセット
         }
-
-        isChanged |= (oldCanSeeSky != canSeeSky); // 空が見える状態が変化した場合は状態が変化したとみなす
-        isChanged |= (oldProgress != progress); // 進行度が変化した場合は状態が変化したとみなす
 
         return isChanged;
     }

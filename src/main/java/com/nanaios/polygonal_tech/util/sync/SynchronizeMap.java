@@ -16,10 +16,18 @@ public class SynchronizeMap {
     @SuppressWarnings("rawtypes")
     public static final Map<Class, List<Field>> inGuiSynchronizedFields = new HashMap<>();
 
+    private static final List<String> scannedMods = new ArrayList<>();
+
     private static final Type syncType = Type.getType("Lcom/nanaios/polygonal_tech/util/sync/Synchronize;");
 
     @SuppressWarnings("rawtypes")
     public static void scanSynchronizeAnnotation(String modId) {
+        if(scannedMods.contains(modId)) {
+            PolygonalTech.LOGGER.warn("Mod {} has already been scanned for synchronization annotations. Skipping.", modId);
+            return;
+        }
+        scannedMods.add(modId);
+
         IModFileInfo info = ModList.get().getModFileById(modId);
         ModFileScanData scanData = info.getFile().getScanResult();
         Set<ModFileScanData.AnnotationData> annotationData = scanData.getAnnotations();
@@ -44,5 +52,7 @@ public class SynchronizeMap {
                 PolygonalTech.LOGGER.error("Failed to find field for synchronization: {} in class {}", data.memberName(), data.clazz().getClassName(), e);
             }
         }
+
+
     }
 }

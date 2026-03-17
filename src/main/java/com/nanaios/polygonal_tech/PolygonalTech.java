@@ -2,6 +2,7 @@ package com.nanaios.polygonal_tech;
 
 import com.mojang.logging.LogUtils;
 import com.nanaios.polygonal_tech.config.PolygonalTechConfig;
+import com.nanaios.polygonal_tech.network.PolygonalTechNetwork;
 import com.nanaios.polygonal_tech.registries.*;
 import com.nanaios.polygonal_tech.util.sync.SynchronizeMap;
 import net.minecraft.resources.ResourceLocation;
@@ -37,6 +38,7 @@ public class PolygonalTech {
     public void commonSetup(final FMLCommonSetupEvent event) {
         // 同期システムの初期化
         SynchronizeMap.scanSynchronizeAnnotation(MODID);
+        event.enqueueWork(PolygonalTechNetwork::registerMessages);
     }
 
     /// {@link ResourceLocation}を{@link PolygonalTech#MODID}付きで生成する
