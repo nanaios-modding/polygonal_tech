@@ -1,5 +1,7 @@
 package com.nanaios.polygonal_tech.util.sync;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -10,11 +12,12 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface Synchronize {
-    Type value();
+    @NotNull
+    Type value() default Type.IN_GUI;
     enum Type {
         /// 常に同期される
         ALWAYS,
         /// GUIを開いているときのみ同期される
-        MENU
+        IN_GUI
     }
 }
