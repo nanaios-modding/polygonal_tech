@@ -27,6 +27,12 @@ public class LongEnergyStorage extends BaseCapability implements ILongEnergyStor
     }
 
     @Override
+    public void setLongEnergy(long energy) {
+        this.energy = energy;
+        triggerEvent(PolygonalTechEventType.CAPABILITY_UPDATE, CapabilityUpdateEvent.DEFAULT);
+    }
+
+    @Override
     public long receiveLongEnergy(long maxReceive, boolean simulate) {
         if (!canReceive()) return 0;
 

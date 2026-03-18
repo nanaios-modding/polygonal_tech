@@ -69,10 +69,17 @@ public class LongFluidTank extends BaseCapability implements ILongFluidTank {
         return drain(resource.getLongAmount(), action);
     }
 
-
     @Override
     public @NotNull LongFluidStack getFluid() {
         return fluid;
+    }
+
+    @Override
+    public void setFluid(LongFluidStack fluid) {
+        if (isFluidValid(fluid)) {
+            this.fluid = fluid;
+            triggerEvent(PolygonalTechEventType.CAPABILITY_UPDATE, CapabilityUpdateEvent.DEFAULT);
+        }
     }
 
     @Override

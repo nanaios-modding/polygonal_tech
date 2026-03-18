@@ -34,6 +34,11 @@ public class LongEnergyCombinedCapability extends BaseCombinedCapability<ILongEn
     }
 
     @Override
+    public void setLongEnergy(long energy) {
+
+    }
+
+    @Override
     public long receiveLongEnergy(long maxReceive, boolean simulate) {
         long totalReceived = 0;
         for(ILongEnergyStorage storage: capabilities) {

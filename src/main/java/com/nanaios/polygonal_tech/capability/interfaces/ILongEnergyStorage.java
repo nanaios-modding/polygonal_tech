@@ -14,6 +14,8 @@ public interface ILongEnergyStorage extends IEnergyStorage,ICapability {
     /// 最大エネルギー量をlong型で取得します。
     long getLongMaxEnergyStored();
 
+    void setLongEnergy(long energy);
+
     /// エネルギーを受け取ります。
     /// @param maxReceive 受け取るエネルギーの最大量
     /// @param simulate trueの場合、実際にはエネルギーを受け取らず、受け取れるエネルギー量をシミュレートします。
@@ -37,7 +39,7 @@ public interface ILongEnergyStorage extends IEnergyStorage,ICapability {
     default void deserializeNBT(CompoundTag nbt) {
         if (nbt.contains(NBT_STORED_ENERGY)) {
             long energy = nbt.getLong(NBT_STORED_ENERGY);
-            receiveLongEnergy(energy, false);
+            setLongEnergy(energy);
         }
     }
 

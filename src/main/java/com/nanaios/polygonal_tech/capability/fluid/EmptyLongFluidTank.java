@@ -24,6 +24,11 @@ public class EmptyLongFluidTank implements ILongFluidTank {
     }
 
     @Override
+    public void setFluid(LongFluidStack fluidStack) {
+
+    }
+
+    @Override
     public long fillLong(LongFluidStack resource, FluidAction action) {
         return 0;
     }

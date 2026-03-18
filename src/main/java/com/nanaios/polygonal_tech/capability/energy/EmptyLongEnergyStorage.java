@@ -20,6 +20,11 @@ public class EmptyLongEnergyStorage implements ILongEnergyStorage {
     }
 
     @Override
+    public void setLongEnergy(long energy) {
+
+    }
+
+    @Override
     public long receiveLongEnergy(long maxReceive, boolean simulate) {
         return 0;
     }

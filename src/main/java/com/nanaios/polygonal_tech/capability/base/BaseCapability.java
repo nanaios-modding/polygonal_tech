@@ -23,6 +23,7 @@ public abstract class BaseCapability implements ICapability {
     protected IOMode[] ioModes = {IOMode.NONE, IOMode.NONE, IOMode.NONE, IOMode.NONE, IOMode.NONE, IOMode.NONE};
     protected boolean arrowInput;
     protected boolean arrowOutput;
+    /// 注意；クライアント側ではこの値は意味を持ちません。サーバー側でのみ、Capabilityの状態が変更されたことを示すために使用されます。
     protected boolean isMarkUpdate;
 
     public BaseCapability(boolean arrowInput,boolean arrowOutput) {

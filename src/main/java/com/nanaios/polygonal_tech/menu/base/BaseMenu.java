@@ -19,7 +19,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class BaseMenu<M extends BaseGuiMachine<M>> extends AbstractContainerMenu {

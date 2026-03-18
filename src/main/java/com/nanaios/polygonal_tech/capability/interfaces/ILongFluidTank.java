@@ -17,6 +17,8 @@ public interface ILongFluidTank extends IFluidTank, ICapability {
     /// タンクの最大容量をlong型で取得します。
     long getLongCapacity();
 
+    void setFluid(LongFluidStack fluidStack);
+
     /// 流体を受け取ります。
     ///
     /// @param resource 受け取る流体の種類と量をLongFluidStackで指定します。
@@ -52,7 +54,7 @@ public interface ILongFluidTank extends IFluidTank, ICapability {
     @Override
     default void deserializeNBT(CompoundTag nbt) {
         LongFluidStack fluidStack = LongFluidStack.loadLongFluidStackFromNBT(nbt);
-        fillLong(fluidStack, FluidAction.EXECUTE);
+        setFluid(fluidStack);
     }
 
     @NotNull
