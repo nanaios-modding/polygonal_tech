@@ -1,0 +1,92 @@
+package com.nanaios.polygonal_tech.client.gui.parts;
+
+import com.nanaios.polygonal_tech.capability.interfaces.ILongFluidTank;
+import com.nanaios.polygonal_tech.client.gui.util.FluidRenderUtil;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.FormattedCharSequence;
+import net.minecraftforge.fluids.FluidStack;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.function.Supplier;
+
+public class FluidTankPart implements IGuiPart {
+    private static final int TANK_BORDER_COLOR = 0xFFFFFFFF;
+    private static final int TANK_BACKGROUND_COLOR = 0xFF373737;
+
+    private final int x;
+    private final int y;
+    private final int width;
+    private final int height;
+    private final Supplier<ILongFluidTank> tankSupplier;
+
+    public FluidTankPart(int x, int y, int width, int height, Supplier<ILongFluidTank> tankSupplier) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.tankSupplier = tankSupplier;
+    }
+
+    @Override
+    public void render(GuiGraphics graphics, float partialTick, int mouseX, int mouseY, int leftPos, int topPos) {
+        int tankX = leftPos + x;
+        int tankY = topPos + y;
+
+        graphics.fill(tankX - 1, tankY - 1, tankX + width + 1, tankY + height + 1, TANK_BORDER_COLOR);
+        graphics.fill(tankX, tankY, tankX + width, tankY + height, TANK_BACKGROUND_COLOR);
+
+        ILongFluidTank tank = tankSupplier.get();
+        if (tank == null) {
+            return;
+        }
+
+        FluidRenderUtil.renderFluidInTank(graphics, tank, tankX, tankY, width, height);
+    }
+
+    @Override
+    public void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY, int leftPos, int topPos, Font font) {
+        int tankX = leftPos + x;
+        int tankY = topPos + y;
+
+        if (!isMouseOverTank(mouseX, mouseY, tankX, tankY)) {
+            return;
+        }
+
+        ILongFluidTank tank = tankSupplier.get();
+        if (tank == null) {
+            return;
+        }
+
+        long amount = tank.getFluidLongAmount();
+        long capacity = tank.getLongCapacity();
+
+        List<Component> tooltipLines = new ArrayList<>();
+        FluidStack fluidStack = tank.getFluid();
+        if (fluidStack.isEmpty()) {
+            tooltipLines.add(Component.literal("空"));
+        } else {
+            tooltipLines.add(fluidStack.getDisplayName());
+        }
+
+        tooltipLines.add(Component.literal(formatLongValue(amount) + " / " + formatLongValue(capacity) + " mB"));
+
+        List<FormattedCharSequence> formattedTooltipLines = new ArrayList<>();
+        for (Component tooltipLine : tooltipLines) {
+            formattedTooltipLines.add(tooltipLine.getVisualOrderText());
+        }
+
+        graphics.renderTooltip(font, formattedTooltipLines, mouseX, mouseY);
+    }
+
+    private boolean isMouseOverTank(int mouseX, int mouseY, int tankX, int tankY) {
+        return mouseX >= tankX && mouseX < tankX + width && mouseY >= tankY && mouseY < tankY + height;
+    }
+
+    private String formatLongValue(long value) {
+        return String.format(Locale.US, "%,d", value);
+    }
+}

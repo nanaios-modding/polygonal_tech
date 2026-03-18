@@ -10,6 +10,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,9 +54,14 @@ public class BaseScreen<M extends BaseGuiMachine<M>> extends AbstractContainerSc
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         this.renderBackground(graphics);
         super.render(graphics, mouseX, mouseY, partialTick);
+
+        for (IGuiPart part : guiParts) {
+            part.renderTooltip(graphics, mouseX, mouseY, this.leftPos, this.topPos, this.font);
+        }
+
         this.renderTooltip(graphics, mouseX, mouseY);
     }
 }
