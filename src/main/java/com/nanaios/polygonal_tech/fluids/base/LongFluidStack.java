@@ -40,9 +40,9 @@ public class LongFluidStack extends FluidStack {
         if (fluid == null) return EMPTY;
 
         if (nbt.contains("Tag", 10)) {
-            return new LongFluidStack(fluid, nbt.getInt("Amount"), nbt.getCompound("Tag"));
+            return new LongFluidStack(fluid, nbt.getLong("Amount"), nbt.getCompound("Tag"));
         } else {
-            return new LongFluidStack(fluid, nbt.getInt("Amount"));
+            return new LongFluidStack(fluid, nbt.getLong("Amount"));
         }
     }
 

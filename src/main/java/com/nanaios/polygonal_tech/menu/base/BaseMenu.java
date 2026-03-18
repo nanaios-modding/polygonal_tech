@@ -6,6 +6,7 @@ import com.nanaios.polygonal_tech.capability.interfaces.IItemSlot;
 import com.nanaios.polygonal_tech.util.sync.SyncedValue;
 import com.nanaios.polygonal_tech.util.sync.SynchronizeMap;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -62,6 +63,20 @@ public class BaseMenu<M extends BaseGuiMachine<M>> extends AbstractContainerMenu
 
         addPlayerInventory(inv);
         addPlayerHotbar(inv);
+
+        if(inv.player instanceof ServerPlayer serverPlayer) {
+            machine.guiViewer.add(serverPlayer);
+        }
+    }
+
+    @Override
+    public void removed(@NotNull Player player) {
+        super.removed(player);
+
+        M machine = getMachine();
+        if(machine != null && player instanceof ServerPlayer serverPlayer) {
+            machine.guiViewer.remove(serverPlayer);
+        }
     }
 
     public int getItemSlotCount() {

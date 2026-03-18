@@ -34,7 +34,7 @@ public abstract class BaseGuiMachine<M extends BaseGuiMachine<M>> extends BaseMa
     @SuppressWarnings("rawtypes")
     protected final List<SyncedValue> syncedGuiFields;
     protected boolean[] markedForGuiSync;
-    protected List<ServerPlayer> guiViewer = new ArrayList<>();
+    public final List<ServerPlayer> guiViewer = new ArrayList<>();
 
     public BaseGuiMachine(RegistryObject<BlockEntityType<M>> type, BlockPos pos, BlockState state) {
         super(type.get(), pos, state);

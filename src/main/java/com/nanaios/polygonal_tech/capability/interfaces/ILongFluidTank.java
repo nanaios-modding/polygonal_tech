@@ -9,8 +9,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import org.jetbrains.annotations.NotNull;
 
 /// long型の流体量を扱うためのインターフェース
-public interface ILongFluidTank extends IFluidTank ,ICapability{
-    String NBT_STORED_LONG_FLUID_STACK = "stored_long_fluid_stack";
+public interface ILongFluidTank extends IFluidTank, ICapability {
 
     /// タンク内の流体量をlong型で取得します。
     long getFluidLongAmount();
@@ -29,38 +28,31 @@ public interface ILongFluidTank extends IFluidTank ,ICapability{
     ///
     /// @return タンク内の流体をLongFluidStackで返します。
     @Override
-    @NotNull
-    LongFluidStack getFluid();
+    @NotNull LongFluidStack getFluid();
 
     /// 流体を抽出します。
     ///
     /// @param maxDrain 抽出する流体の最大量をlong型で指定します。
     /// @param action   抽出のシミュレーションを行うかどうかを指定します。
     /// @return 実際に抽出された流体の種類と量をLongFluidStackで返します。
-    @NotNull
-    LongFluidStack drain(long maxDrain, FluidAction action);
+    @NotNull LongFluidStack drain(long maxDrain, FluidAction action);
 
     /// 流体を抽出します。
     ///
     /// @param resource 抽出する流体の種類と量をLongFluidStackで指定します。
     /// @param action   抽出のシミュレーションを行うかどうかを指定します。
     /// @return 実際に抽出された流体の種類と量をLongFluidStackで返します。
-    @NotNull
-    LongFluidStack drain(LongFluidStack resource, FluidAction action);
+    @NotNull LongFluidStack drain(LongFluidStack resource, FluidAction action);
 
     @Override
     default CompoundTag serializeNBT() {
-        CompoundTag tag = new CompoundTag();
-        tag.put(NBT_STORED_LONG_FLUID_STACK, getFluid().writeToNBT(new CompoundTag()));
-        return tag;
+        return getFluid().writeToNBT(new CompoundTag());
     }
 
     @Override
     default void deserializeNBT(CompoundTag nbt) {
-        if (nbt.contains(NBT_STORED_LONG_FLUID_STACK)) {
-            LongFluidStack fluidStack = LongFluidStack.loadLongFluidStackFromNBT(nbt.getCompound(NBT_STORED_LONG_FLUID_STACK));
-            fillLong(fluidStack, FluidAction.EXECUTE);
-        }
+        LongFluidStack fluidStack = LongFluidStack.loadLongFluidStackFromNBT(nbt);
+        fillLong(fluidStack, FluidAction.EXECUTE);
     }
 
     @NotNull

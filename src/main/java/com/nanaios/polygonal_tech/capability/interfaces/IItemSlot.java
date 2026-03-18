@@ -7,7 +7,6 @@ import org.jetbrains.annotations.NotNull;
 
 /// 単一のItemStackスロットを表すインターフェース
 public interface IItemSlot extends IItemHandlerModifiable, ICapability {
-    String NBT_STORED = "stored_item";
 
     /// ItemStackを取得するメソッド
     ///
@@ -49,21 +48,17 @@ public interface IItemSlot extends IItemHandlerModifiable, ICapability {
 
     @Override
     default CompoundTag serializeNBT() {
-        CompoundTag tag = new CompoundTag();
-        tag.put(NBT_STORED, getStack().serializeNBT());
-        return tag;
+        return getStack().serializeNBT();
     }
 
     @Override
     default void deserializeNBT(CompoundTag nbt) {
-        if (nbt.contains(NBT_STORED)) {
-            ItemStack stack = ItemStack.of(nbt.getCompound(NBT_STORED));
-            if (!stack.isEmpty()) {
-                setStack(stack);
-                return;
-            }
+        ItemStack stack = ItemStack.of(nbt);
+        if (!stack.isEmpty()) {
+            setStack(stack);
+            return;
         }
-        
+
         setStack(ItemStack.EMPTY);
     }
 
