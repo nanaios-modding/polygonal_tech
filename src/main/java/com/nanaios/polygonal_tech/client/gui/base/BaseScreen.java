@@ -49,7 +49,7 @@ public class BaseScreen<M extends BaseGuiMachine<M>> extends AbstractContainerSc
         }
 
         for(IGuiPart part : guiParts) {
-            part.render(graphics, partialTick, mouseX, mouseY, x, y);
+            part.renderBg(graphics, partialTick, mouseX, mouseY, x, y);
         }
     }
 
@@ -57,6 +57,10 @@ public class BaseScreen<M extends BaseGuiMachine<M>> extends AbstractContainerSc
     public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         this.renderBackground(graphics);
         super.render(graphics, mouseX, mouseY, partialTick);
+
+        for (IGuiPart part : guiParts) {
+            part.render(graphics,mouseX,mouseY,partialTick,this.leftPos,this.topPos);
+        }
 
         for (IGuiPart part : guiParts) {
             part.renderTooltip(graphics, mouseX, mouseY, this.leftPos, this.topPos, this.font);

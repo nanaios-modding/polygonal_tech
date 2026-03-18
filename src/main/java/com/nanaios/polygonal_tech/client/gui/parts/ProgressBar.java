@@ -26,7 +26,7 @@ public class ProgressBar implements IGuiPart{
     }
 
     @Override
-    public void render(GuiGraphics graphics, float partialTick, int mouseX, int mouseY, int leftPos, int topPos) {
+    public void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY, int leftPos, int topPos) {
         long progress = progressSupplier.getAsLong();
         long maxProgress = maxProgressSupplier.getAsLong();
         long progressWidth = maxProgress == 0 ? 0 : (long) ((double) progress / maxProgress * ARROW_WIDTH);

@@ -1,6 +1,5 @@
 package com.nanaios.polygonal_tech.block_entity;
 
-import com.nanaios.polygonal_tech.PolygonalTech;
 import com.nanaios.polygonal_tech.block_entity.base.BaseGuiMachine;
 import com.nanaios.polygonal_tech.capability.CapabilityBuilder;
 import com.nanaios.polygonal_tech.capability.fluid.LongFluidTank;
@@ -80,7 +79,6 @@ public class PhotolysisMachineMk1 extends BaseGuiMachine<PhotolysisMachineMk1> {
             if(progress >= PolygonalTechMachineConfig.PHOTOLYSIS_MACHINE_MK1_PROCESS_TIME.get()) {
                 inputSlot.extractItem(1, false); // アイテムを1つ消費
                 outputTank.fillLong(new LongFluidStack(Fluids.WATER, 10000000000L), IFluidHandler.FluidAction.EXECUTE);
-                PolygonalTech.LOGGER.debug("now tank fluid amount: {}", outputTank.getFluidLongAmount());
                 progress = 0; // 進行度をリセット
             }
         } else {

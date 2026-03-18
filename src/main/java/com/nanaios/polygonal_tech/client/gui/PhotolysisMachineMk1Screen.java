@@ -1,6 +1,5 @@
 package com.nanaios.polygonal_tech.client.gui;
 
-import com.nanaios.polygonal_tech.PolygonalTech;
 import com.nanaios.polygonal_tech.block_entity.PhotolysisMachineMk1;
 import com.nanaios.polygonal_tech.client.gui.base.BaseScreen;
 import com.nanaios.polygonal_tech.client.gui.parts.FluidTankPart;
@@ -28,7 +27,5 @@ public class PhotolysisMachineMk1Screen extends BaseScreen<PhotolysisMachineMk1>
                 16, 56,
                 () -> machine.outputTank
         ));
-
-        PolygonalTech.LOGGER.debug("tank amount: {}", machine.outputTank.getFluidLongAmount());
     }
 }

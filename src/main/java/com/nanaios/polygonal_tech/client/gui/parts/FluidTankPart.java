@@ -32,7 +32,7 @@ public class FluidTankPart implements IGuiPart {
     }
 
     @Override
-    public void render(GuiGraphics graphics, float partialTick, int mouseX, int mouseY, int leftPos, int topPos) {
+    public void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY, int leftPos, int topPos) {
         int tankX = leftPos + x;
         int tankY = topPos + y;
 
