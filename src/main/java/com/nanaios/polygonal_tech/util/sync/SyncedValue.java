@@ -14,10 +14,6 @@ public abstract class SyncedValue<T> {
         this.instance = instance;
     }
 
-    public T getValue() {
-        return value;
-    }
-
     public void setValue(T value) {
         this.value = value;
         try {
@@ -26,13 +22,16 @@ public abstract class SyncedValue<T> {
     }
 
     @SuppressWarnings("unchecked")
-    public boolean isChanged() {
-        T oldValue = value;
+    protected void updateValue() {
         try {
             value = (T) field.get(instance);
-            return !value.equals(oldValue);
         } catch (IllegalAccessException ignored) {}
-        return false;
+    }
+
+    public boolean isChanged() {
+        T oldValue = value;
+        updateValue();
+        return !value.equals(oldValue);
     }
 
     public abstract void writeToFriendlyByteBuf(FriendlyByteBuf tag);

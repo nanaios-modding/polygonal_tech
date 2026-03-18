@@ -11,7 +11,7 @@ public class SyncedBoolean extends SyncedValue<Boolean>{
 
     @Override
     public void writeToFriendlyByteBuf(FriendlyByteBuf tag) {
-        tag.writeBoolean(getValue());
+        tag.writeBoolean(value);
     }
 
     @Override

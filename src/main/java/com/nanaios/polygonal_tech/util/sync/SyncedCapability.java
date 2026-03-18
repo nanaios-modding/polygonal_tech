@@ -12,18 +12,18 @@ public class SyncedCapability extends SyncedValue<ICapability> {
 
     @Override
     public boolean isChanged() {
-        ICapability capability = getValue();
-        return capability != null && capability.isMarkUpdate();
+        updateValue();
+        return value != null && value.isMarkUpdate();
     }
 
     @Override
     public void writeToFriendlyByteBuf(FriendlyByteBuf tag) {
-        tag.writeNbt(getValue().serializeNBT());
-        getValue().setMarkUpdate(false);
+        tag.writeNbt(value.serializeNBT());
+        value.setMarkUpdate(false);
     }
 
     @Override
     public void readFromFriendlyByteBuf(FriendlyByteBuf tag) {
-         getValue().deserializeNBT(tag.readNbt());
+         value.deserializeNBT(tag.readNbt());
     }
 }
