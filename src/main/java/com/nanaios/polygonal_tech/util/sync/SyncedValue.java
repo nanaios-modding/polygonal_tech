@@ -14,6 +14,10 @@ public abstract class SyncedValue<T> {
         this.instance = instance;
     }
 
+    public T getValue() {
+        return value;
+    }
+
     public void setValue(T value) {
         this.value = value;
         try {
@@ -32,6 +36,9 @@ public abstract class SyncedValue<T> {
         T oldValue = value;
         updateValue();
         return !value.equals(oldValue);
+    }
+    
+    public void onSynced() {
     }
 
     public abstract void writeToFriendlyByteBuf(FriendlyByteBuf tag);

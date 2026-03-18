@@ -51,19 +51,21 @@ public final class FluidRenderUtil {
         float green = (float) (tintColor >> 8 & 255) / 255.0F;
         float blue = (float) (tintColor & 255) / 255.0F;
 
-        int fluidY = y + height - fillHeight;
+        int fluidTopY = y + height - fillHeight;
 
         RenderSystem.enableBlend();
         graphics.setColor(red, green, blue, alpha);
+        graphics.enableScissor(x, fluidTopY, x + width, y + height);
 
         for (int xOffset = 0; xOffset < width; xOffset += TILE_SIZE) {
             int drawWidth = Math.min(TILE_SIZE, width - xOffset);
             for (int yOffset = 0; yOffset < fillHeight; yOffset += TILE_SIZE) {
-                int drawHeight = Math.min(TILE_SIZE, fillHeight - yOffset);
-                graphics.blit(x + xOffset, fluidY + yOffset, 0, drawWidth, drawHeight, sprite);
+                int drawY = y + height - yOffset - TILE_SIZE;
+                graphics.blit(x + xOffset, drawY, 0, drawWidth, TILE_SIZE, sprite);
             }
         }
 
+        graphics.disableScissor();
         graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.disableBlend();
     }

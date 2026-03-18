@@ -1,10 +1,13 @@
 package com.nanaios.polygonal_tech.client.gui.parts;
 
+import com.nanaios.polygonal_tech.PolygonalTech;
+import com.nanaios.polygonal_tech.PolygonalTechLang;
 import com.nanaios.polygonal_tech.capability.interfaces.ILongFluidTank;
 import com.nanaios.polygonal_tech.client.gui.util.FluidRenderUtil;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -14,8 +17,12 @@ import java.util.Locale;
 import java.util.function.Supplier;
 
 public class FluidTankPart implements IGuiPart {
-    private static final int TANK_BORDER_COLOR = 0xFFFFFFFF;
-    private static final int TANK_BACKGROUND_COLOR = 0xFF373737;
+    private static final int TANK_BACKGROUND_COLOR = 0xFF8B8B8B;
+    private static final ResourceLocation FLUID_TANK_COVER = PolygonalTech.rl("textures/gui/fluid_tank_cover.png");
+
+    private static final int COVER_BORDER_SIZE = 1;
+    private static final int COVER_WIDTH = 18;
+    private static final int COVER_HEIGHT = 66;
 
     private final int x;
     private final int y;
@@ -36,15 +43,24 @@ public class FluidTankPart implements IGuiPart {
         int tankX = leftPos + x;
         int tankY = topPos + y;
 
-        graphics.fill(tankX - 1, tankY - 1, tankX + width + 1, tankY + height + 1, TANK_BORDER_COLOR);
         graphics.fill(tankX, tankY, tankX + width, tankY + height, TANK_BACKGROUND_COLOR);
 
         ILongFluidTank tank = tankSupplier.get();
-        if (tank == null) {
-            return;
+        if (tank != null) {
+            FluidRenderUtil.renderFluidInTank(graphics, tank, tankX, tankY, width, height);
         }
 
-        FluidRenderUtil.renderFluidInTank(graphics, tank, tankX, tankY, width, height);
+        graphics.blit(
+                FLUID_TANK_COVER,
+                tankX - COVER_BORDER_SIZE,
+                tankY - COVER_BORDER_SIZE,
+                0,
+                0,
+                COVER_WIDTH,
+                COVER_HEIGHT,
+                COVER_WIDTH,
+                COVER_HEIGHT
+        );
     }
 
     @Override
@@ -61,18 +77,18 @@ public class FluidTankPart implements IGuiPart {
             return;
         }
 
-        long amount = tank.getFluidLongAmount();
+        long amount = tank.getFluid().getLongAmount();
         long capacity = tank.getLongCapacity();
 
         List<Component> tooltipLines = new ArrayList<>();
         FluidStack fluidStack = tank.getFluid();
         if (fluidStack.isEmpty()) {
-            tooltipLines.add(Component.literal("空"));
+            tooltipLines.add(PolygonalTechLang.FLUID_TANK_EMPTY.get());
         } else {
             tooltipLines.add(fluidStack.getDisplayName());
         }
 
-        tooltipLines.add(Component.literal(formatLongValue(amount) + " / " + formatLongValue(capacity) + " mB"));
+        tooltipLines.add(PolygonalTechLang.FLUID_TANK_AMOUNT.get(formatLongValue(amount), formatLongValue(capacity)));
 
         List<FormattedCharSequence> formattedTooltipLines = new ArrayList<>();
         for (Component tooltipLine : tooltipLines) {

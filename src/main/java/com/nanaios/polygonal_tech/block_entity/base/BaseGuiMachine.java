@@ -27,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public abstract class BaseGuiMachine<M extends BaseGuiMachine<M>> extends BaseMachine<M> implements MenuProvider {
@@ -49,14 +50,21 @@ public abstract class BaseGuiMachine<M extends BaseGuiMachine<M>> extends BaseMa
         }
     }
 
+    public void forceWriteSyncGuiData(FriendlyByteBuf buf) {
+        boolean[] allTrue = new boolean[syncedGuiFields.size()];
+        Arrays.fill(allTrue, true);
+        buf.writeBoolean(true);
+        writeSyncDataFromFields(syncedGuiFields, allTrue, buf);
+    }
+
     /// GUIを開いているときにのみ送るデータ。これにより、GUIを開いていないときのネットワーク負荷を減らすことができる。
-    protected void writeSyncGuiData(FriendlyByteBuf buf) {
+    public void writeSyncGuiData(FriendlyByteBuf buf) {
         buf.writeBoolean(true);
         writeSyncDataFromFields(syncedGuiFields, markedForGuiSync, buf);
     }
 
     /// GUIを開いているときにのみ受け取るデータ。これにより、GUIを開いていないときのネットワーク負荷を減らすことができる。
-    protected void readSyncGuiData(FriendlyByteBuf buf) {
+    public void readSyncGuiData(FriendlyByteBuf buf) {
         readSyncDataToFields(syncedGuiFields, buf);
     }
 
@@ -85,6 +93,9 @@ public abstract class BaseGuiMachine<M extends BaseGuiMachine<M>> extends BaseMa
                     PacketDistributor.PLAYER.with(() -> serverPlayer),
                     new ClientBoundBlockEntityBufPacket(this.worldPosition, level.dimension(), buf)
             );
+        }
+        for (SyncedValue syncedGuiField : syncedGuiFields) {
+            syncedGuiField.onSynced();
         }
     }
 

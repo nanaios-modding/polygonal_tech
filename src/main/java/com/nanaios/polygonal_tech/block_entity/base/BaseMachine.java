@@ -82,6 +82,16 @@ public abstract class BaseMachine<M extends BaseMachine<M>> extends BaseBlockEnt
         }
     }
 
+    @Override
+    public void sendSyncPacket() {
+        super.sendSyncPacket();
+        if (level != null && !level.isClientSide) {
+            for (SyncedValue syncedField : syncedFields) {
+                syncedField.onSynced();
+            }
+        }
+    }
+
     @SuppressWarnings("rawtypes")
     protected List<SyncedValue> createSyncedField(List<Field> fields) {
         List<SyncedValue> syncedFields = new ArrayList<>();

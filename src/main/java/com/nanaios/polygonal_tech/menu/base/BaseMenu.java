@@ -3,9 +3,13 @@ package com.nanaios.polygonal_tech.menu.base;
 import com.nanaios.polygonal_tech.PolygonalTech;
 import com.nanaios.polygonal_tech.block_entity.base.BaseGuiMachine;
 import com.nanaios.polygonal_tech.capability.interfaces.IItemSlot;
+import com.nanaios.polygonal_tech.network.PolygonalTechNetwork;
+import com.nanaios.polygonal_tech.network.packet.ClientBoundBlockEntityBufPacket;
 import com.nanaios.polygonal_tech.util.sync.SyncedValue;
 import com.nanaios.polygonal_tech.util.sync.SynchronizeMap;
+import io.netty.buffer.Unpooled;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -14,6 +18,7 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -64,6 +69,12 @@ public class BaseMenu<M extends BaseGuiMachine<M>> extends AbstractContainerMenu
 
         if(inv.player instanceof ServerPlayer serverPlayer) {
             machine.guiViewer.add(serverPlayer);
+            FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+            machine.forceWriteSyncGuiData(buf);
+            PolygonalTechNetwork.CHANNEL.send(
+                    PacketDistributor.PLAYER.with(() -> serverPlayer),
+                    new ClientBoundBlockEntityBufPacket(machine.getBlockPos(), serverPlayer.level().dimension(), buf)
+            );
         }
     }
 

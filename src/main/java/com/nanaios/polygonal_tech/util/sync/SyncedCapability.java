@@ -18,14 +18,17 @@ public class SyncedCapability extends SyncedValue<ICapability> {
 
     @Override
     public void writeToFriendlyByteBuf(FriendlyByteBuf tag) {
-        updateValue();
         tag.writeNbt(value.serializeNBT());
-        value.setMarkUpdate(false);
     }
 
     @Override
     public void readFromFriendlyByteBuf(FriendlyByteBuf tag) {
         updateValue();
         value.deserializeNBT(tag.readNbt());
+    }
+
+    @Override
+    public void onSynced() {
+        value.setMarkUpdate(false);
     }
 }

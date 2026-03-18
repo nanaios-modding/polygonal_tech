@@ -44,7 +44,7 @@ public class PhotolysisMachineMk1 extends BaseGuiMachine<PhotolysisMachineMk1> {
     @Override
     public CapabilityBuilder<ILongFluidTank> initFluidTank() {
         CapabilityBuilder<ILongFluidTank> builder = new CapabilityBuilder<>();
-        builder.add(outputTank = new LongFluidTank(false,true,() -> 100000000000L,fluidStack -> true), Direction.EAST,Direction.WEST);
+        builder.add(outputTank = new LongFluidTank(false,true,PolygonalTechMachineConfig.PHOTOLYSIS_MACHINE_MK1_OUTPUT_TANK_CAPACITY::get,fluidStack -> true), Direction.EAST,Direction.WEST);
         return builder;
     }
 
@@ -72,17 +72,28 @@ public class PhotolysisMachineMk1 extends BaseGuiMachine<PhotolysisMachineMk1> {
 
         // 処理が可能かどうかをチェック
         boolean hasItem = !inputSlot.getStack().isEmpty();
+        if(!hasItem) {
+            progress = 0; // アイテムがない場合は進行度をリセット
+            return isChanged;
+        }
+
+        long space = outputTank.getLongCapacity() - outputTank.getFluidLongAmount(); // 出力タンクの空き容量を計算
+        if(space < PolygonalTechMachineConfig.PHOTOLYSIS_MACHINE_MK1_PRODUCED_AMOUNT.get()) {
+            progress = 0; // 出力タンクに十分な空き容量がない場合は進行度をリセット
+            return isChanged;
+        }
+
         canSeeSky = level.canSeeSky(pos.above()) && level.getBrightness(LightLayer.SKY, pos) >= PolygonalTechMachineConfig.PHOTOLYSIS_MACHINE_MK1_PROCESS_LIGHT_LEVEL.get();
 
-        if(hasItem && canSeeSky) {
+        // 処理が可能な場合は進行度を増加
+        // 逆に処理が不可能な場合は進行を停止
+        if(canSeeSky) {
             progress++;
             if(progress >= PolygonalTechMachineConfig.PHOTOLYSIS_MACHINE_MK1_PROCESS_TIME.get()) {
                 inputSlot.extractItem(1, false); // アイテムを1つ消費
-                outputTank.fillLong(new LongFluidStack(Fluids.WATER, 10000000000L), IFluidHandler.FluidAction.EXECUTE);
+                outputTank.fillLong(new LongFluidStack(Fluids.WATER, PolygonalTechMachineConfig.PHOTOLYSIS_MACHINE_MK1_PRODUCED_AMOUNT.get()), IFluidHandler.FluidAction.EXECUTE);
                 progress = 0; // 進行度をリセット
             }
-        } else {
-            progress = 0; // 処理できない場合は進行度をリセット
         }
 
         return isChanged;

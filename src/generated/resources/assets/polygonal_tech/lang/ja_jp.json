@@ -1,3 +1,5 @@
 {
-  "block.polygonal_tech.photolysis_machine_mk1": "光分解機MK.1"
+  "block.polygonal_tech.photolysis_machine_mk1": "光分解機MK.1",
+  "tooltip.polygonal_tech.fluid_tank.empty": "空",
+  "tooltip.polygonal_tech.fluid_tank.amount": "%s / %s mB"
 }

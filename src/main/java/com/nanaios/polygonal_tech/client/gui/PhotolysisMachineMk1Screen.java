@@ -17,14 +17,14 @@ public class PhotolysisMachineMk1Screen extends BaseScreen<PhotolysisMachineMk1>
         if (machine == null) return;
 
         guiParts.add(new ProgressBar(
-                65,35,
+                78,40,
                 machine::getProgress,
                 () ->PolygonalTechMachineConfig.PHOTOLYSIS_MACHINE_MK1_PROCESS_TIME.get()
         ));
 
         guiParts.add(new FluidTankPart(
-                125, 20,
-                16, 56,
+                125, 15,
+                16, 64,
                 () -> machine.outputTank
         ));
     }
