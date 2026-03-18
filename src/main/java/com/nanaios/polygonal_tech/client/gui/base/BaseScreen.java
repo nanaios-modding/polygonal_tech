@@ -42,7 +42,7 @@ public class BaseScreen<M extends BaseGuiMachine<M>> extends AbstractContainerSc
 
         graphics.blit(BACK_GROUND, x, y, 0, 0, this.imageWidth, this.imageHeight);
 
-        for (int i = 0;i < menu.getMachineSlots();i++) {
+        for (int i = 0; i < menu.getItemSlotCount(); i++) {
             Slot slot = menu.slots.get(i);
             graphics.blit(SLOT, x + slot.x - 1, y + slot.y - 1, 0, 0, 18, 18,18,18);
         }

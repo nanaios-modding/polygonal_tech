@@ -1,9 +1,11 @@
 package com.nanaios.polygonal_tech.block_entity.base;
 
+import com.nanaios.polygonal_tech.PolygonalTech;
 import com.nanaios.polygonal_tech.capability.CapabilityBuilder;
 import com.nanaios.polygonal_tech.capability.PolygonalTechCapabilities;
 import com.nanaios.polygonal_tech.capability.energy.LongEnergyProvider;
 import com.nanaios.polygonal_tech.capability.fluid.LongFluidProvider;
+import com.nanaios.polygonal_tech.capability.interfaces.ICapability;
 import com.nanaios.polygonal_tech.capability.interfaces.IItemSlot;
 import com.nanaios.polygonal_tech.capability.interfaces.ILongEnergyStorage;
 import com.nanaios.polygonal_tech.capability.interfaces.ILongFluidTank;
@@ -25,24 +27,38 @@ import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public abstract class BaseMachine<M extends BaseMachine<M>> extends BaseBlockEntity<M> {
     public final LongEnergyProvider energyProvider = new LongEnergyProvider(this::capabilityUpdateListener);
     public final LongFluidProvider fluidProvider = new LongFluidProvider(this::capabilityUpdateListener);
     public final ItemSlotProvider itemSlotProvider = new ItemSlotProvider(this::capabilityUpdateListener);
-    protected final List<Field> alwaysSyncFields;
     @SuppressWarnings("rawtypes")
-    protected final List<SyncedValue> syncedFields = new ArrayList<>();
-    protected final boolean[] markedForSync;
+    protected final List<SyncedValue> syncedFields;
+    protected boolean[] markedForSync;
 
     public BaseMachine(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
 
-        // 同期対象のフィールドを取得。これにより、サブクラスで@Synchronizeアノテーションが付けられたフィールドも自動的に同期されるようになる。
-        alwaysSyncFields = SynchronizeMap.alwaysSynchronizedFields.getOrDefault(this.getClass(), List.of());
-        for (Field field : alwaysSyncFields) {
+        syncedFields = createSyncedField(SynchronizeMap.alwaysSynchronizedFields.getOrDefault(this.getClass(), List.of()));
+
+        if(!syncedFields.isEmpty()) {
+            markedForSync = new boolean[syncedFields.size()];
+        }
+
+        initEnergyStorage().register(energyProvider);
+        initFluidTank().register(fluidProvider);
+        initItemSlot().register(itemSlotProvider);
+    }
+
+    @SuppressWarnings("rawtypes")
+    protected List<SyncedValue> createSyncedField(List<Field> fields) {
+        List<SyncedValue> syncedFields = new ArrayList<>();
+        for (Field field : fields) {
             Class<?> fieldType = field.getType();
+
+            PolygonalTech.LOGGER.debug("fieldName [{}], fieldType [{}]", field.getName(), fieldType);
 
             if (fieldType == int.class) {
                 syncedFields.add(new SyncedInt(field, this));
@@ -50,46 +66,22 @@ public abstract class BaseMachine<M extends BaseMachine<M>> extends BaseBlockEnt
                 syncedFields.add(new SyncedBoolean(field, this));
             } else if (fieldType == long.class) {
                 syncedFields.add(new SyncedLong(field, this));
+            } else if (Arrays.asList(fieldType.getInterfaces()).contains(ICapability.class)) {
+                syncedFields.add(new SyncedCapability(field, this));
             }
         }
 
-        markedForSync = new boolean[syncedFields.size() - 1];
-
-        initEnergyStorage().register(energyProvider);
-        initFluidTank().register(fluidProvider);
-        initItemSlot().register(itemSlotProvider);
+        return syncedFields;
     }
 
     @Override
     public void writeSyncData(FriendlyByteBuf buf) {
-        int size = 0;
-        for (int i = 0; i < syncedFields.size(); i++) {
-            if (markedForSync[i]) {
-                size++;
-            }
-        }
-
-        // 変更されたフィールドの数を最初に書き込む。これにより、クライアントは受信するフィールドの数を知ることができる。
-        buf.writeInt(size);
-
-        // 変更されたフィールドのインデックスと値を順番に書き込む。これにより、クライアントはどのフィールドが変更されたかを知ることができる。
-        for (int i = 0; i < syncedFields.size(); i++) {
-            if (markedForSync[i]) {
-                buf.writeInt(i);
-                syncedFields.get(i).writeToFriendlyByteBuf(buf);
-                markedForSync[i] = false;
-            }
-        }
+        writeSyncDataFromFields(syncedFields,markedForSync,buf);
     }
 
     @Override
     public void readSyncData(FriendlyByteBuf buf) {
-        int size = buf.readInt();
-
-        for (int i = 0; i < size; i++) {
-            int index = buf.readInt();
-            syncedFields.get(index).readFromFriendlyByteBuf(buf);
-        }
+        readSyncDataToFields(syncedFields,buf);
     }
 
     @SuppressWarnings("rawtypes")
@@ -168,5 +160,37 @@ public abstract class BaseMachine<M extends BaseMachine<M>> extends BaseBlockEnt
     @Override
     public void invalidateCaps() {
         super.invalidateCaps();
+    }
+
+    @SuppressWarnings("rawtypes")
+    public static void writeSyncDataFromFields(List<SyncedValue> syncedFields,boolean[] markedForSync,FriendlyByteBuf buf) {
+        int size = 0;
+        for (int i = 0; i < syncedFields.size(); i++) {
+            if (markedForSync[i]) {
+                size++;
+            }
+        }
+
+        // 変更されたフィールドの数を最初に書き込む。これにより、クライアントは受信するフィールドの数を知ることができる。
+        buf.writeInt(size);
+
+        // 変更されたフィールドのインデックスと値を順番に書き込む。これにより、クライアントはどのフィールドが変更されたかを知ることができる。
+        for (int i = 0; i < syncedFields.size(); i++) {
+            if (markedForSync[i]) {
+                buf.writeInt(i);
+                syncedFields.get(i).writeToFriendlyByteBuf(buf);
+                markedForSync[i] = false;
+            }
+        }
+    }
+
+    @SuppressWarnings("rawtypes")
+    public static void readSyncDataToFields(List<SyncedValue> syncedFields,FriendlyByteBuf buf) {
+        int size = buf.readInt();
+
+        for (int i = 0; i < size; i++) {
+            int index = buf.readInt();
+            syncedFields.get(index).readFromFriendlyByteBuf(buf);
+        }
     }
 }

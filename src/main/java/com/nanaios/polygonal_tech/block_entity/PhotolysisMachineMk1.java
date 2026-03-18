@@ -22,14 +22,14 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.NotNull;
 
 public class PhotolysisMachineMk1 extends BaseGuiMachine<PhotolysisMachineMk1> {
-    @Synchronize(Synchronize.Type.ALWAYS)
-    private ItemSlot inputSlot;
-    @Synchronize(Synchronize.Type.ALWAYS)
-    private LongFluidTank outputTank;
-    @Synchronize(Synchronize.Type.ALWAYS)
-    private long progress = 0;
-    @Synchronize(Synchronize.Type.ALWAYS)
-    private boolean canSeeSky = false;
+    @Synchronize(Synchronize.Type.IN_GUI)
+    public ItemSlot inputSlot;
+    @Synchronize(Synchronize.Type.IN_GUI)
+    public LongFluidTank outputTank;
+    @Synchronize(Synchronize.Type.IN_GUI)
+    public long progress = 0;
+    @Synchronize(Synchronize.Type.IN_GUI)
+    public boolean canSeeSky = false;
 
     public PhotolysisMachineMk1(BlockPos pos, BlockState state) {
         super(PolygonalTechBlockEntityTypeRegister.PHOTOLYSIS_MACHINE_MK1, pos, state);

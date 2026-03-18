@@ -38,7 +38,7 @@ public class PolygonalTech {
     public void commonSetup(final FMLCommonSetupEvent event) {
         // 同期システムの初期化
         SynchronizeMap.scanSynchronizeAnnotation(MODID);
-        event.enqueueWork(PolygonalTechNetwork::registerMessages);
+        PolygonalTechNetwork.registerMessages();
     }
 
     /// {@link ResourceLocation}を{@link PolygonalTech#MODID}付きで生成する

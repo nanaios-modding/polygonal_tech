@@ -1,5 +1,7 @@
 package com.nanaios.polygonal_tech.capability.base;
 
+import com.google.common.collect.ImmutableList;
+import com.nanaios.polygonal_tech.PolygonalTech;
 import com.nanaios.polygonal_tech.capability.interfaces.ICapability;
 import com.nanaios.polygonal_tech.capability.interfaces.IProvider;
 import com.nanaios.polygonal_tech.event.CapabilityUpdateEvent;
@@ -13,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -21,9 +24,6 @@ public abstract class BaseProvider<T extends ICapability, C extends BaseCombined
     public static final String NBT_CAPABILITY_PREFIX = "capability_";
 
     private boolean isLocked = false;
-    /// lock後に初期化されることを想定しているため、ロック前はnullであることが許容される。\
-    /// lockの段階でcapabilitiesのサイズに合わせて初期化され、各capabilityの状態が更新されたかどうかを追跡するために使用される。
-    protected boolean[] markedForUpdate;
 
     protected List<T> capabilities = new ArrayList<>();
     protected Consumer<CapabilityUpdateEvent> capabilityUpdateListener;
@@ -64,6 +64,7 @@ public abstract class BaseProvider<T extends ICapability, C extends BaseCombined
         capability.addListener(PolygonalTechEventType.IO_MODE_UPDATE, this::updateCombinedCapabilityActive);
         capability.addListener(PolygonalTechEventType.CAPABILITY_UPDATE, (event) -> updateCapability(event, index));
         capabilities.add(capability);
+        PolygonalTech.LOGGER.debug("Capability added: {}, total capabilities: {}", capability.getClass().getSimpleName(), capabilities.size());
     }
 
     /// LazyOptionalを初期化するためのヘルパーメソッド。コンストラクタで呼び出され、各combined capabilityに対応するLazyOptionalを生成します。
@@ -147,10 +148,6 @@ public abstract class BaseProvider<T extends ICapability, C extends BaseCombined
     private void updateCapability(CapabilityUpdateEvent event,int index) {
         // capabilityの更新を通知
         this.capabilityUpdateListener.accept(event);
-        // capabilityの状態が更新されたことをmarkedForUpdateに記録
-        // 安全のため、lock済みであることを確認する
-        if(!isLocked) return;
-        markedForUpdate[index] = true;
     }
 
     @Override
@@ -198,11 +195,8 @@ public abstract class BaseProvider<T extends ICapability, C extends BaseCombined
     /// これにより、メモリ効率の向上や、capabilityの同期を容易にします
     public void lock() {
         // 不変リストに変更
-        capabilities = List.copyOf(capabilities);
+        capabilities = Collections.unmodifiableList(capabilities);
         isLocked = true;
-        // markedForUpdateをcapabilitiesのサイズに合わせて初期化
-        // capabilitiesのサイズはロック前に固定されるため、ロック後にサイズが変わることはありません。したがって、markedForUpdateのサイズもロック前に固定されます。
-        markedForUpdate = new boolean[capabilities.size() - 1];
     }
 
     /// combined capabilityを生成するためのファクトリインターフェース

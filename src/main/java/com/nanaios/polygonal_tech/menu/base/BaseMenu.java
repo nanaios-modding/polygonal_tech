@@ -1,8 +1,10 @@
 package com.nanaios.polygonal_tech.menu.base;
 
+import com.nanaios.polygonal_tech.PolygonalTech;
 import com.nanaios.polygonal_tech.block_entity.base.BaseGuiMachine;
 import com.nanaios.polygonal_tech.capability.interfaces.IItemSlot;
-import com.nanaios.polygonal_tech.capability.item.ItemSlotProvider;
+import com.nanaios.polygonal_tech.util.sync.SyncedValue;
+import com.nanaios.polygonal_tech.util.sync.SynchronizeMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -11,15 +13,22 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class BaseMenu<M extends BaseGuiMachine<M>> extends AbstractContainerMenu {
     protected final BlockPos pos;
     protected final Inventory inventory;
     protected final ContainerLevelAccess access;
-    protected int machineSlots;
+    @SuppressWarnings("rawtypes")
+    protected final List<SyncedValue> syncedFields = new ArrayList<>();
+    protected int itemSlotCount;
+    protected boolean[] markedForSync;
 
     public BaseMenu(MenuType<?> type, int id, Inventory inv, BlockPos pos) {
         super(type, id);
@@ -31,14 +40,26 @@ public class BaseMenu<M extends BaseGuiMachine<M>> extends AbstractContainerMenu
         M machine = getMachine();
         if (machine == null) return;
 
-        int i = 0;
-        ItemSlotProvider slotProvider = machine.itemSlotProvider;
-        for(IItemSlot itemSlot : slotProvider.getCapabilities()) {
-            this.addSlot(new ItemSlotHandler(itemSlot,i));
-            i++;
+        // 同期対象のフィールドを取得。これにより、@Synchronizeアノテーションが付けられたフィールドが自動的に同期されるようになる。
+        for (Field field : SynchronizeMap.inGuiSynchronizedFields.getOrDefault(this.getClass(), List.of())) {
+            Class<?> fieldType = field.getType();
+            List<Class<?>> interfaces = Arrays.asList(fieldType.getInterfaces());
+
+            // 同期するアイテムスロットを追加。これにより、機械のアイテムスロットが自動的にメニューに追加されるようになる。
+            if (interfaces.contains(IItemSlot.class)) {
+                try {
+                    IItemSlot iitemSlot = (IItemSlot) field.get(machine);
+                    addSlot(new ItemSlotHandler(iitemSlot, itemSlotCount));
+                    itemSlotCount++;
+                } catch (IllegalAccessException e) {
+                    PolygonalTech.LOGGER.error("Failed to access item slot field for synchronization", e);
+                }
+            }
         }
 
-        machineSlots = i;
+        if (!syncedFields.isEmpty()) {
+            markedForSync = new boolean[syncedFields.size()];
+        }
 
         addPlayerInventory(inv);
         addPlayerHotbar(inv);
@@ -47,10 +68,14 @@ public class BaseMenu<M extends BaseGuiMachine<M>> extends AbstractContainerMenu
     @Override
     public void broadcastChanges() {
         super.broadcastChanges();
+
+        M machine = getMachine();
+        if (machine == null) return;
+
     }
 
-    public int getMachineSlots() {
-        return machineSlots;
+    public int getItemSlotCount() {
+        return itemSlotCount;
     }
 
     @SuppressWarnings("unchecked")
@@ -59,12 +84,13 @@ public class BaseMenu<M extends BaseGuiMachine<M>> extends AbstractContainerMenu
     }
 
     @Override
-    public boolean stillValid(Player player) {
+    public boolean stillValid(@NotNull Player player) {
         return stillValid(access, player, inventory.player.level().getBlockState(pos).getBlock());
     }
 
     @Override
-    public ItemStack quickMoveStack(Player player, int index) {
+    @NotNull
+    public ItemStack quickMoveStack(@NotNull Player player, int index) {
         Slot slot = this.slots.get(index);
 
         if (!slot.hasItem()) {
@@ -74,17 +100,17 @@ public class BaseMenu<M extends BaseGuiMachine<M>> extends AbstractContainerMenu
         ItemStack stack = slot.getItem();
         ItemStack copy = stack.copy();
 
-        if (index < machineSlots) {
+        if (index < itemSlotCount) {
 
             // machine -> player
-            if (!moveItemStackTo(stack, machineSlots, slots.size(), true)) {
+            if (!moveItemStackTo(stack, itemSlotCount, slots.size(), true)) {
                 return ItemStack.EMPTY;
             }
 
         } else {
 
             // player -> machine
-            if (!moveItemStackTo(stack, 0, machineSlots, false)) {
+            if (!moveItemStackTo(stack, 0, itemSlotCount, false)) {
                 return ItemStack.EMPTY;
             }
 

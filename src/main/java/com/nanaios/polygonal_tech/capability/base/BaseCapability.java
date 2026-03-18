@@ -23,10 +23,21 @@ public abstract class BaseCapability implements ICapability {
     protected IOMode[] ioModes = {IOMode.NONE, IOMode.NONE, IOMode.NONE, IOMode.NONE, IOMode.NONE, IOMode.NONE};
     protected boolean arrowInput;
     protected boolean arrowOutput;
+    protected boolean isMarkUpdate;
 
     public BaseCapability(boolean arrowInput,boolean arrowOutput) {
         this.arrowInput = arrowInput;
         this.arrowOutput = arrowOutput;
+    }
+
+    @Override
+    public void setMarkUpdate(boolean markUpdate) {
+        isMarkUpdate = markUpdate;
+    }
+
+    @Override
+    public boolean isMarkUpdate() {
+        return isMarkUpdate;
     }
 
     @Override
@@ -85,11 +96,13 @@ public abstract class BaseCapability implements ICapability {
             for (Consumer<CapabilityUpdateEvent> listener : capabilityUpdateEventListener) {
                 listener.accept((CapabilityUpdateEvent) event);
             }
+            setMarkUpdate(true);
         } else if (type == PolygonalTechEventType.IO_MODE_UPDATE) {
             // この時点でEはIOModeUpdateEventであることが保証されているため、キャストしてリストのリスナーにイベントを通知します。
             for (Consumer<IOModeUpdateEvent> listener : ioModeUpdateEventListener) {
                 listener.accept((IOModeUpdateEvent) event);
             }
+            setMarkUpdate(true);
         }
     }
 }

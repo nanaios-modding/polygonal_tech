@@ -6,7 +6,7 @@ import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
 
 public final class PolygonalTechNetwork {
-    private static final String PROTOCOL_VERSION = "1";
+    private static final String PROTOCOL_VERSION = "1.0";
     public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
             PolygonalTech.rl("main"),
             () -> PROTOCOL_VERSION,
@@ -15,9 +15,6 @@ public final class PolygonalTechNetwork {
     );
 
     private static int packetId = 0;
-
-    private PolygonalTechNetwork() {
-    }
 
     public static void registerMessages() {
         CHANNEL.registerMessage(

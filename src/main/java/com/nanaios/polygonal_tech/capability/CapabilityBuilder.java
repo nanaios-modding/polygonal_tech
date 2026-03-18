@@ -21,5 +21,6 @@ public class CapabilityBuilder<C extends ICapability> {
         for (C capability : capabilities) {
             provider.addCapability(capability);
         }
+        provider.lock();
     }
 }

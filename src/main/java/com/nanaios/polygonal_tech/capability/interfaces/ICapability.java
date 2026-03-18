@@ -26,6 +26,12 @@ public interface ICapability extends IEventTarget , INBTSerializable<CompoundTag
     /// @param mode 設定するIOMode。
     default void setIOMode(@NotNull Direction side, IOMode mode) {}
 
+    default boolean isMarkUpdate() {
+        return false;
+    }
+
+    default void setMarkUpdate(boolean markUpdate) {}
+
     @Override
     default CompoundTag serializeNBT() {
         return new CompoundTag();

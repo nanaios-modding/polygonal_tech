@@ -43,6 +43,7 @@ public record ClientBoundBlockEntityBufPacket(BlockPos pos, ResourceKey<Level> d
                 blockEntity.readSyncData(packet.buf);
             }
         });
+        ctx.get().setPacketHandled(true);
     }
 }
 
