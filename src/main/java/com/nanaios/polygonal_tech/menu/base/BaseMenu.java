@@ -64,15 +64,6 @@ public class BaseMenu<M extends BaseGuiMachine<M>> extends AbstractContainerMenu
         addPlayerHotbar(inv);
     }
 
-    @Override
-    public void broadcastChanges() {
-        super.broadcastChanges();
-
-        M machine = getMachine();
-        if (machine == null) return;
-        machine.checkAndSyncGuiData(inventory.player);
-    }
-
     public int getItemSlotCount() {
         return itemSlotCount;
     }

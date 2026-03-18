@@ -1,7 +1,5 @@
 package com.nanaios.polygonal_tech.capability.base;
 
-import com.google.common.collect.ImmutableList;
-import com.nanaios.polygonal_tech.PolygonalTech;
 import com.nanaios.polygonal_tech.capability.interfaces.ICapability;
 import com.nanaios.polygonal_tech.capability.interfaces.IProvider;
 import com.nanaios.polygonal_tech.event.CapabilityUpdateEvent;
@@ -22,12 +20,8 @@ import java.util.function.Consumer;
 public abstract class BaseProvider<T extends ICapability, C extends BaseCombinedCapability<T>> implements IProvider<T> {
     public static final String NBT_CAPABILITY_COUNT = "capability_count";
     public static final String NBT_CAPABILITY_PREFIX = "capability_";
-
-    private boolean isLocked = false;
-
     protected List<T> capabilities = new ArrayList<>();
     protected Consumer<CapabilityUpdateEvent> capabilityUpdateListener;
-
     protected C internal;
     protected C up;
     protected C down;
@@ -35,7 +29,6 @@ public abstract class BaseProvider<T extends ICapability, C extends BaseCombined
     protected C south;
     protected C west;
     protected C east;
-
     protected LazyOptional<C> lazyInternal;
     protected LazyOptional<C> lazyUp;
     protected LazyOptional<C> lazyDown;
@@ -43,6 +36,7 @@ public abstract class BaseProvider<T extends ICapability, C extends BaseCombined
     protected LazyOptional<C> lazySouth;
     protected LazyOptional<C> lazyWest;
     protected LazyOptional<C> lazyEast;
+    private boolean isLocked = false;
 
     public BaseProvider(CombinedCapabilityFactory<T, C> factory, Consumer<CapabilityUpdateEvent> capabilityUpdateListener) {
         internal = factory.create(null, capabilities);
@@ -79,7 +73,13 @@ public abstract class BaseProvider<T extends ICapability, C extends BaseCombined
 
     /// capabilityを復活させるためのヘルパーメソッド。invalidateCapsで無効化されたcapabilityを再度有効にするために使用されます。通常、BlockEntityのreviveCapsメソッド内で呼び出されます。
     public void reviveCaps() {
-        initCaps();
+        lazyInternal = updateLazy(internal, lazyInternal);
+        lazyUp = updateLazy(up, lazyUp);
+        lazyDown = updateLazy(down, lazyDown);
+        lazyNorth = updateLazy(north, lazyNorth);
+        lazySouth = updateLazy(south, lazySouth);
+        lazyWest = updateLazy(west, lazyWest);
+        lazyEast = updateLazy(east, lazyEast);
     }
 
     /// capabilityを無効化するためのヘルパーメソッド。通常、BlockEntityのinvalidateCapsメソッド内で呼び出され、すべてのcapabilityを無効にします。
@@ -100,15 +100,15 @@ public abstract class BaseProvider<T extends ICapability, C extends BaseCombined
     /// 例えば、combined capabilityが有効になった場合は、新しいLazyOptionalを生成し、無効になった場合はLazyOptionalを空にします。
     ///
     /// @param capability 状態を更新するcapability
-    /// @param nowLazy 現在のLazyOptional
+    /// @param nowLazy    現在のLazyOptional
     /// @return 更新されたLazyOptional。状態が変化していない場合は、現在のLazyOptionalを返します。
-    private LazyOptional<C> updateLazy(C capability,LazyOptional<C> nowLazy) {
+    private LazyOptional<C> updateLazy(C capability, LazyOptional<C> nowLazy) {
         // capabilityの状態を更新する
         boolean oldActive = capability.isActive();
         boolean newActive = capability.updateActive();
 
         // 状態が変化していない場合は更新の必要がないため、現在のLazyOptionalを返します。
-        if(oldActive == newActive) return nowLazy;
+        if (oldActive == newActive) return nowLazy;
 
         // 状態が変化している場合は、LazyOptionalを更新します。
         nowLazy.invalidate();
@@ -120,7 +120,7 @@ public abstract class BaseProvider<T extends ICapability, C extends BaseCombined
     }
 
     public List<T> getCapabilities() {
-        if(!isLocked) return List.of();
+        if (!isLocked) return List.of();
         return capabilities;
     }
 
@@ -129,7 +129,7 @@ public abstract class BaseProvider<T extends ICapability, C extends BaseCombined
         if (event.side() == null) {
             lazyInternal = updateLazy(internal, lazyInternal);
             return;
-        };
+        }
 
         // sideに応じて対応するcombined capabilityを更新する
         // 更新後、combined capabilityが有効かどうかを確認し、有効な場合はLazyOptionalを再生成し、無効な場合はLazyOptionalを空にします。
@@ -144,7 +144,7 @@ public abstract class BaseProvider<T extends ICapability, C extends BaseCombined
         }
     }
 
-    private void updateCapability(CapabilityUpdateEvent event,int index) {
+    private void updateCapability(CapabilityUpdateEvent event, int index) {
         // capabilityの更新を通知
         this.capabilityUpdateListener.accept(event);
     }

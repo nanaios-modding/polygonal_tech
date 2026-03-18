@@ -25,7 +25,7 @@ public class LongFluidTank extends BaseCapability implements ILongFluidTank {
 
     @Override
     public long getFluidLongAmount() {
-        return fluid.getAmount();
+        return fluid.getLongAmount();
     }
 
     @Override
@@ -38,13 +38,13 @@ public class LongFluidTank extends BaseCapability implements ILongFluidTank {
         if (resource.isEmpty() || !isFluidValid(resource)) return 0;
 
         if (action.simulate()) {
-            if (fluid.isEmpty()) return Math.min(capacity.getAsLong(), resource.getAmount());
+            if (fluid.isEmpty()) return Math.min(capacity.getAsLong(), resource.getLongAmount());
             if (!fluid.isFluidEqual(resource)) return 0;
-            return Math.min(capacity.getAsLong() - fluid.getAmount(), resource.getAmount());
+            return Math.min(capacity.getAsLong() - fluid.getLongAmount(), resource.getLongAmount());
         }
 
         if (fluid.isEmpty()) {
-            fluid = new LongFluidStack(resource, Math.min(capacity.getAsLong(), resource.getAmount()));
+            fluid = new LongFluidStack(resource, Math.min(capacity.getAsLong(), resource.getLongAmount()));
             triggerEvent(PolygonalTechEventType.CAPABILITY_UPDATE, CapabilityUpdateEvent.DEFAULT);
             return fluid.getLongAmount();
         }
@@ -53,7 +53,7 @@ public class LongFluidTank extends BaseCapability implements ILongFluidTank {
 
         long filled = capacity.getAsLong() - fluid.getLongAmount();
 
-        if (resource.getAmount() < filled) {
+        if (resource.getLongAmount() < filled) {
             fluid.grow(resource.getLongAmount());
             filled = resource.getLongAmount();
         } else {

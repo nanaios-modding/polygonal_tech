@@ -18,6 +18,7 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.network.PacketDistributor;
@@ -25,6 +26,7 @@ import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class BaseGuiMachine<M extends BaseGuiMachine<M>> extends BaseMachine<M> implements MenuProvider {
@@ -32,6 +34,7 @@ public abstract class BaseGuiMachine<M extends BaseGuiMachine<M>> extends BaseMa
     @SuppressWarnings("rawtypes")
     protected final List<SyncedValue> syncedGuiFields;
     protected boolean[] markedForGuiSync;
+    protected List<ServerPlayer> guiViewer = new ArrayList<>();
 
     public BaseGuiMachine(RegistryObject<BlockEntityType<M>> type, BlockPos pos, BlockState state) {
         super(type.get(), pos, state);
@@ -58,9 +61,8 @@ public abstract class BaseGuiMachine<M extends BaseGuiMachine<M>> extends BaseMa
     }
 
     @SuppressWarnings("rawtypes")
-    public void checkAndSyncGuiData(Player player) {
+    private void checkAndSyncGuiData() {
         if(level == null || level.isClientSide) return;
-        if(!(player instanceof ServerPlayer serverPlayer)) return;
 
         boolean needsSync = false;
         // 同期対象のフィールドをチェックし、変更があった場合はmarkedForSyncを更新する。これにより、変更されたフィールドのみがクライアントに送信されるようになる。
@@ -77,10 +79,19 @@ public abstract class BaseGuiMachine<M extends BaseGuiMachine<M>> extends BaseMa
         // 対象Playerにパケットを送信
         FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         writeSyncGuiData(buf);
-        PolygonalTechNetwork.CHANNEL.send(
-                PacketDistributor.PLAYER.with(() -> serverPlayer),
-                new ClientBoundBlockEntityBufPacket(this.worldPosition, level.dimension(), buf)
-        );
+
+        for (ServerPlayer serverPlayer : guiViewer) {
+            PolygonalTechNetwork.CHANNEL.send(
+                    PacketDistributor.PLAYER.with(() -> serverPlayer),
+                    new ClientBoundBlockEntityBufPacket(this.worldPosition, level.dimension(), buf)
+            );
+        }
+    }
+
+    @Override
+    public boolean afterServerTick(Level level, BlockPos pos, BlockState state, M blockEntity) {
+        checkAndSyncGuiData();
+        return super.afterServerTick(level, pos, state, blockEntity);
     }
 
     @Override

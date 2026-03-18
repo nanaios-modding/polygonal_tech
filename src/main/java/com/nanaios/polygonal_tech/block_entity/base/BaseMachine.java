@@ -43,13 +43,45 @@ public abstract class BaseMachine<M extends BaseMachine<M>> extends BaseBlockEnt
 
         syncedFields = createSyncedField(SynchronizeMap.alwaysSynchronizedFields.getOrDefault(this.getClass(), List.of()));
 
-        if(!syncedFields.isEmpty()) {
+        if (!syncedFields.isEmpty()) {
             markedForSync = new boolean[syncedFields.size()];
         }
 
         initEnergyStorage().register(energyProvider);
         initFluidTank().register(fluidProvider);
         initItemSlot().register(itemSlotProvider);
+    }
+
+    @SuppressWarnings("rawtypes")
+    public static void writeSyncDataFromFields(List<SyncedValue> syncedFields, boolean[] markedForSync, FriendlyByteBuf buf) {
+        int size = 0;
+        for (int i = 0; i < syncedFields.size(); i++) {
+            if (markedForSync[i]) {
+                size++;
+            }
+        }
+
+        // 変更されたフィールドの数を最初に書き込む。これにより、クライアントは受信するフィールドの数を知ることができる。
+        buf.writeInt(size);
+
+        // 変更されたフィールドのインデックスと値を順番に書き込む。これにより、クライアントはどのフィールドが変更されたかを知ることができる。
+        for (int i = 0; i < syncedFields.size(); i++) {
+            if (markedForSync[i]) {
+                buf.writeInt(i);
+                syncedFields.get(i).writeToFriendlyByteBuf(buf);
+                markedForSync[i] = false;
+            }
+        }
+    }
+
+    @SuppressWarnings("rawtypes")
+    public static void readSyncDataToFields(List<SyncedValue> syncedFields, FriendlyByteBuf buf) {
+        int size = buf.readInt();
+
+        for (int i = 0; i < size; i++) {
+            int index = buf.readInt();
+            syncedFields.get(index).readFromFriendlyByteBuf(buf);
+        }
     }
 
     @SuppressWarnings("rawtypes")
@@ -76,12 +108,12 @@ public abstract class BaseMachine<M extends BaseMachine<M>> extends BaseBlockEnt
 
     @Override
     public void writeSyncData(FriendlyByteBuf buf) {
-        writeSyncDataFromFields(syncedFields,markedForSync,buf);
+        writeSyncDataFromFields(syncedFields, markedForSync, buf);
     }
 
     @Override
     public void readSyncData(FriendlyByteBuf buf) {
-        readSyncDataToFields(syncedFields,buf);
+        readSyncDataToFields(syncedFields, buf);
     }
 
     @SuppressWarnings("rawtypes")
@@ -155,42 +187,16 @@ public abstract class BaseMachine<M extends BaseMachine<M>> extends BaseBlockEnt
     @Override
     public void reviveCaps() {
         super.reviveCaps();
+        energyProvider.reviveCaps();
+        fluidProvider.reviveCaps();
+        itemSlotProvider.reviveCaps();
     }
 
     @Override
     public void invalidateCaps() {
         super.invalidateCaps();
-    }
-
-    @SuppressWarnings("rawtypes")
-    public static void writeSyncDataFromFields(List<SyncedValue> syncedFields,boolean[] markedForSync,FriendlyByteBuf buf) {
-        int size = 0;
-        for (int i = 0; i < syncedFields.size(); i++) {
-            if (markedForSync[i]) {
-                size++;
-            }
-        }
-
-        // 変更されたフィールドの数を最初に書き込む。これにより、クライアントは受信するフィールドの数を知ることができる。
-        buf.writeInt(size);
-
-        // 変更されたフィールドのインデックスと値を順番に書き込む。これにより、クライアントはどのフィールドが変更されたかを知ることができる。
-        for (int i = 0; i < syncedFields.size(); i++) {
-            if (markedForSync[i]) {
-                buf.writeInt(i);
-                syncedFields.get(i).writeToFriendlyByteBuf(buf);
-                markedForSync[i] = false;
-            }
-        }
-    }
-
-    @SuppressWarnings("rawtypes")
-    public static void readSyncDataToFields(List<SyncedValue> syncedFields,FriendlyByteBuf buf) {
-        int size = buf.readInt();
-
-        for (int i = 0; i < size; i++) {
-            int index = buf.readInt();
-            syncedFields.get(index).readFromFriendlyByteBuf(buf);
-        }
+        energyProvider.invalidateCaps();
+        fluidProvider.invalidateCaps();
+        itemSlotProvider.invalidateCaps();
     }
 }

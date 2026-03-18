@@ -12,14 +12,13 @@ public class SyncedCapability extends SyncedValue<ICapability> {
 
     @Override
     public boolean isChanged() {
-        boolean changed = getValue().isMarkUpdate();
-        getValue().setMarkUpdate(false);
-        return changed;
+        return getValue().isMarkUpdate();
     }
 
     @Override
     public void writeToFriendlyByteBuf(FriendlyByteBuf tag) {
         tag.writeNbt(getValue().serializeNBT());
+        getValue().setMarkUpdate(false);
     }
 
     @Override

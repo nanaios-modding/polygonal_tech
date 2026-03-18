@@ -1,5 +1,6 @@
 package com.nanaios.polygonal_tech.client.gui;
 
+import com.nanaios.polygonal_tech.PolygonalTech;
 import com.nanaios.polygonal_tech.block_entity.PhotolysisMachineMk1;
 import com.nanaios.polygonal_tech.client.gui.base.BaseScreen;
 import com.nanaios.polygonal_tech.client.gui.parts.FluidTankPart;
@@ -13,26 +14,21 @@ public class PhotolysisMachineMk1Screen extends BaseScreen<PhotolysisMachineMk1>
     public PhotolysisMachineMk1Screen(BaseMenu<PhotolysisMachineMk1> baseMenu, Inventory inventory, Component component) {
         super(baseMenu, inventory, component);
 
+        PhotolysisMachineMk1 machine = menu.getMachine();
+        if (machine == null) return;
+
         guiParts.add(new ProgressBar(
                 65,35,
-                () -> {
-                    PhotolysisMachineMk1 machine = menu.getMachine();
-                    if(machine == null) return 0;
-                    return machine.getProgress();
-                },
+                machine::getProgress,
                 () ->PolygonalTechMachineConfig.PHOTOLYSIS_MACHINE_MK1_PROCESS_TIME.get()
         ));
 
         guiParts.add(new FluidTankPart(
                 125, 20,
                 16, 56,
-                () -> {
-                    PhotolysisMachineMk1 machine = menu.getMachine();
-                    if (machine == null) {
-                        return null;
-                    }
-                    return machine.outputTank;
-                }
+                () -> machine.outputTank
         ));
+
+        PolygonalTech.LOGGER.debug("tank amount: {}", machine.outputTank.getFluidLongAmount());
     }
 }
