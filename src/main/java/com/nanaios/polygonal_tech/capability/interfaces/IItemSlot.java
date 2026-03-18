@@ -6,36 +6,38 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.NotNull;
 
 /// 単一のItemStackスロットを表すインターフェース
-public interface IItemSlot extends IItemHandlerModifiable ,ICapability{
+public interface IItemSlot extends IItemHandlerModifiable, ICapability {
     String NBT_STORED = "stored_item";
 
     /// ItemStackを取得するメソッド
+    ///
     /// @return スロットにあるItemStack。スロットが空の場合はItemStack.EMPTYを返す。
-    @NotNull
-    ItemStack getStack();
+    @NotNull ItemStack getStack();
 
     /// ItemStackを設定するメソッド
+    ///
     /// @param stack 設定するItemStack
     void setStack(@NotNull ItemStack stack);
 
     /// ItemStackを挿入するメソッド
-    /// @param stack 挿入するItemStack
+    ///
+    /// @param stack    挿入するItemStack
     /// @param simulate ItemStackを実際に挿入するかどうか。trueの場合、挿入できるかどうかをシミュレートするだけで、実際には挿入しません。
     /// @return 挿入できなかったItemStackの残り。
-    @NotNull
-    ItemStack insertItem(@NotNull ItemStack stack, boolean simulate);
+    @NotNull ItemStack insertItem(@NotNull ItemStack stack, boolean simulate);
 
     /// ItemStackを抽出するメソッド
-    /// @param amount 抽出するItemStackの数量
+    ///
+    /// @param amount   抽出するItemStackの数量
     /// @param simulate ItemStackを実際に抽出するかどうか。trueの場合、抽出できるかどうかをシミュレートするだけで、実際には抽出しません。
     /// @return 抽出されたItemStack。スロットが空の場合はItemStack.EMPTYを返す。
-    @NotNull
-    ItemStack extractItem(int amount, boolean simulate);
+    @NotNull ItemStack extractItem(int amount, boolean simulate);
 
     /// スロットの最大スタックサイズを返すメソッド
     int getSlotLimit();
 
     /// ItemStackがスロットに挿入可能かどうかを判断するメソッド
+    ///
     /// @param stack 挿入しようとしているItemStack
     boolean isItemValid(@NotNull ItemStack stack);
 
@@ -55,10 +57,14 @@ public interface IItemSlot extends IItemHandlerModifiable ,ICapability{
     @Override
     default void deserializeNBT(CompoundTag nbt) {
         if (nbt.contains(NBT_STORED)) {
-            setStack(ItemStack.of(nbt.getCompound(NBT_STORED)));
-        } else {
-            setStack(ItemStack.EMPTY);
+            ItemStack stack = ItemStack.of(nbt.getCompound(NBT_STORED));
+            if (!stack.isEmpty()) {
+                setStack(stack);
+                return;
+            }
         }
+        
+        setStack(ItemStack.EMPTY);
     }
 
     @Override

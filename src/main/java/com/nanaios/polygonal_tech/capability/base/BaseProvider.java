@@ -64,7 +64,6 @@ public abstract class BaseProvider<T extends ICapability, C extends BaseCombined
         capability.addListener(PolygonalTechEventType.IO_MODE_UPDATE, this::updateCombinedCapabilityActive);
         capability.addListener(PolygonalTechEventType.CAPABILITY_UPDATE, (event) -> updateCapability(event, index));
         capabilities.add(capability);
-        PolygonalTech.LOGGER.debug("Capability added: {}, total capabilities: {}", capability.getClass().getSimpleName(), capabilities.size());
     }
 
     /// LazyOptionalを初期化するためのヘルパーメソッド。コンストラクタで呼び出され、各combined capabilityに対応するLazyOptionalを生成します。

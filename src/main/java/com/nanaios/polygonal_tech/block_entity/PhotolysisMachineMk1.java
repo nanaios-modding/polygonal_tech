@@ -13,7 +13,6 @@ import com.nanaios.polygonal_tech.util.sync.Synchronize;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.block.state.BlockState;
@@ -72,7 +71,7 @@ public class PhotolysisMachineMk1 extends BaseGuiMachine<PhotolysisMachineMk1> {
         boolean isChanged = super.serverTick(level, pos, state, blockEntity);
 
         // 処理が可能かどうかをチェック
-        boolean hasItem = inputSlot.getStack() != ItemStack.EMPTY;
+        boolean hasItem = !inputSlot.getStack().isEmpty();
         canSeeSky = level.canSeeSky(pos.above()) && level.getBrightness(LightLayer.SKY, pos) >= PolygonalTechMachineConfig.PHOTOLYSIS_MACHINE_MK1_PROCESS_LIGHT_LEVEL.get();
 
         if(hasItem && canSeeSky) {

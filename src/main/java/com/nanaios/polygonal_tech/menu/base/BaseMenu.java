@@ -41,10 +41,9 @@ public class BaseMenu<M extends BaseGuiMachine<M>> extends AbstractContainerMenu
         if (machine == null) return;
 
         // 同期対象のフィールドを取得。これにより、@Synchronizeアノテーションが付けられたフィールドが自動的に同期されるようになる。
-        for (Field field : SynchronizeMap.inGuiSynchronizedFields.getOrDefault(this.getClass(), List.of())) {
+        for (Field field : SynchronizeMap.inGuiSynchronizedFields.getOrDefault(machine.getClass(), List.of())) {
             Class<?> fieldType = field.getType();
             List<Class<?>> interfaces = Arrays.asList(fieldType.getInterfaces());
-
             // 同期するアイテムスロットを追加。これにより、機械のアイテムスロットが自動的にメニューに追加されるようになる。
             if (interfaces.contains(IItemSlot.class)) {
                 try {
@@ -71,7 +70,7 @@ public class BaseMenu<M extends BaseGuiMachine<M>> extends AbstractContainerMenu
 
         M machine = getMachine();
         if (machine == null) return;
-
+        machine.checkAndSyncGuiData(inventory.player);
     }
 
     public int getItemSlotCount() {

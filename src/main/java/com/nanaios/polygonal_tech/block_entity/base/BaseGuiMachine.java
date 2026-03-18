@@ -59,13 +59,13 @@ public abstract class BaseGuiMachine<M extends BaseGuiMachine<M>> extends BaseMa
 
     @SuppressWarnings("rawtypes")
     public void checkAndSyncGuiData(Player player) {
-        if(level == null) return;
+        if(level == null || level.isClientSide) return;
         if(!(player instanceof ServerPlayer serverPlayer)) return;
 
         boolean needsSync = false;
         // 同期対象のフィールドをチェックし、変更があった場合はmarkedForSyncを更新する。これにより、変更されたフィールドのみがクライアントに送信されるようになる。
-        for (int i = 0; i < syncedFields.size(); i++) {
-            SyncedValue value = syncedFields.get(i);
+        for (int i = 0; i < syncedGuiFields.size(); i++) {
+            SyncedValue value = syncedGuiFields.get(i);
             if (value.isChanged()) {
                 needsSync = true;
                 markedForGuiSync[i] = true;
