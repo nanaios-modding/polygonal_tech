@@ -1,6 +1,5 @@
 package com.nanaios.polygonal_tech.block_entity.base;
 
-import com.nanaios.polygonal_tech.PolygonalTech;
 import com.nanaios.polygonal_tech.capability.CapabilityBuilder;
 import com.nanaios.polygonal_tech.capability.PolygonalTechCapabilities;
 import com.nanaios.polygonal_tech.capability.energy.LongEnergyProvider;
@@ -27,7 +26,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public abstract class BaseMachine<M extends BaseMachine<M>> extends BaseBlockEntity<M> {
@@ -89,16 +87,13 @@ public abstract class BaseMachine<M extends BaseMachine<M>> extends BaseBlockEnt
         List<SyncedValue> syncedFields = new ArrayList<>();
         for (Field field : fields) {
             Class<?> fieldType = field.getType();
-
-            PolygonalTech.LOGGER.debug("fieldName [{}], fieldType [{}]", field.getName(), fieldType);
-
             if (fieldType == int.class) {
                 syncedFields.add(new SyncedInt(field, this));
             } else if (fieldType == boolean.class) {
                 syncedFields.add(new SyncedBoolean(field, this));
             } else if (fieldType == long.class) {
                 syncedFields.add(new SyncedLong(field, this));
-            } else if (Arrays.asList(fieldType.getInterfaces()).contains(ICapability.class)) {
+            } else if (ICapability.class.isAssignableFrom(fieldType)) {
                 syncedFields.add(new SyncedCapability(field, this));
             }
         }

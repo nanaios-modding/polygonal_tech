@@ -12,7 +12,8 @@ public class SyncedCapability extends SyncedValue<ICapability> {
 
     @Override
     public boolean isChanged() {
-        return getValue().isMarkUpdate();
+        ICapability capability = getValue();
+        return capability != null && capability.isMarkUpdate();
     }
 
     @Override

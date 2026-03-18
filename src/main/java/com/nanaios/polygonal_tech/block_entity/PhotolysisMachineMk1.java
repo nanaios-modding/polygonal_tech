@@ -45,7 +45,7 @@ public class PhotolysisMachineMk1 extends BaseGuiMachine<PhotolysisMachineMk1> {
     @Override
     public CapabilityBuilder<ILongFluidTank> initFluidTank() {
         CapabilityBuilder<ILongFluidTank> builder = new CapabilityBuilder<>();
-        builder.add(outputTank = new LongFluidTank(false,true,() -> Long.MAX_VALUE,fluidStack -> true), Direction.EAST,Direction.WEST);
+        builder.add(outputTank = new LongFluidTank(false,true,() -> 100000000000L,fluidStack -> true), Direction.EAST,Direction.WEST);
         return builder;
     }
 
@@ -79,7 +79,7 @@ public class PhotolysisMachineMk1 extends BaseGuiMachine<PhotolysisMachineMk1> {
             progress++;
             if(progress >= PolygonalTechMachineConfig.PHOTOLYSIS_MACHINE_MK1_PROCESS_TIME.get()) {
                 inputSlot.extractItem(1, false); // アイテムを1つ消費
-                outputTank.fillLong(new LongFluidStack(Fluids.WATER, Integer.MAX_VALUE), IFluidHandler.FluidAction.EXECUTE);
+                outputTank.fillLong(new LongFluidStack(Fluids.WATER, 10000000000L), IFluidHandler.FluidAction.EXECUTE);
                 PolygonalTech.LOGGER.debug("now tank fluid amount: {}", outputTank.getFluidLongAmount());
                 progress = 0; // 進行度をリセット
             }
