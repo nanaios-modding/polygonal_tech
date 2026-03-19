@@ -9,24 +9,30 @@ import com.nanaios.polygonal_tech.capability.item.ItemSlot;
 import com.nanaios.polygonal_tech.config.PolygonalTechMachineConfig;
 import com.nanaios.polygonal_tech.fluids.base.LongFluidStack;
 import com.nanaios.polygonal_tech.registries.PolygonalTechBlockEntityTypeRegister;
+import com.nanaios.polygonal_tech.util.save.SaveToNBT;
 import com.nanaios.polygonal_tech.util.sync.Synchronize;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import org.jetbrains.annotations.NotNull;
 
 public class PhotolysisMachineMk1 extends BaseGuiMachine<PhotolysisMachineMk1> {
+    @SaveToNBT
     @Synchronize(Synchronize.Type.IN_GUI)
     public ItemSlot inputSlot;
+
+    @SaveToNBT
     @Synchronize(Synchronize.Type.IN_GUI)
     public LongFluidTank outputTank;
+
+    @SaveToNBT
     @Synchronize(Synchronize.Type.IN_GUI)
     public long progress = 0;
+
+    @SaveToNBT
     @Synchronize(Synchronize.Type.IN_GUI)
     public boolean canSeeSky = false;
 
@@ -50,20 +56,6 @@ public class PhotolysisMachineMk1 extends BaseGuiMachine<PhotolysisMachineMk1> {
 
     public long getProgress() {
         return progress;
-    }
-
-    @Override
-    public void save(CompoundTag tag) {
-        super.save(tag);
-        tag.putLong("progress", progress);
-        tag.putBoolean("can_see_sky", canSeeSky);
-    }
-
-    @Override
-    public void load(@NotNull CompoundTag tag) {
-        super.load(tag);
-        progress = tag.getLong("progress");
-        canSeeSky = tag.getBoolean("can_see_sky");
     }
 
     @Override

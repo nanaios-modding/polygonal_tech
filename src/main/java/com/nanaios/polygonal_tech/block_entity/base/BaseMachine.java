@@ -13,7 +13,6 @@ import com.nanaios.polygonal_tech.event.CapabilityUpdateEvent;
 import com.nanaios.polygonal_tech.util.sync.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -82,6 +81,7 @@ public abstract class BaseMachine<M extends BaseMachine<M>> extends BaseBlockEnt
         }
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
     public void sendSyncPacket() {
         super.sendSyncPacket();
@@ -136,14 +136,20 @@ public abstract class BaseMachine<M extends BaseMachine<M>> extends BaseBlockEnt
         return needsSync;
     }
 
+    /// 入力・出力問わず外部に公開する必要のあるILongEnergyStorageを初期化するためのメソッド
+    /// このメソッドによってCapabilityBuilderに登録されたILongEnergyStorageは、BlockEntityのgetCapability()メソッドで自動的に公開されるようになる。
     public CapabilityBuilder<ILongEnergyStorage> initEnergyStorage() {
         return new CapabilityBuilder<>();
     }
 
+    /// 入力・出力問わず外部に公開する必要のあるILongFluidTankを初期化するためのメソッド
+    /// このメソッドによってCapabilityBuilderに登録されたILongFluidTankは、BlockEntityのgetCapability()メソッドで自動的に公開されるようになる。
     public CapabilityBuilder<ILongFluidTank> initFluidTank() {
         return new CapabilityBuilder<>();
     }
 
+    /// 入力・出力問わず外部に公開する必要のあるIItemSlotを初期化するためのメソッド
+    /// このメソッドによってCapabilityBuilderに登録されたIItemSlotは、BlockEntityのgetCapability()メソッドで自動的に公開されるようになる。
     public CapabilityBuilder<IItemSlot> initItemSlot() {
         return new CapabilityBuilder<>();
     }
@@ -165,28 +171,6 @@ public abstract class BaseMachine<M extends BaseMachine<M>> extends BaseBlockEnt
             return itemSlotProvider.getCapability(cap, side);
         }
         return super.getCapability(cap, side);
-    }
-
-    @Override
-    public void save(CompoundTag tag) {
-        super.save(tag);
-        tag.put(LongEnergyProvider.NBT_LONG_ENERGY, energyProvider.serializeNBT());
-        tag.put(LongFluidProvider.NBT_LONG_FLUID, fluidProvider.serializeNBT());
-        tag.put(ItemSlotProvider.NBT_ITEM_SLOTS, itemSlotProvider.serializeNBT());
-    }
-
-    @Override
-    public void load(@NotNull CompoundTag tag) {
-        super.load(tag);
-        if (tag.contains(LongEnergyProvider.NBT_LONG_ENERGY)) {
-            energyProvider.deserializeNBT(tag.getCompound(LongEnergyProvider.NBT_LONG_ENERGY));
-        }
-        if (tag.contains(LongFluidProvider.NBT_LONG_FLUID)) {
-            fluidProvider.deserializeNBT(tag.getCompound(LongFluidProvider.NBT_LONG_FLUID));
-        }
-        if (tag.contains(ItemSlotProvider.NBT_ITEM_SLOTS)) {
-            itemSlotProvider.deserializeNBT(tag.getCompound(ItemSlotProvider.NBT_ITEM_SLOTS));
-        }
     }
 
     @Override

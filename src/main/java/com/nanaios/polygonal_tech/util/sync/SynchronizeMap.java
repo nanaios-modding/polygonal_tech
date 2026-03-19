@@ -1,11 +1,8 @@
 package com.nanaios.polygonal_tech.util.sync;
 
 import com.nanaios.polygonal_tech.PolygonalTech;
-import net.minecraftforge.fml.ModList;
+import com.nanaios.polygonal_tech.util.AnnotationScanner;
 import net.minecraftforge.fml.loading.moddiscovery.ModAnnotation;
-import net.minecraftforge.forgespi.language.IModFileInfo;
-import net.minecraftforge.forgespi.language.ModFileScanData;
-import org.objectweb.asm.Type;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -16,24 +13,11 @@ public class SynchronizeMap {
     @SuppressWarnings("rawtypes")
     public static final Map<Class, List<Field>> inGuiSynchronizedFields = new HashMap<>();
 
-    private static final List<String> scannedMods = new ArrayList<>();
-
-    private static final Type syncType = Type.getType("Lcom/nanaios/polygonal_tech/util/sync/Synchronize;");
+    private static final AnnotationScanner annotationScanner = new AnnotationScanner(Synchronize.class);
 
     @SuppressWarnings("rawtypes")
     public static void scanSynchronizeAnnotation(String modId) {
-        if(scannedMods.contains(modId)) {
-            PolygonalTech.LOGGER.warn("Mod {} has already been scanned for synchronization annotations. Skipping.", modId);
-            return;
-        }
-        scannedMods.add(modId);
-
-        IModFileInfo info = ModList.get().getModFileById(modId);
-        ModFileScanData scanData = info.getFile().getScanResult();
-        Set<ModFileScanData.AnnotationData> annotationData = scanData.getAnnotations();
-        for (ModFileScanData.AnnotationData data : annotationData) {
-            if(!data.annotationType().equals(syncType)) continue;
-
+        annotationScanner.scan(modId,data -> {
             ModAnnotation.EnumHolder holder = (ModAnnotation.EnumHolder)data.annotationData().get("value");
             Synchronize.Type syncKind = Synchronize.Type.valueOf(holder.getValue());
             try {
@@ -51,8 +35,6 @@ public class SynchronizeMap {
             } catch (NoSuchFieldException e) {
                 PolygonalTech.LOGGER.error("Failed to find field for synchronization: {} in class {}", data.memberName(), data.clazz().getClassName(), e);
             }
-        }
-
-
+        });
     }
 }

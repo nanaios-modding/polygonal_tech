@@ -6,7 +6,6 @@ import com.nanaios.polygonal_tech.event.CapabilityUpdateEvent;
 import com.nanaios.polygonal_tech.event.IOModeUpdateEvent;
 import com.nanaios.polygonal_tech.event.PolygonalTechEventType;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
@@ -18,8 +17,6 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public abstract class BaseProvider<T extends ICapability, C extends BaseCombinedCapability<T>> implements IProvider<T> {
-    public static final String NBT_CAPABILITY_COUNT = "capability_count";
-    public static final String NBT_CAPABILITY_PREFIX = "capability_";
     protected List<T> capabilities = new ArrayList<>();
     protected Consumer<CapabilityUpdateEvent> capabilityUpdateListener;
     protected C internal;
@@ -36,7 +33,6 @@ public abstract class BaseProvider<T extends ICapability, C extends BaseCombined
     protected LazyOptional<C> lazySouth;
     protected LazyOptional<C> lazyWest;
     protected LazyOptional<C> lazyEast;
-    private boolean isLocked = false;
 
     public BaseProvider(CombinedCapabilityFactory<T, C> factory, Consumer<CapabilityUpdateEvent> capabilityUpdateListener) {
         internal = factory.create(null, capabilities);
@@ -54,9 +50,8 @@ public abstract class BaseProvider<T extends ICapability, C extends BaseCombined
 
     @Override
     public void addCapability(T capability) {
-        int index = capabilities.size();
         capability.addListener(PolygonalTechEventType.IO_MODE_UPDATE, this::updateCombinedCapabilityActive);
-        capability.addListener(PolygonalTechEventType.CAPABILITY_UPDATE, (event) -> updateCapability(event, index));
+        capability.addListener(PolygonalTechEventType.CAPABILITY_UPDATE, this::updateCapability);
         capabilities.add(capability);
     }
 
@@ -119,11 +114,6 @@ public abstract class BaseProvider<T extends ICapability, C extends BaseCombined
         }
     }
 
-    public List<T> getCapabilities() {
-        if (!isLocked) return List.of();
-        return capabilities;
-    }
-
     private void updateCombinedCapabilityActive(IOModeUpdateEvent event) {
         // sideがnullの場合はinternalのみ更新する
         if (event.side() == null) {
@@ -144,7 +134,7 @@ public abstract class BaseProvider<T extends ICapability, C extends BaseCombined
         }
     }
 
-    private void updateCapability(CapabilityUpdateEvent event, int index) {
+    private void updateCapability(CapabilityUpdateEvent event) {
         // capabilityの更新を通知
         this.capabilityUpdateListener.accept(event);
     }
@@ -163,39 +153,12 @@ public abstract class BaseProvider<T extends ICapability, C extends BaseCombined
         };
     }
 
-    @Override
-    public CompoundTag serializeNBT() {
-        CompoundTag tag = new CompoundTag();
-
-        // capabilitiesの数をNBTに保存する
-        tag.putInt(NBT_CAPABILITY_COUNT, capabilities.size());
-
-        // capabilitiesの各要素をNBTに保存する
-        for (int i = 0; i < capabilities.size(); i++) {
-            tag.put(NBT_CAPABILITY_PREFIX + i, capabilities.get(i).serializeNBT());
-        }
-        return tag;
-    }
-
-    @Override
-    public void deserializeNBT(CompoundTag nbt) {
-        // capabilitiesの数をNBTから読み取る
-        int count = nbt.getInt(NBT_CAPABILITY_COUNT);
-
-        // capabilitiesの各要素をNBTから読み取る
-        for (int i = 0; i < count; i++) {
-            CompoundTag capabilityTag = nbt.getCompound(NBT_CAPABILITY_PREFIX + i);
-            capabilities.get(i).deserializeNBT(capabilityTag);
-        }
-    }
-
     /// providerをロックし、新規のcapabilityの追加を防止するためのメソッド。
     /// ロックにより予期せぬcapabilityの追加を防止するとともに、サイズの固定をします。
     /// これにより、メモリ効率の向上や、capabilityの同期を容易にします
     public void lock() {
         // 不変リストに変更
         capabilities = Collections.unmodifiableList(capabilities);
-        isLocked = true;
     }
 
     /// combined capabilityを生成するためのファクトリインターフェース
