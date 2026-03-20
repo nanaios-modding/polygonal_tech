@@ -1,30 +1,11 @@
 package com.nanaios.polygonal_tech.registries;
 
-import com.nanaios.polygonal_tech.item.ElementItem;
 import com.nanaios.polygonal_tech.registration.impl.DeferredItemRegister;
 import com.nanaios.polygonal_tech.registration.impl.MultipleItemRegister;
-import net.minecraft.world.item.Item;
-import net.minecraftforge.registries.RegistryObject;
 
 public class PolygonalTechItemRegister {
     public static final MultipleItemRegister ITEMS = new MultipleItemRegister();
     public static final DeferredItemRegister ELEMENTS = ITEMS.create();
     public static final DeferredItemRegister EASTER_EGGS = ITEMS.create();
     public static final DeferredItemRegister BLOCK_ITEMS = ITEMS.create();
-
-    // 角素アイテム
-    public static final RegistryObject<Item> ELEMENT_3;
-    public static final RegistryObject<Item> ELEMENT_4;
-    public static final RegistryObject<Item> ELEMENT_5;
-
-    // イースターエッグアイテム
-    public static final RegistryObject<Item> ELEMENT_5000;
-
-    static {
-        ELEMENT_3 = ELEMENTS.register("element_3", () -> new ElementItem(3));
-        ELEMENT_4 = ELEMENTS.register("element_4", () -> new ElementItem(4));
-        ELEMENT_5 = ELEMENTS.register("element_5", () -> new ElementItem(5));
-
-        ELEMENT_5000 = EASTER_EGGS.register("element_5000", () -> new ElementItem(5000));
-    }
 }
