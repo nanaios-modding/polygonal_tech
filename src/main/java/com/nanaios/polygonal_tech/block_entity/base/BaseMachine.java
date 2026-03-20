@@ -1,5 +1,7 @@
 package com.nanaios.polygonal_tech.block_entity.base;
 
+import com.mojang.datafixers.util.Pair;
+import com.nanaios.polygonal_tech.PolygonalTech;
 import com.nanaios.polygonal_tech.capability.CapabilityBuilder;
 import com.nanaios.polygonal_tech.capability.PolygonalTechCapabilities;
 import com.nanaios.polygonal_tech.capability.energy.LongEnergyProvider;
@@ -12,15 +14,18 @@ import com.nanaios.polygonal_tech.capability.item.ItemSlotProvider;
 import com.nanaios.polygonal_tech.event.CapabilityUpdateEvent;
 import com.nanaios.polygonal_tech.network.PolygonalTechNetwork;
 import com.nanaios.polygonal_tech.network.packet.ClientBoundBlockEntityBufPacket;
+import com.nanaios.polygonal_tech.util.save.SaveToNBTMap;
 import com.nanaios.polygonal_tech.util.sync.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
@@ -51,6 +56,85 @@ public abstract class BaseMachine<M extends BaseMachine<M>> extends BaseBlockEnt
         initEnergyStorage().register(energyProvider);
         initFluidTank().register(fluidProvider);
         initItemSlot().register(itemSlotProvider);
+    }
+
+    @SuppressWarnings("rawtypes")
+    @Override
+    public void save(CompoundTag tag) {
+        super.save(tag);
+
+        List<Pair<Field,String>> fields = SaveToNBTMap.saveToNBTFields.get(this.getClass());
+        for (Pair<Field, String> pair : fields) {
+            Field field = pair.getFirst();
+            String key = pair.getSecond();
+
+            Class fieldType = field.getType();
+            Object value;
+            try {
+                value = field.get(this);
+            } catch (IllegalAccessException e) {
+                PolygonalTech.LOGGER.error("Failed to access field for SaveToNBT: {} in class {}", field.getName(), this.getClass().getName(), e);
+                continue;
+            }
+            if(fieldType == int.class) {
+                tag.putInt(key, (Integer) value);
+            } else if(fieldType == boolean.class) {
+                tag.putBoolean(key, (Boolean) value);
+            } else if(fieldType == long.class) {
+                tag.putLong(key, (Long) value);
+            } else if(fieldType == float.class) {
+                tag.putFloat(key, (Float) value);
+            } else if(fieldType == double.class) {
+                tag.putDouble(key, (Double) value);
+            } else if(fieldType == String.class) {
+                tag.putString(key, (String) value);
+            } else if(INBTSerializable.class.isAssignableFrom(fieldType)) {
+                tag.put(key, ((INBTSerializable) value).serializeNBT());
+            } else {
+                PolygonalTech.LOGGER.warn("Unsupported save field type for SaveToNBT: {} in class {}", fieldType.getName(), this.getClass().getName());
+            }
+        }
+    }
+
+    @SuppressWarnings({"rawtypes","unchecked"})
+    @Override
+    public void load(@NotNull CompoundTag tag) {
+        super.load(tag);
+
+        List<Pair<Field,String>> fields = SaveToNBTMap.saveToNBTFields.get(this.getClass());
+        for (Pair<Field, String> pair : fields) {
+            Field field = pair.getFirst();
+            String key = pair.getSecond();
+
+            if(!tag.contains(key)) {
+                PolygonalTech.LOGGER.warn("Missing key for SaveToNBT: {} in class {}", key, this.getClass().getName());
+                continue;
+            }
+
+            Class fieldType = field.getType();
+            try {
+                if(fieldType == int.class) {
+                    field.set(this, tag.getInt(key));
+                } else if(fieldType == boolean.class) {
+                    field.set(this, tag.getBoolean(key));
+                } else if(fieldType == long.class) {
+                    field.set(this, tag.getLong(key));
+                } else if(fieldType == float.class) {
+                    field.set(this, tag.getFloat(key));
+                } else if(fieldType == double.class) {
+                    field.set(this, tag.getDouble(key));
+                } else if(fieldType == String.class) {
+                    field.set(this, tag.getString(key));
+                } else if(INBTSerializable.class.isAssignableFrom(fieldType)) {
+                    INBTSerializable instance = (INBTSerializable) field.get(this);
+                    instance.deserializeNBT(tag.get(key));
+                } else {
+                    PolygonalTech.LOGGER.warn("Unsupported load field type for SaveToNBT: {} in class {}", fieldType.getName(), this.getClass().getName());
+                }
+            } catch (IllegalAccessException e) {
+                PolygonalTech.LOGGER.error("Failed to access field for SaveToNBT: {} in class {}", field.getName(), this.getClass().getName(), e);
+            }
+        }
     }
 
     @SuppressWarnings("rawtypes")

@@ -17,7 +17,8 @@ public class SaveToNBTMap {
 
     @SuppressWarnings("rawtypes")
     public static void scanSaveToNBTAnnotation(String modId) {
-        HashMap<Class,List<String>> usedKeys = new HashMap<>();
+        // 一時的なマップを作成して、スキャン中にフィールドと保存キーのペアを保存
+        Map<Class, List<Pair<Field, String>>> tempMap = new HashMap<>();
 
         annotationScanner.scan(modId, data -> {
             try {
@@ -30,25 +31,36 @@ public class SaveToNBTMap {
                     key = field.getName();
                 }
 
-                // 同じクラス内で同じ保存キーが使われないよう調整
-                String finalKey = key;
-                int i = 2;
-                List<String> keysForClass = usedKeys.computeIfAbsent(clazz, c -> new ArrayList<>());
-                while(keysForClass.contains(finalKey)) {
-                    finalKey = key + "_" + i;
-                    i++;
-                }
-                keysForClass.add(finalKey);
-
                 // フィールドと保存キーのペアを保存
-                Pair<Field, String> pair = Pair.of(field, finalKey);
-                saveToNBTFields.computeIfAbsent(clazz, c -> new ArrayList<>()).add(pair);
-                PolygonalTech.LOGGER.debug("Registered SaveToNBT field: {}(save key : {}) in class {}", data.memberName(),finalKey, data.clazz().getClassName());
+                Pair<Field, String> pair = Pair.of(field, key);
+                tempMap.computeIfAbsent(clazz, c -> new ArrayList<>()).add(pair);
+                PolygonalTech.LOGGER.debug("Registered SaveToNBT field: {}(save key : {}) in class {}", data.memberName(),key, data.clazz().getClassName());
             } catch (ClassNotFoundException e) {
                 PolygonalTech.LOGGER.error("Failed to load class for SaveToNBT: {}", data.clazz().getClassName(), e);
             } catch (NoSuchFieldException e) {
                 PolygonalTech.LOGGER.error("Failed to find field for SaveToNBT: {} in class {}", data.memberName(), data.clazz().getClassName(), e);
             }
         });
+        // 継承階層を遡って、スーパークラスのフィールドも含める
+        tempMap.forEach((clazz, pairs) -> {
+            Class superClass = clazz;
+            while ((superClass = superClass.getSuperclass()) != null) {
+
+                // スーパークラスのフィールドと保存キーのペアを取得してListに追加
+                List<Pair<Field, String>> superPairs = tempMap.get(superClass);
+                if (superPairs != null) {
+                    pairs.addAll(superPairs);
+                }
+
+                // スーパークラスのフィールドと保存キーのペアを取得してListに追加
+                superPairs  = saveToNBTFields.get(superClass);
+                if (superPairs != null) {
+                    pairs.addAll(superPairs);
+                }
+            }
+        });
+
+        // スキャンが完了したら、最終的なマップを保存
+        saveToNBTFields.putAll(tempMap);
     }
 }
