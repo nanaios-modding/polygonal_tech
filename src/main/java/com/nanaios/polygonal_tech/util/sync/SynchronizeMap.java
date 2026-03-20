@@ -68,5 +68,9 @@ public class SynchronizeMap {
                 }
             }
         });
+
+        // 最後に、staticなマップに反映させる
+        alwaysSynchronizedFields.putAll(tempAlwaysSynchronizedFields);
+        inGuiSynchronizedFields.putAll(tempInGuiSynchronizedFields);
     }
 }
