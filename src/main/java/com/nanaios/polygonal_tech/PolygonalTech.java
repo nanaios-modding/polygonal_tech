@@ -32,6 +32,7 @@ public class PolygonalTech {
         PolygonalTechCreativeModeTabRegister.CREATIVE_TABS.register(bus);
         PolygonalTechMenuTypeRegister.MENU_TYPES.register(bus);
         PolygonalTechFluidTypeRegister.FLUID_TYPES.register(bus);
+        PolygonalTechFluidRegister.FLUIDS.register(bus);
 
         // commonSetupを登録
         bus.addListener(this::commonSetup);

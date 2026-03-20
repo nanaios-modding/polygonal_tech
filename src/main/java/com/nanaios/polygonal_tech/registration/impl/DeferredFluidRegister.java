@@ -32,7 +32,7 @@ public class DeferredFluidRegister extends WrapperDeferredRegister<Fluid> {
 
         ForgeFlowingFluid.Properties properties = new ForgeFlowingFluid.Properties(typeRegistry,sourceFluid,flowingFluid);
 
-        flowingFluid = super.register(token,() -> new ForgeFlowingFluid.Flowing(properties));
+        flowingFluid = super.register(token.name() + "_flowing",() -> new ForgeFlowingFluid.Flowing(properties));
         sourceFluid = super.register(token,() -> new ForgeFlowingFluid.Source(properties));
 
         return (RegistryObject<I>) sourceFluid;
