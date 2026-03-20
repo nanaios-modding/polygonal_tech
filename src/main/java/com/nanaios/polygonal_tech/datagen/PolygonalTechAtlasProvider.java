@@ -16,7 +16,7 @@ public class PolygonalTechAtlasProvider implements DataProvider {
 
     public PolygonalTechAtlasProvider(PackOutput output) {
         this.outputPath = output.getOutputFolder(PackOutput.Target.RESOURCE_PACK)
-                .resolve("assets/minecraft/atlases/blocks.json");
+                .resolve("minecraft/atlases/blocks.json");
     }
 
     @Override
@@ -40,4 +40,3 @@ public class PolygonalTechAtlasProvider implements DataProvider {
         return PROVIDER_NAME;
     }
 }
-
