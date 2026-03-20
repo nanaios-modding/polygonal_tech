@@ -11,6 +11,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 public class DeferredFluidRegister extends WrapperDeferredRegister<Fluid> {
     private static final Map<NamedToken, RegistryObject<Fluid>> REGISTRY_OBJECT_MAP = new HashMap<>();
@@ -27,14 +28,16 @@ public class DeferredFluidRegister extends WrapperDeferredRegister<Fluid> {
             throw new IllegalStateException("No FluidType registered for token: " + token);
         }
 
-        RegistryObject<Fluid> sourceFluid = null;
-        RegistryObject<Fluid> flowingFluid = null;
+        RegistryObject<Fluid>[] fluids = new RegistryObject[2];
 
-        ForgeFlowingFluid.Properties properties = new ForgeFlowingFluid.Properties(typeRegistry,sourceFluid,flowingFluid);
+        Supplier<Fluid> sourceSupplier = () -> fluids[0].get();
+        Supplier<Fluid> flowingSupplier = () -> fluids[1].get();
 
-        flowingFluid = super.register(token.name() + "_flowing",() -> new ForgeFlowingFluid.Flowing(properties));
-        sourceFluid = super.register(token,() -> new ForgeFlowingFluid.Source(properties));
+        ForgeFlowingFluid.Properties properties = new ForgeFlowingFluid.Properties(typeRegistry,sourceSupplier,flowingSupplier);
 
-        return (RegistryObject<I>) sourceFluid;
+        fluids[0] = super.register(token,() -> new ForgeFlowingFluid.Source(properties));
+        fluids[1] = super.register(token.name() + "_flowing",() -> new ForgeFlowingFluid.Flowing(properties));
+
+        return (RegistryObject<I>) fluids[0];
     }
 }
