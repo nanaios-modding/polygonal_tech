@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.function.Supplier;
 
-public class FluidTankPart implements IGuiPart {
+public class FluidTank implements IGuiPart {
     private static final int TANK_BACKGROUND_COLOR = 0xFF8B8B8B;
     private static final ResourceLocation FLUID_TANK_COVER = PolygonalTech.rl("textures/gui/fluid_tank_cover.png");
 
@@ -30,7 +30,7 @@ public class FluidTankPart implements IGuiPart {
     private final int height;
     private final Supplier<ILongFluidTank> tankSupplier;
 
-    public FluidTankPart(int x, int y, int width, int height, Supplier<ILongFluidTank> tankSupplier) {
+    public FluidTank(int x, int y, int width, int height, Supplier<ILongFluidTank> tankSupplier) {
         this.x = x;
         this.y = y;
         this.width = width;
