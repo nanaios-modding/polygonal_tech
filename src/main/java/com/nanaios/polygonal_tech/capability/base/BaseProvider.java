@@ -26,13 +26,13 @@ public abstract class BaseProvider<T extends ICapability, C extends BaseCombined
     protected C south;
     protected C west;
     protected C east;
-    protected LazyOptional<C> lazyInternal;
-    protected LazyOptional<C> lazyUp;
-    protected LazyOptional<C> lazyDown;
-    protected LazyOptional<C> lazyNorth;
-    protected LazyOptional<C> lazySouth;
-    protected LazyOptional<C> lazyWest;
-    protected LazyOptional<C> lazyEast;
+    protected LazyOptional<C> lazyInternal = LazyOptional.empty();
+    protected LazyOptional<C> lazyUp = LazyOptional.empty();
+    protected LazyOptional<C> lazyDown = LazyOptional.empty();
+    protected LazyOptional<C> lazyNorth = LazyOptional.empty();
+    protected LazyOptional<C> lazySouth = LazyOptional.empty();
+    protected LazyOptional<C> lazyWest = LazyOptional.empty();
+    protected LazyOptional<C> lazyEast = LazyOptional.empty();
 
     public BaseProvider(CombinedCapabilityFactory<T, C> factory, Consumer<CapabilityUpdateEvent> capabilityUpdateListener) {
         internal = factory.create(null, capabilities);
@@ -44,8 +44,6 @@ public abstract class BaseProvider<T extends ICapability, C extends BaseCombined
         east = factory.create(Direction.EAST, capabilities);
 
         this.capabilityUpdateListener = capabilityUpdateListener;
-
-        initCaps();
     }
 
     @Override
@@ -53,17 +51,6 @@ public abstract class BaseProvider<T extends ICapability, C extends BaseCombined
         capability.addListener(PolygonalTechEventType.IO_MODE_UPDATE, this::updateCombinedCapabilityActive);
         capability.addListener(PolygonalTechEventType.CAPABILITY_UPDATE, this::updateCapability);
         capabilities.add(capability);
-    }
-
-    /// LazyOptionalを初期化するためのヘルパーメソッド。コンストラクタで呼び出され、各combined capabilityに対応するLazyOptionalを生成します。
-    private void initCaps() {
-        lazyInternal = LazyOptional.of(() -> internal);
-        lazyUp = LazyOptional.of(() -> up);
-        lazyDown = LazyOptional.of(() -> down);
-        lazyNorth = LazyOptional.of(() -> north);
-        lazySouth = LazyOptional.of(() -> south);
-        lazyWest = LazyOptional.of(() -> west);
-        lazyEast = LazyOptional.of(() -> east);
     }
 
     /// capabilityを復活させるためのヘルパーメソッド。invalidateCapsで無効化されたcapabilityを再度有効にするために使用されます。通常、BlockEntityのreviveCapsメソッド内で呼び出されます。
@@ -159,6 +146,9 @@ public abstract class BaseProvider<T extends ICapability, C extends BaseCombined
     public void lock() {
         // 不変リストに変更
         capabilities = Collections.unmodifiableList(capabilities);
+
+        // 全ての面を構築する
+        reviveCaps();
     }
 
     /// combined capabilityを生成するためのファクトリインターフェース

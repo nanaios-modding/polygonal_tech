@@ -6,6 +6,9 @@ public class PolygonalTechNamedTokens {
     //タブ
     public static final NamedToken MAIN_TAB = new NamedToken("main_tab");
 
+    //パイプ
+    public static final NamedToken FLUID_PIPE = new NamedToken("fluid_pipe");
+
     //機械
     public static final NamedToken PHOTOLYSIS_MACHINE_MK1 = new NamedToken("photolysis_machine_mk1");
 

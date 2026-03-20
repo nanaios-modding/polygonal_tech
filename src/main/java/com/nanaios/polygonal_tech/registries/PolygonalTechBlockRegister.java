@@ -1,5 +1,6 @@
 package com.nanaios.polygonal_tech.registries;
 
+import com.nanaios.polygonal_tech.block.pipe.FluidPipeBlock;
 import com.nanaios.polygonal_tech.registration.impl.DeferredBlockRegister;
 import com.nanaios.polygonal_tech.registration.impl.MultipleBlockRegister;
 import net.minecraft.world.level.block.Block;
@@ -10,10 +11,15 @@ public class PolygonalTechBlockRegister {
     public static DeferredBlockRegister MACHINE_BLOCKS = BLOCKS.create().setBlockItemRegister(
             PolygonalTechItemRegister.BLOCK_ITEMS
     );
+    public static DeferredBlockRegister PIPE_BLOCKS = BLOCKS.create().setBlockItemRegister(
+            PolygonalTechItemRegister.BLOCK_ITEMS
+    );
 
     public static RegistryObject<Block> PHOTOLYSIS_MACHINE_MK1;
+    public static RegistryObject<Block> FLUID_PIPE;
 
     static {
             PHOTOLYSIS_MACHINE_MK1 = MACHINE_BLOCKS.registerGuiMachine(PolygonalTechNamedTokens.PHOTOLYSIS_MACHINE_MK1);
+            FLUID_PIPE = PIPE_BLOCKS.registerPipe(PolygonalTechNamedTokens.FLUID_PIPE, FluidPipeBlock::new);
     }
 }
