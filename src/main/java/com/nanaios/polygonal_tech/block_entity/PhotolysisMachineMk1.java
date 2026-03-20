@@ -61,6 +61,7 @@ public class PhotolysisMachineMk1 extends BaseGuiMachine<PhotolysisMachineMk1> {
     @Override
     public boolean serverTick(Level level, BlockPos pos, BlockState state, PhotolysisMachineMk1 blockEntity) {
         boolean isChanged = super.serverTick(level, pos, state, blockEntity);
+        canSeeSky = level.canSeeSky(pos.above()) && level.getBrightness(LightLayer.SKY, pos) >= PolygonalTechMachineConfig.PHOTOLYSIS_MACHINE_MK1_PROCESS_LIGHT_LEVEL.get();
 
         // 処理が可能かどうかをチェック
         boolean hasItem = !inputSlot.getStack().isEmpty();
@@ -74,8 +75,6 @@ public class PhotolysisMachineMk1 extends BaseGuiMachine<PhotolysisMachineMk1> {
             progress = 0; // 出力タンクに十分な空き容量がない場合は進行度をリセット
             return isChanged;
         }
-
-        canSeeSky = level.canSeeSky(pos.above()) && level.getBrightness(LightLayer.SKY, pos) >= PolygonalTechMachineConfig.PHOTOLYSIS_MACHINE_MK1_PROCESS_LIGHT_LEVEL.get();
 
         // 処理が可能な場合は進行度を増加
         // 逆に処理が不可能な場合は進行を停止
