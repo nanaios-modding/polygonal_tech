@@ -16,6 +16,6 @@ public class PolygonalTechDataGenerators {
 
         gen.addProvider(event.includeServer(), new PolygonalTechBlockStateProvider(output, event.getExistingFileHelper()));
         gen.addProvider(event.includeServer(), new PolygonalTechLanguageProvider(output));
-        //gen.addProvider(event.includeClient(), new PolygonalTechAtlasProvider(output));
+        gen.addProvider(event.includeClient(), new PolygonalTechAtlasProvider(output));
     }
 }

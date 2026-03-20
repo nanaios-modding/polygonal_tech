@@ -1,9 +1,0 @@
-{
-  "sources": [
-    {
-      "type": "single",
-      "resource": "polygonal_tech:fluid/third_flow",
-      "sprite": "polygonal_tech:fluid/third_flow"
-    }
-  ]
-}

@@ -1,9 +1,9 @@
 package com.nanaios.polygonal_tech.client.gui.parts;
 
 import com.nanaios.polygonal_tech.PolygonalTech;
-import com.nanaios.polygonal_tech.PolygonalTechLang;
 import com.nanaios.polygonal_tech.capability.interfaces.ILongFluidTank;
 import com.nanaios.polygonal_tech.client.gui.util.FluidRenderUtil;
+import com.nanaios.polygonal_tech.lang.PolygonalTechToolTipLang;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -83,12 +83,12 @@ public class FluidTankPart implements IGuiPart {
         List<Component> tooltipLines = new ArrayList<>();
         FluidStack fluidStack = tank.getFluid();
         if (fluidStack.isEmpty()) {
-            tooltipLines.add(PolygonalTechLang.FLUID_TANK_EMPTY.get());
+            tooltipLines.add(PolygonalTechToolTipLang.FLUID_TANK_EMPTY.get());
         } else {
             tooltipLines.add(fluidStack.getDisplayName());
         }
 
-        tooltipLines.add(PolygonalTechLang.FLUID_TANK_AMOUNT.get(formatLongValue(amount), formatLongValue(capacity)));
+        tooltipLines.add(PolygonalTechToolTipLang.FLUID_TANK_AMOUNT.get(formatLongValue(amount), formatLongValue(capacity)));
 
         List<FormattedCharSequence> formattedTooltipLines = new ArrayList<>();
         for (Component tooltipLine : tooltipLines) {

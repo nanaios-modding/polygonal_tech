@@ -1,6 +1,6 @@
 package com.nanaios.polygonal_tech.registries;
 
-import com.nanaios.polygonal_tech.PolygonalTechLang;
+import com.nanaios.polygonal_tech.lang.PolygonalTechLang;
 import com.nanaios.polygonal_tech.registration.impl.DeferredCreativeModeTabRegister;
 import com.nanaios.polygonal_tech.registration.impl.MultipleCreativeModeTabRegister;
 import net.minecraft.world.item.CreativeModeTab;

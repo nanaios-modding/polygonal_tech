@@ -1,12 +1,10 @@
-package com.nanaios.polygonal_tech;
+package com.nanaios.polygonal_tech.lang;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
 public enum PolygonalTechLang {
-    MAIN_TAB("itemGroup.polygonal_tech.main_tab"),
-    FLUID_TANK_EMPTY("tooltip.polygonal_tech.fluid_tank.empty"),
-    FLUID_TANK_AMOUNT("tooltip.polygonal_tech.fluid_tank.amount");
+    MAIN_TAB("itemGroup.polygonal_tech.main_tab");
 
     final String key;
 
