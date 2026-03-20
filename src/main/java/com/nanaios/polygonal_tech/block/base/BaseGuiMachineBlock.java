@@ -13,6 +13,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.NotNull;
 
 public class BaseGuiMachineBlock<M extends BaseGuiMachine<?>> extends BaseMachineBlock {
     public BaseGuiMachineBlock(RegistryObject<BlockEntityType<?>> blockEntityType) {
@@ -21,7 +22,7 @@ public class BaseGuiMachineBlock<M extends BaseGuiMachine<?>> extends BaseMachin
 
     @SuppressWarnings("deprecation")
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    public @NotNull InteractionResult use(@NotNull BlockState state, Level level, @NotNull BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
 
         if (level.isClientSide) return InteractionResult.SUCCESS;
 

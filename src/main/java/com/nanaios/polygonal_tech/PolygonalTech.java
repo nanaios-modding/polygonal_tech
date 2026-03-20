@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import com.nanaios.polygonal_tech.config.PolygonalTechConfig;
 import com.nanaios.polygonal_tech.network.PolygonalTechNetwork;
 import com.nanaios.polygonal_tech.registries.*;
+import com.nanaios.polygonal_tech.util.save.SaveToNBTMap;
 import com.nanaios.polygonal_tech.util.sync.SynchronizeMap;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -38,6 +39,7 @@ public class PolygonalTech {
     public void commonSetup(final FMLCommonSetupEvent event) {
         // 同期システムの初期化
         SynchronizeMap.scanSynchronizeAnnotation(MODID);
+        SaveToNBTMap.scanSaveToNBTAnnotation(MODID);
         PolygonalTechNetwork.registerMessages();
     }
 

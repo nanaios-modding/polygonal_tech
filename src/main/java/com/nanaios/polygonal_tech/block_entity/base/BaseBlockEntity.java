@@ -1,20 +1,14 @@
 package com.nanaios.polygonal_tech.block_entity.base;
 
-import com.nanaios.polygonal_tech.network.PolygonalTechNetwork;
-import com.nanaios.polygonal_tech.network.packet.ClientBoundBlockEntityBufPacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class BaseBlockEntity<T extends BaseBlockEntity<T>> extends BlockEntity {
-    private boolean markedForSync = false;
-
     public BaseBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
     }
@@ -37,22 +31,7 @@ public abstract class BaseBlockEntity<T extends BaseBlockEntity<T>> extends Bloc
     public void clientTick(Level level, BlockPos pos, BlockState state, T blockEntity) {
     }
 
-    /// クライアントに同期するデータを書き込むためのメソッド。これをオーバーライドして、クライアントに送信したいデータをbufに書き込むことができる。\
-    public void writeSyncData(FriendlyByteBuf buf) {
-    }
-
-    /// クライアントから受け取った同期データを読み込むためのメソッド。これをオーバーライドして、クライアントから送信されたデータをbufから読み取ることができる。\
-    public void readSyncData(FriendlyByteBuf buf) {
-    }
-
-    public void sendSyncPacket() {
-        if (markedForSync && level != null && !level.isClientSide) {
-            ClientBoundBlockEntityBufPacket packet = ClientBoundBlockEntityBufPacket.create(this);
-            if (packet == null) return;
-            PolygonalTechNetwork.CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(worldPosition)), packet);
-            markedForSync = false;
-        }
-    }
+    public void sendSyncPacket() {}
 
     @Override
     protected void saveAdditional(@NotNull CompoundTag tag) {
@@ -71,12 +50,6 @@ public abstract class BaseBlockEntity<T extends BaseBlockEntity<T>> extends Bloc
                 baseBlockEntity.sendSyncPacket();
             }
         }
-    }
-
-    @Override
-    public void setChanged() {
-        super.setChanged();
-        markedForSync = true;
     }
 
     @SuppressWarnings({"unchecked","rawtypes"})

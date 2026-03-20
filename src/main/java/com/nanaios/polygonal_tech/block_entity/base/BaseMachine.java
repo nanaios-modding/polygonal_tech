@@ -10,6 +10,8 @@ import com.nanaios.polygonal_tech.capability.interfaces.ILongEnergyStorage;
 import com.nanaios.polygonal_tech.capability.interfaces.ILongFluidTank;
 import com.nanaios.polygonal_tech.capability.item.ItemSlotProvider;
 import com.nanaios.polygonal_tech.event.CapabilityUpdateEvent;
+import com.nanaios.polygonal_tech.network.PolygonalTechNetwork;
+import com.nanaios.polygonal_tech.network.packet.ClientBoundBlockEntityBufPacket;
 import com.nanaios.polygonal_tech.util.sync.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -20,6 +22,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,6 +37,7 @@ public abstract class BaseMachine<M extends BaseMachine<M>> extends BaseBlockEnt
     @SuppressWarnings("rawtypes")
     protected final List<SyncedValue> syncedFields;
     protected boolean[] markedForSync;
+    protected boolean wantSync;
 
     public BaseMachine(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -84,8 +88,12 @@ public abstract class BaseMachine<M extends BaseMachine<M>> extends BaseBlockEnt
     @SuppressWarnings("rawtypes")
     @Override
     public void sendSyncPacket() {
-        super.sendSyncPacket();
-        if (level != null && !level.isClientSide) {
+        if (wantSync && level != null && !level.isClientSide) {
+            ClientBoundBlockEntityBufPacket packet = ClientBoundBlockEntityBufPacket.create(this);
+            if (packet == null) return;
+            PolygonalTechNetwork.CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(worldPosition)), packet);
+            wantSync = false;
+
             for (SyncedValue syncedField : syncedFields) {
                 syncedField.onSynced();
             }
@@ -111,14 +119,18 @@ public abstract class BaseMachine<M extends BaseMachine<M>> extends BaseBlockEnt
         return syncedFields;
     }
 
-    @Override
     public void writeSyncData(FriendlyByteBuf buf) {
         writeSyncDataFromFields(syncedFields, markedForSync, buf);
     }
 
-    @Override
     public void readSyncData(FriendlyByteBuf buf) {
         readSyncDataToFields(syncedFields, buf);
+    }
+
+    @Override
+    public void setChanged() {
+        super.setChanged();
+        wantSync = true;
     }
 
     @SuppressWarnings("rawtypes")
