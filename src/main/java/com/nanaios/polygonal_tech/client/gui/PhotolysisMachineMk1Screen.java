@@ -19,7 +19,7 @@ public class PhotolysisMachineMk1Screen extends BaseScreen<PhotolysisMachineMk1>
 
         guiParts.add(
                 new SolarMark(
-                        80, 25,
+                        80, 20,
                         () -> machine.canSeeSky
                 )
         );
