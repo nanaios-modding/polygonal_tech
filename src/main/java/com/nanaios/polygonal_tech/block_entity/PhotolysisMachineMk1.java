@@ -83,7 +83,7 @@ public class PhotolysisMachineMk1 extends BaseGuiMachine<PhotolysisMachineMk1> {
             progress++;
             if(progress >= PolygonalTechMachineConfig.PHOTOLYSIS_MACHINE_MK1_PROCESS_TIME.get()) {
                 inputSlot.extractItem(1, false); // アイテムを1つ消費
-                outputTank.fillLong(new LongFluidStack(PolygonalTechFluidRegister.ELEMENT3.get(), PolygonalTechMachineConfig.PHOTOLYSIS_MACHINE_MK1_PRODUCED_AMOUNT.get()), IFluidHandler.FluidAction.EXECUTE);
+                outputTank.fillLong(new LongFluidStack(PolygonalTechFluidRegister.THIRD_FLOW.get(), PolygonalTechMachineConfig.PHOTOLYSIS_MACHINE_MK1_PRODUCED_AMOUNT.get()), IFluidHandler.FluidAction.EXECUTE);
                 progress = 0; // 進行度をリセット
             }
         }

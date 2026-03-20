@@ -14,7 +14,7 @@ public class PolygonalTechLanguageProvider extends LanguageProvider {
     @Override
     protected void addTranslations() {
         add(PolygonalTechBlockRegister.PHOTOLYSIS_MACHINE_MK1.get(), "光分解機MK.1");
-        add("fluid_type.polygonal_tech.element3", "Element3流体");
+        add("fluid_type.polygonal_tech.third_flow", "3次流元");
         add(PolygonalTechLang.FLUID_TANK_EMPTY.getKey(), "空");
         add(PolygonalTechLang.FLUID_TANK_AMOUNT.getKey(), "%s / %s mB");
     }
