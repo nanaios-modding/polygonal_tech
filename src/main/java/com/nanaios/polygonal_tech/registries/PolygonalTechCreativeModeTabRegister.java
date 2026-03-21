@@ -17,8 +17,8 @@ public class PolygonalTechCreativeModeTabRegister {
                         .title(PolygonalTechLang.MAIN_TAB.get())
                         .icon(() -> new ItemStack(PolygonalTechBlockRegister.PHOTOLYSIS_MACHINE_MK1.get()))
                         .displayItems((parameters, output) -> {
-                            PolygonalTechItemRegister.ELEMENTS.display(output);
                             PolygonalTechItemRegister.BLOCK_ITEMS.display(output);
+                            PolygonalTechItemRegister.BUCKETS.display(output);
                         })
                         .build());
     }

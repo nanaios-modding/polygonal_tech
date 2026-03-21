@@ -1,0 +1,5 @@
+{
+  "parent": "forge:item/bucket",
+  "fluid": "polygonal_tech:third_flow",
+  "loader": "forge:fluid_container"
+}
