@@ -5,6 +5,7 @@ import com.nanaios.polygonal_tech.lang.ILang;
 import com.nanaios.polygonal_tech.lang.PolygonalTechToolTipLang;
 import com.nanaios.polygonal_tech.registries.PolygonalTechBlockRegister;
 import com.nanaios.polygonal_tech.registries.PolygonalTechFluidTypeRegister;
+import com.nanaios.polygonal_tech.registries.PolygonalTechItemRegister;
 import net.minecraft.Util;
 import net.minecraft.data.PackOutput;
 import net.minecraftforge.common.data.LanguageProvider;
@@ -18,8 +19,19 @@ public class PolygonalTechLanguageProvider extends LanguageProvider {
 
     @Override
     protected void addTranslations() {
+        // 機械
         add(PolygonalTechBlockRegister.PHOTOLYSIS_MACHINE_MK1.get(), "光分解機MK.1");
+
+        // パイプ
+        add(PolygonalTechBlockRegister.FLUID_PIPE.get(), "流体パイプ");
+
+        // アイテム
+        add(PolygonalTechItemRegister.THIRD_FLOW_BUCKET.get(), "3次流元入りバケツ");
+
+        // 流体
         add(PolygonalTechFluidTypeRegister.THIRD_FLOW_TYPE.get(), "3次流元");
+
+        // ツールチップ
         add(PolygonalTechToolTipLang.FLUID_TANK_EMPTY, "空");
         add(PolygonalTechToolTipLang.FLUID_TANK_AMOUNT, "%s / %s mB");
     }

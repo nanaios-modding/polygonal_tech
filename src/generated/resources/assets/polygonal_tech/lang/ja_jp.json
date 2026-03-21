@@ -1,6 +1,8 @@
 {
+  "block.polygonal_tech.fluid_pipe": "流体パイプ",
   "block.polygonal_tech.photolysis_machine_mk1": "光分解機MK.1",
   "fluid_type.polygonal_tech.third_flow": "3次流元",
+  "item.polygonal_tech.third_flow_bucket": "3次流元入りバケツ",
   "tooltip.polygonal_tech.fluid_tank.amount": "%s / %s mB",
   "tooltip.polygonal_tech.fluid_tank.empty": "空"
 }
