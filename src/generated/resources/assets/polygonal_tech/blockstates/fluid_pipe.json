@@ -2,12 +2,12 @@
   "multipart": [
     {
       "apply": {
-        "model": "polygonal_tech:block/base_pipe"
+        "model": "polygonal_tech:block/fluid_pipe"
       }
     },
     {
       "apply": {
-        "model": "polygonal_tech:block/base_pipe_arm"
+        "model": "polygonal_tech:block/fluid_pipe"
       },
       "when": {
         "north": "true"
@@ -15,7 +15,7 @@
     },
     {
       "apply": {
-        "model": "polygonal_tech:block/base_pipe_arm",
+        "model": "polygonal_tech:block/fluid_pipe",
         "y": 180
       },
       "when": {
@@ -24,7 +24,7 @@
     },
     {
       "apply": {
-        "model": "polygonal_tech:block/base_pipe_arm",
+        "model": "polygonal_tech:block/fluid_pipe",
         "y": 90
       },
       "when": {
@@ -33,7 +33,7 @@
     },
     {
       "apply": {
-        "model": "polygonal_tech:block/base_pipe_arm",
+        "model": "polygonal_tech:block/fluid_pipe",
         "y": 270
       },
       "when": {
@@ -42,7 +42,7 @@
     },
     {
       "apply": {
-        "model": "polygonal_tech:block/base_pipe_arm",
+        "model": "polygonal_tech:block/fluid_pipe",
         "x": 270
       },
       "when": {
@@ -51,7 +51,7 @@
     },
     {
       "apply": {
-        "model": "polygonal_tech:block/base_pipe_arm",
+        "model": "polygonal_tech:block/fluid_pipe",
         "x": 90
       },
       "when": {
