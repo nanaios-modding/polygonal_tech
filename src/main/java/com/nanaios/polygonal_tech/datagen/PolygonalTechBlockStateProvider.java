@@ -37,17 +37,19 @@ public class PolygonalTechBlockStateProvider extends BlockStateProvider {
         }
 
         for (RegistryObject<Block> block : PolygonalTechBlockRegister.PIPE_BLOCKS.getEntries()) {
-            pipeBlock(block.get());
+            pipeBlock(block);
         }
     }
 
-    private void pipeBlock(Block block) {
-        ModelFile armModel = models().getExistingFile(PolygonalTech.rl("block/base_pipe_arm"));
-        ModelFile coreModel = models().getExistingFile(PolygonalTech.rl("block/base_pipe"));
+    private void pipeBlock(RegistryObject<Block> block) {
+        ResourceLocation location = block.getId();
+
+        ModelFile armModel = models().getExistingFile(location);
+        ModelFile coreModel = models().getExistingFile(location);
 
 
         // マルチパートbuilder
-        MultiPartBlockStateBuilder builder = getMultipartBuilder(block);
+        MultiPartBlockStateBuilder builder = getMultipartBuilder(block.get());
 
         // コアは常に表示
         builder.part().modelFile(coreModel).addModel().end();
@@ -59,6 +61,11 @@ public class PolygonalTechBlockStateProvider extends BlockStateProvider {
         addArm(builder, armModel, BlockStateProperties.WEST,  0, 270);
         addArm(builder, armModel, BlockStateProperties.UP,    270, 0);
         addArm(builder, armModel, BlockStateProperties.DOWN,  90,  0);
+
+        simpleBlockItem(
+                block.get(),
+                coreModel
+        );
     }
 
     private void addArm(MultiPartBlockStateBuilder builder, ModelFile arm,
