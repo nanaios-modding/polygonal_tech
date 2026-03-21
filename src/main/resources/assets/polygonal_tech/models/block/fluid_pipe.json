@@ -2,10 +2,6 @@
   "format_version": "1.9.0",
   "credit": "Made with Blockbench",
   "parent": "polygonal_tech:block/base_pipe",
-  "texture_size": [
-    32,
-    32
-  ],
   "textures": {
     "0": "polygonal_tech:block/fluid_pipe",
     "particle": "polygonal_tech:block/fluid_pipe"

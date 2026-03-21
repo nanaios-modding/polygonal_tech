@@ -4,8 +4,7 @@
 	"parent": "block/block",
 	"texture_size": [32, 32],
 	"textures": {
-		"1": "polygonal_tech:block/fluid_pipe_arm",
-		"particle": "polygonal_tech:block/base_pipe_arm"
+		"1": ""
 	},
 	"elements": [
 		{
