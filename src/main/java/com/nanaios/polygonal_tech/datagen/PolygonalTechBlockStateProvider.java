@@ -44,7 +44,9 @@ public class PolygonalTechBlockStateProvider extends BlockStateProvider {
     private void pipeBlock(RegistryObject<Block> block) {
         ResourceLocation location = block.getId();
 
-        ModelFile armModel = models().getExistingFile(location);
+        ResourceLocation armLocation = ResourceLocation.fromNamespaceAndPath(location.getNamespace(), location.getPath() + "_arm");
+
+        ModelFile armModel = models().getExistingFile(armLocation);
         ModelFile coreModel = models().getExistingFile(location);
 
 
