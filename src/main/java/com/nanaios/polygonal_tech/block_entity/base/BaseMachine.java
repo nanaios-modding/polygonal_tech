@@ -23,6 +23,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -43,9 +44,14 @@ public abstract class BaseMachine<M extends BaseMachine<M>> extends BaseBlockEnt
     protected final List<SyncedValue> syncedFields;
     protected boolean[] markedForSync;
     protected boolean wantSync;
+    protected Direction facing = Direction.NORTH;
 
     public BaseMachine(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
+
+        if(state.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
+            facing = state.getValue(BlockStateProperties.HORIZONTAL_FACING);
+        }
 
         syncedFields = createSyncedField(SynchronizeMap.alwaysSynchronizedFields.getOrDefault(this.getClass(), List.of()));
 
@@ -257,16 +263,19 @@ public abstract class BaseMachine<M extends BaseMachine<M>> extends BaseBlockEnt
 
     @Override
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
+        // 機械のfacingを基準に、ローカル方向をワールド方向へ変換する。これにより、BlockStateProperties.HORIZONTAL_FACINGで指定された向きに応じて、正面・背面・右・左の方向が自動的に切り替わるようになる。
+        Direction face = toWorldDirection(side,facing);
+
         if (cap == ForgeCapabilities.ENERGY || cap == PolygonalTechCapabilities.LONG_ENERGY) {
-            return energyProvider.getCapability(cap, side);
+            return energyProvider.getCapability(cap, face);
         }
         if (cap == ForgeCapabilities.FLUID_HANDLER || cap == PolygonalTechCapabilities.LONG_FLUID_HANDLER) {
-            return fluidProvider.getCapability(cap, side);
+            return fluidProvider.getCapability(cap, face);
         }
         if (cap == ForgeCapabilities.ITEM_HANDLER) {
-            return itemSlotProvider.getCapability(cap, side);
+            return itemSlotProvider.getCapability(cap, face);
         }
-        return super.getCapability(cap, side);
+        return super.getCapability(cap, face);
     }
 
     @Override
@@ -283,5 +292,20 @@ public abstract class BaseMachine<M extends BaseMachine<M>> extends BaseBlockEnt
         energyProvider.invalidateCaps();
         fluidProvider.invalidateCaps();
         itemSlotProvider.invalidateCaps();
+    }
+
+
+    ///機械のfacingを基準に、ローカル方向をワールド方向へ変換する
+    ///@param facing  機械のfacing。BlockStateProperties.HORIZONTAL_FACINGで指定されていることを想定している
+    ///@param local   機械内部で想定している基底の方向
+    public static Direction toWorldDirection(Direction facing, Direction local) {
+        return switch (local) {
+            case NORTH -> facing;                        // 正面
+            case SOUTH -> facing.getOpposite();          // 背面
+            case EAST  -> facing.getCounterClockWise();  // 右
+            case WEST  -> facing.getClockWise();         // 左
+            case UP    -> Direction.UP;
+            case DOWN  -> Direction.DOWN;
+        };
     }
 }
