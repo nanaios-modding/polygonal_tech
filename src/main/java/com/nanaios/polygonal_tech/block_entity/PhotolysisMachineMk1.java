@@ -50,7 +50,10 @@ public class PhotolysisMachineMk1 extends BaseGuiMachine<PhotolysisMachineMk1> {
     @Override
     public CapabilityBuilder<ILongFluidTank> initFluidTank() {
         CapabilityBuilder<ILongFluidTank> builder = new CapabilityBuilder<>();
-        builder.add(outputTank = new LongFluidTank(false,true,PolygonalTechMachineConfig.PHOTOLYSIS_MACHINE_MK1_OUTPUT_TANK_CAPACITY::get,fluidStack -> true), Direction.EAST,Direction.WEST);
+        builder.add(outputTank = new LongFluidTank(false,true,
+                PolygonalTechMachineConfig.PHOTOLYSIS_MACHINE_MK1_OUTPUT_TANK_CAPACITY::get,
+                fluidStack -> fluidStack.getFluid().isSame(PolygonalTechFluidRegister.THIRD_FLOW.get())),
+                Direction.EAST,Direction.WEST);
         return builder;
     }
 

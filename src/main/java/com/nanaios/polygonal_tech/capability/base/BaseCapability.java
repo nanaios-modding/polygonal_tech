@@ -43,14 +43,16 @@ public abstract class BaseCapability implements ICapability {
 
     @Override
     public boolean canInput(@Nullable Direction side) {
-        if(side == null) return arrowInput;
+        if(!arrowInput) return false;
+        if(side == null) return true;
         IOMode mode = ioModes[side.ordinal()];
         return mode == IOMode.INPUT || mode == IOMode.INPUT_OUTPUT;
     }
 
     @Override
     public boolean canOutput(@Nullable Direction side) {
-        if(side == null) return arrowOutput;
+        if(!arrowOutput) return false;
+        if(side == null) return true;
         IOMode mode = ioModes[side.ordinal()];
         return mode == IOMode.OUTPUT || mode == IOMode.INPUT_OUTPUT;
     }
