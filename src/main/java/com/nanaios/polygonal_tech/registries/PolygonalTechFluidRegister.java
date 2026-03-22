@@ -12,7 +12,7 @@ public class PolygonalTechFluidRegister {
     public static final RegistryObject<Fluid> THIRD_FLOW;
 
     static{
-        THIRD_FLOW = BASE_FLUIDS.register(PolygonalTechNamedTokens.THIRD_FLOW);
+        THIRD_FLOW = BASE_FLUIDS.register(PolygonalTechNamedTokens.THIRD_FLOW, PolygonalTechFluidTypeRegister.THIRD_FLOW_TYPE);
     }
 }
 

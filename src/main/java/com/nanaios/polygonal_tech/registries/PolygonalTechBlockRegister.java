@@ -19,7 +19,7 @@ public class PolygonalTechBlockRegister {
     public static RegistryObject<Block> FLUID_PIPE;
 
     static {
-            PHOTOLYSIS_MACHINE_MK1 = MACHINE_BLOCKS.registerGuiMachine(PolygonalTechNamedTokens.PHOTOLYSIS_MACHINE_MK1);
-            FLUID_PIPE = PIPE_BLOCKS.registerPipe(PolygonalTechNamedTokens.FLUID_PIPE, FluidPipeBlock::new);
+            PHOTOLYSIS_MACHINE_MK1 = MACHINE_BLOCKS.registerGuiMachine(PolygonalTechNamedTokens.PHOTOLYSIS_MACHINE_MK1, () -> PolygonalTechBlockEntityTypeRegister.PHOTOLYSIS_MACHINE_MK1);
+            FLUID_PIPE = PIPE_BLOCKS.registerPipe(PolygonalTechNamedTokens.FLUID_PIPE, () -> PolygonalTechBlockEntityTypeRegister.FLUID_PIPE,FluidPipeBlock::new);
     }
 }

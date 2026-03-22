@@ -29,4 +29,10 @@ public class DeferredMenuTypeRegister extends WrapperDeferredRegister<MenuType<?
                     return new BaseMenu<>(registryObjectMap.get(name).get(), id, inv, pos);
                 }));
     }
+
+
+    /// tokenに対応するRegistryObjectを返す
+    public static RegistryObject<MenuType<?>> getRegistry(NamedToken token) {
+        return REGISTRY_OBJECT_MAP.get(token);
+    }
 }

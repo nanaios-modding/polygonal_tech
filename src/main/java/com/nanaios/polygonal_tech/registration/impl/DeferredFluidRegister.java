@@ -1,7 +1,6 @@
 package com.nanaios.polygonal_tech.registration.impl;
 
 import com.nanaios.polygonal_tech.registration.base.WrapperDeferredRegister;
-import com.nanaios.polygonal_tech.registries.PolygonalTechFluidTypeRegister;
 import com.nanaios.polygonal_tech.util.NamedToken;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidType;
@@ -22,12 +21,7 @@ public class DeferredFluidRegister extends WrapperDeferredRegister<Fluid> {
     }
 
     @SuppressWarnings("unchecked")
-    public <I extends Fluid> RegistryObject<I> register(NamedToken token) {
-        RegistryObject<FluidType> typeRegistry = PolygonalTechFluidTypeRegister.BASE_FLUID_TYPES.getRegistry(token);
-        if (typeRegistry == null) {
-            throw new IllegalStateException("No FluidType registered for token: " + token);
-        }
-
+    public <I extends Fluid> RegistryObject<I> register(NamedToken token,RegistryObject<FluidType> typeRegistry) {
         RegistryObject<Fluid>[] fluids = new RegistryObject[2];
 
         Supplier<Fluid> sourceSupplier = () -> fluids[0].get();

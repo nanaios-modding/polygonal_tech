@@ -39,15 +39,6 @@ public class WrapperDeferredRegister<T> {
         return registryObject;
     }
 
-    /// tokenに対応するRegistryObjectを返す
-    public RegistryObject<T> getRegistry(NamedToken token) {
-        return registryObjectMap.get(token);
-    }
-
-    /// registryObjectに対応するtokenを返す
-    public NamedToken getToken(RegistryObject<T> registryObject) {
-        return reverseRegistryObjectMap.get(registryObject);
-    }
 
     /// 登録されている全てのRegistryObjectを返す
     public Collection<RegistryObject<T>> getEntries() {

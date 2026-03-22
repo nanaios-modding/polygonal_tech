@@ -4,8 +4,8 @@ import com.nanaios.polygonal_tech.PolygonalTech;
 import com.nanaios.polygonal_tech.menu.base.BaseMenu;
 import com.nanaios.polygonal_tech.network.PolygonalTechNetwork;
 import com.nanaios.polygonal_tech.network.packet.ClientBoundBlockEntityBufPacket;
-import com.nanaios.polygonal_tech.registries.PolygonalTechBlockEntityTypeRegister;
-import com.nanaios.polygonal_tech.registries.PolygonalTechMenuTypeRegister;
+import com.nanaios.polygonal_tech.registration.impl.DeferredBlockEntityTypeRegister;
+import com.nanaios.polygonal_tech.registration.impl.DeferredMenuTypeRegister;
 import com.nanaios.polygonal_tech.util.NamedToken;
 import com.nanaios.polygonal_tech.util.sync.SyncedValue;
 import com.nanaios.polygonal_tech.util.sync.SynchronizeMap;
@@ -41,7 +41,7 @@ public abstract class BaseGuiMachine<M extends BaseGuiMachine<M>> extends BaseMa
         super(type.get(), pos, state);
 
         // RegistryObject<BlockEntityType<M>>はRegistryObject<BlockEntityType<?>>のサブクラスであるため、キャスト可能
-        token = PolygonalTechBlockEntityTypeRegister.MACHINE_BLOCK_ENTITIES.getToken(castType(type));
+        token = DeferredBlockEntityTypeRegister.getToken(type);
 
         // GUIで同期するFieldを取得
         syncedGuiFields = createSyncedField(SynchronizeMap.inGuiSynchronizedFields.getOrDefault(this.getClass(), List.of()));
@@ -123,11 +123,6 @@ public abstract class BaseGuiMachine<M extends BaseGuiMachine<M>> extends BaseMa
         }
     }
 
-    @SuppressWarnings("unchecked")
-    public static <M extends BaseGuiMachine<M>> RegistryObject<BlockEntityType<?>> castType(RegistryObject<BlockEntityType<M>> type) {
-        return ((RegistryObject<BlockEntityType<?>>) (Object) type);
-    }
-
     @Override
     public @NotNull Component getDisplayName() {
         return Component.translatable("block.%1$s.%2$s".formatted(PolygonalTech.MODID,token.name()));
@@ -135,6 +130,6 @@ public abstract class BaseGuiMachine<M extends BaseGuiMachine<M>> extends BaseMa
 
     @Override
     public @Nullable AbstractContainerMenu createMenu(int id, @NotNull Inventory inv, @NotNull Player player) {
-        return new BaseMenu<>(PolygonalTechMenuTypeRegister.MACHINE_GUI.getRegistry(token).get(), id, inv, this.worldPosition);
+        return new BaseMenu<>(DeferredMenuTypeRegister.getRegistry(token).get(), id, inv, this.worldPosition);
     }
 }
