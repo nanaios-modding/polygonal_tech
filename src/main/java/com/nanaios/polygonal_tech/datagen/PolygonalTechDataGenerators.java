@@ -1,6 +1,6 @@
 package com.nanaios.polygonal_tech.datagen;
 
-import com.nanaios.polygonal_tech.PolygonalTech;
+import com.nanaios.polygonal_tech.main.PolygonalTech;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraftforge.data.event.GatherDataEvent;

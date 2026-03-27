@@ -1,11 +1,11 @@
 package com.nanaios.polygonal_tech.datagen;
 
-import com.nanaios.polygonal_tech.PolygonalTech;
-import com.nanaios.polygonal_tech.lang.ILang;
-import com.nanaios.polygonal_tech.lang.PolygonalTechToolTipLang;
-import com.nanaios.polygonal_tech.registries.PolygonalTechBlockRegister;
-import com.nanaios.polygonal_tech.registries.PolygonalTechFluidTypeRegister;
-import com.nanaios.polygonal_tech.registries.PolygonalTechItemRegister;
+import com.nanaios.polygonal_tech.main.PolygonalTech;
+import com.nanaios.polygonal_tech.main.lang.ILang;
+import com.nanaios.polygonal_tech.main.lang.PolygonalTechToolTipLang;
+import com.nanaios.polygonal_tech.main.registries.PolygonalTechBlockRegister;
+import com.nanaios.polygonal_tech.main.registries.PolygonalTechFluidTypeRegister;
+import com.nanaios.polygonal_tech.main.registries.PolygonalTechItemRegister;
 import net.minecraft.Util;
 import net.minecraft.data.PackOutput;
 import net.minecraftforge.common.data.LanguageProvider;

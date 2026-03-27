@@ -1,7 +1,7 @@
 package com.nanaios.polygonal_tech.datagen;
 
-import com.nanaios.polygonal_tech.PolygonalTech;
-import com.nanaios.polygonal_tech.registries.PolygonalTechBlockRegister;
+import com.nanaios.polygonal_tech.main.PolygonalTech;
+import com.nanaios.polygonal_tech.main.registries.PolygonalTechBlockRegister;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;

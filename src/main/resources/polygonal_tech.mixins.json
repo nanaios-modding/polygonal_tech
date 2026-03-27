@@ -1,7 +1,7 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "com.nanaios.polygonal_tech.mixin",
+  "package": "com.nanaios.polygonal_tech.main.mixin",
   "compatibilityLevel": "JAVA_8",
   "refmap": "polygonal_tech.refmap.json",
   "mixins": [
