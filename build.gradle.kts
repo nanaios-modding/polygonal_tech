@@ -15,6 +15,7 @@ plugins {
     eclipse
     idea
     id("net.minecraftforge.gradle") version "[6.0.16,6.2)"
+    kotlin("jvm")
 }
 
 apply(plugin = "org.spongepowered.mixin")
@@ -99,16 +100,24 @@ repositories {
         name = "Modmaven"
         url = uri("https://modmaven.dev/")
     }
+    maven {
+        name = "Kotlin for Forge"
+        setUrl("https://thedarkcolour.github.io/KotlinForForge/")
+    }
+    mavenCentral()
 }
 
 dependencies {
     "minecraft"("net.minecraftforge:forge:${minecraftVersion}-${forgeVersion}")
+    implementation("thedarkcolour:kotlinforforge:4.11.0")
 
     compileOnly(fg.deobf("mezz.jei:jei-${minecraftVersion}-common-api:${jeiVersion}"))
     compileOnly(fg.deobf("mezz.jei:jei-${minecraftVersion}-forge-api:${jeiVersion}"))
     runtimeOnly(fg.deobf("mezz.jei:jei-${minecraftVersion}-forge:${jeiVersion}"))
 
     annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
+    implementation(kotlin("stdlib-jdk8"))
+
 }
 
 tasks.named<ProcessResources>("processResources") {

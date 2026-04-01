@@ -6,6 +6,9 @@ pluginManagement {
             url = uri("https://maven.minecraftforge.net/")
         }
     }
+    plugins {
+        kotlin("jvm") version "2.3.0"
+    }
 }
 
 plugins {
