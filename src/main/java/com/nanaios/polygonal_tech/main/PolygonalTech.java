@@ -1,7 +1,6 @@
 package com.nanaios.polygonal_tech.main;
 
 import com.mojang.logging.LogUtils;
-import com.nanaios.polygonal_tech.lib.sync.TestKt;
 import com.nanaios.polygonal_tech.main.config.PolygonalTechConfig;
 import com.nanaios.polygonal_tech.main.network.PolygonalTechNetwork;
 import com.nanaios.polygonal_tech.main.registries.*;
@@ -44,8 +43,6 @@ public class PolygonalTech {
         SynchronizeMap.scanSynchronizeAnnotation(MODID);
         SaveToNBTMap.scanSaveToNBTAnnotation(MODID);
         PolygonalTechNetwork.registerMessages();
-
-        TestKt.kotlinTest();
     }
 
     /// {@link ResourceLocation}を{@link PolygonalTech#MODID}付きで生成する

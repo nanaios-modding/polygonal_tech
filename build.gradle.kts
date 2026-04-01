@@ -116,7 +116,6 @@ dependencies {
     runtimeOnly(fg.deobf("mezz.jei:jei-${minecraftVersion}-forge:${jeiVersion}"))
 
     annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
-    implementation(kotlin("stdlib-jdk8"))
 
 }
 
