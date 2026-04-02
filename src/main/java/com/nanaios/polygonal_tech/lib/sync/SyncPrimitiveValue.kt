@@ -4,27 +4,25 @@ import net.minecraft.network.FriendlyByteBuf
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
+/**
+ * IntやFloatなどの基本的な値を同期するクラス
+ */
 abstract class SyncPrimitiveValue<T>(
-    protected var value: T,
-    protected val listener:(T) -> Unit
-) : SyncValue<T>(), ReadWriteProperty<Any?,T> {
+    storage: ISyncValueStorage,
+    value:T
+) : SyncValue<T>(storage,value), ReadWriteProperty<Any?,T> {
     override fun getValue(thisRef: Any?, property: KProperty<*>): T {
         return value
     }
     override fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {
         if(this.value == value) return
-        // 値に変更があった場合のみ、値を更新してonChanged()を呼び出す
         this.value = value
-        onChanged()
-    }
 
-    override fun onChanged() {
-        super.onChanged()
-        listener(value)
+        storage.onSyncValueChanged(this)
     }
 }
 
-open class SyncIntValue(value: Int,listener: (Int) -> Unit = {}) : SyncPrimitiveValue<Int>(value, listener) {
+open class SyncIntValue(value: Int,storage: ISyncValueStorage) : SyncPrimitiveValue<Int>(storage,value) {
     override fun write(buf: FriendlyByteBuf) {
         buf.writeInt(value)
     }
@@ -34,7 +32,7 @@ open class SyncIntValue(value: Int,listener: (Int) -> Unit = {}) : SyncPrimitive
     }
 }
 
-open class SyncLongValue(value: Long,listener: (Long) -> Unit = {}) : SyncPrimitiveValue<Long>(value, listener) {
+open class SyncLongValue(value: Long,storage: ISyncValueStorage) : SyncPrimitiveValue<Long>(storage,value) {
     override fun write(buf: FriendlyByteBuf) {
         buf.writeLong(value)
     }
@@ -43,7 +41,7 @@ open class SyncLongValue(value: Long,listener: (Long) -> Unit = {}) : SyncPrimit
     }
 }
 
-open class SyncFloatValue(value: Float,listener: (Float) -> Unit = {}) : SyncPrimitiveValue<Float>(value, listener) {
+open class SyncFloatValue(value: Float,storage: ISyncValueStorage) : SyncPrimitiveValue<Float>(storage,value) {
     override fun write(buf: FriendlyByteBuf) {
         buf.writeFloat(value)
     }
