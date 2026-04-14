@@ -6,7 +6,10 @@ import net.minecraft.world.item.Item
 
 object PolygonalTechItemRegister {
     val TEST_ITEMS = DeferredItemRegister(PolygonalTech.MOD_ID)
-    val ITEM_1 = TEST_ITEMS.register("") {
-        Item(Item.Properties())
+
+    init {
+        TEST_ITEMS.register("test_1") {
+            Item(Item.Properties())
+        }
     }
 }

@@ -10,11 +10,36 @@ import org.apache.logging.log4j.Logger
 open class PolygonalTech(context: FMLJavaModLoadingContext) {
     companion object {
         const val MOD_ID = "polygonal_tech"
-        val LOGGER: Logger = LogManager.getLogger(MOD_ID)
+        private val LOGGER: Logger = LogManager.getLogger(MOD_ID)
     }
 
     init {
         val eventBus = context.modEventBus
+        showBootLog(context)
         PolygonalTechItemRegister.TEST_ITEMS.register(eventBus)
+    }
+
+    /**
+     * 遊び心のある起動ログを表示するだけのメソッド
+     * */
+    private fun showBootLog(context: FMLJavaModLoadingContext) {
+        // バージョンを取得してタイトルを生成
+        val version = context.container.modInfo.version.toString()
+        val title = "    P O L Y G O N A L   T E C H v$version    "
+
+        // 上下のボーダー部分を生成
+        val border = "═".repeat(title.length)
+        val subTitle = "~~ Industrial Mod ~~"
+
+        // サブタイトル部分を生成
+        val centeredSubTitle = subTitle.padStart((subTitle.length + title.length) / 2).padEnd(title.length)
+
+        LOGGER.info("""
+            
+            ╔$border╗
+            ║$title║
+            ║$centeredSubTitle║
+            ╚$border╝
+        """.trimIndent())
     }
 }

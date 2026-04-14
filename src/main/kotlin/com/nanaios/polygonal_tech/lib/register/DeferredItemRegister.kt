@@ -1,8 +1,19 @@
 package com.nanaios.polygonal_tech.lib.register
 
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.Item
-import net.minecraftforge.registries.DeferredRegister
 import net.minecraftforge.registries.ForgeRegistries
+import net.minecraftforge.registries.RegistryObject
 
-open class DeferredItemRegister(modId: String): DeferredExtendRegister<Item>(DeferredRegister.create(ForgeRegistries.ITEMS,modId)) {
+open class DeferredItemRegister(modId: String, map: MutableMap<ResourceLocation, RegistryObject<out Item>>): DeferredExtendRegister<Item>(
+    ForgeRegistries.ITEMS,modId, map
+) {
+    constructor(modId: String) : this(modId, MAP)
+    companion object{
+        private val MAP: MutableMap<ResourceLocation, RegistryObject<out Item>> = mutableMapOf()
+
+        fun getItemRegistryObject(location: ResourceLocation): RegistryObject<out Item>? {
+            return MAP[location]
+        }
+    }
 }
