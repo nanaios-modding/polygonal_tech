@@ -5,10 +5,9 @@ import net.minecraft.world.level.block.Block
 import net.minecraftforge.registries.ForgeRegistries
 import net.minecraftforge.registries.RegistryObject
 
-class DeferredBaseBlockRegister(modId: String, map: MutableMap<ResourceLocation, RegistryObject<out Block>>): DeferredBaseRegister<Block>(
-    ForgeRegistries.BLOCKS,modId, map
+class DeferredSingleBlockRegister(modId: String): DeferredSingleRegister<Block>(
+    ForgeRegistries.BLOCKS,modId, MAP
 ){
-    constructor(modId: String) : this(modId, MAP)
     companion object{
         private val MAP: MutableMap<ResourceLocation, RegistryObject<out Block>> = mutableMapOf()
 

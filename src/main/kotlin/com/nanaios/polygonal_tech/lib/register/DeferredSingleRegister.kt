@@ -6,10 +6,10 @@ import net.minecraftforge.registries.IForgeRegistry
 import net.minecraftforge.registries.RegistryObject
 import java.util.function.Supplier
 
-abstract class DeferredBaseRegister<T> private constructor(
-    val register: DeferredRegister<T>,
-    val modId: String,
-    val map: MutableMap<ResourceLocation, RegistryObject<out T>>
+abstract class DeferredSingleRegister<T> private constructor(
+    protected val register: DeferredRegister<T>,
+    protected val modId: String,
+    protected val map: MutableMap<ResourceLocation, RegistryObject<out T>>
 ): IDeferredRegister<T> by register.cast() {
     constructor(registry: IForgeRegistry<T>,modId: String,map: MutableMap<ResourceLocation, RegistryObject<out T>>)
             :this(DeferredRegister.create(registry,modId),modId,map)

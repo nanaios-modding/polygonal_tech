@@ -45,3 +45,14 @@ interface IRegistryObject<T>: Supplier<T> {
 
     fun getHolder(): Optional<Holder<T>>
 }
+
+
+/**
+ * [RegistryObject]を[IRegistryObject]にキャストするための拡張関数
+ * */
+@Suppress("UNCHECKED_CAST", "NOTHING_TO_INLINE")
+inline fun <T> RegistryObject<T>.cast(): IRegistryObject<T> {
+    // エディタ上ではRegistryObjectはfinal classのためIRegistryObjectへのキャストは常に失敗すると表示される
+    // しかし、実際にはRegistryObjectはmixinによってIRegistryObjectを実装しているため、キャストは成功する
+    return this as IRegistryObject<T>
+}

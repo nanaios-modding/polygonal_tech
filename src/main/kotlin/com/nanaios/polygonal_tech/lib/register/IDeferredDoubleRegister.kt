@@ -9,7 +9,7 @@ import net.minecraftforge.registries.RegistryObject
  * 2つのDeferredRegisterをまとめるためのinterface。
  * 例えば、ItemとBlockのDeferredRegisterをまとめるために使用できます。
  * */
-interface IDoubleDeferredRegister<T1,T2>: IDeferredRegister<T1> {
+interface IDeferredDoubleRegister<T1,T2>: IDeferredRegister<T1> {
     fun getSecondEntries(): MutableCollection<RegistryObject<T2>>
     fun getSecondRegistryKey(): ResourceKey<out Registry<T2>>
     fun getSecondRegistryName(): ResourceLocation
