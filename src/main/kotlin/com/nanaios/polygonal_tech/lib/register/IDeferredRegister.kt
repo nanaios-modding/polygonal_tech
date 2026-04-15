@@ -26,8 +26,8 @@ interface IDeferredRegister<T> {
 /**
  * [DeferredRegister]を[IDeferredRegister]にキャストするための拡張関数
  * */
-@Suppress("UNCHECKED_CAST")
-fun <T>DeferredRegister<T>.cast():IDeferredRegister<T> {
+@Suppress("UNCHECKED_CAST", "NOTHING_TO_INLINE")
+inline fun <T>DeferredRegister<T>.cast():IDeferredRegister<T> {
     // mixinによってDeferredRegisterはIDeferredRegisterを実装するため、キャストして返すことができます。
     return this as IDeferredRegister<T>
 }

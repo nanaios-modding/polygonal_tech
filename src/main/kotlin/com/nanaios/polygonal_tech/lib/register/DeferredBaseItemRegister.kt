@@ -5,7 +5,7 @@ import net.minecraft.world.item.Item
 import net.minecraftforge.registries.ForgeRegistries
 import net.minecraftforge.registries.RegistryObject
 
-open class DeferredItemRegister(modId: String, map: MutableMap<ResourceLocation, RegistryObject<out Item>>): DeferredExtendRegister<Item>(
+open class DeferredBaseItemRegister(modId: String, map: MutableMap<ResourceLocation, RegistryObject<out Item>>): DeferredBaseRegister<Item>(
     ForgeRegistries.ITEMS,modId, map
 ) {
     constructor(modId: String) : this(modId, MAP)

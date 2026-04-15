@@ -6,7 +6,7 @@ import net.minecraftforge.registries.IForgeRegistry
 import net.minecraftforge.registries.RegistryObject
 import java.util.function.Supplier
 
-open class DeferredExtendRegister<T> private constructor(
+abstract class DeferredBaseRegister<T> private constructor(
     val register: DeferredRegister<T>,
     val modId: String,
     val map: MutableMap<ResourceLocation, RegistryObject<out T>>
