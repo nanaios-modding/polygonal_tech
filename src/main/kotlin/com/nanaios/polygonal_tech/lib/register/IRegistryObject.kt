@@ -19,30 +19,57 @@ import java.util.stream.Stream
  * これにより、移譲を用いてRegistryObjectの機能を少ない記述量で継承できます
  * */
 interface IRegistryObject<T>: Supplier<T> {
+    /**
+     * [RegistryObject.getId]のラップメソッド。
+     * */
     fun getId(): ResourceLocation
-
+    /**
+     * [RegistryObject.getKey]のラップメソッド。
+     * */
     fun getKey(): ResourceKey<T>
-
+    /**
+     * [RegistryObject.stream]のラップメソッド。
+     * */
     fun stream(): Stream<T>
-
+    /**
+     * [RegistryObject.ifPresent]のラップメソッド。
+     * */
     fun isPresent(): Boolean
-
+    /**
+     * [RegistryObject.ifPresent]のラップメソッド。
+     * */
     fun ifPresent(consumer: Consumer<in T>)
-
+    /**
+     * [RegistryObject.filter]のラップメソッド。
+     * */
     fun filter(predicate: Predicate<in T>): RegistryObject<T>
-
+    /**
+     * [RegistryObject.map]のラップメソッド。
+     * */
     fun <U> map(mapper: Function<in T, out U>): Optional<U>
-
+    /**
+     * [RegistryObject.flatMap]のラップメソッド。
+     * */
     fun <U> flatMap(mapper: Function<in T, Optional<U>>): Optional<U>
-
+    /**
+     * [RegistryObject.lazyMap]のラップメソッド。
+     * */
     fun <U> lazyMap(mapper: Function<in T, out U>): Supplier<U>
-
+    /**
+     * [RegistryObject.orElse]のラップメソッド。
+     * */
     fun orElse(other: T): T
-
+    /**
+     * [RegistryObject.orElseGet]のラップメソッド。
+     * */
     fun orElseGet(other: Supplier<out T>): T
-
+    /**
+     * [RegistryObject.orElseThrow]のラップメソッド。
+     * */
     fun <X : Throwable> orElseThrow(exceptionSupplier: Supplier<out X>): T
-
+    /**
+     * [RegistryObject.getHolder]のラップメソッド。
+     * */
     fun getHolder(): Optional<Holder<T>>
 }
 

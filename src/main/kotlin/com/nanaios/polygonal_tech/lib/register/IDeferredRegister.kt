@@ -16,10 +16,25 @@ import java.util.function.Supplier
  * これにより、移譲を用いてDeferredRegisterの機能を少ない記述量で継承できます
  * */
 interface IDeferredRegister<T> {
+    /**
+     * [DeferredRegister.register]のラップメソッド。
+     * */
     fun <I : T> register(name: String, sup: Supplier<out I>): RegistryObject<I>
+    /**
+     * [DeferredRegister.register]のラップメソッド。
+     * */
     fun register(bus: IEventBus)
+    /**
+     * [DeferredRegister.getEntries]のラップメソッド。
+     * */
     fun getEntries(): MutableCollection<RegistryObject<T>>
+    /**
+     * [DeferredRegister.getRegistryKey]のラップメソッド。
+     * */
     fun getRegistryKey(): ResourceKey<out Registry<T>>
+    /**
+     * [DeferredRegister.getRegistryName]のラップメソッド。
+     * */
     fun getRegistryName(): ResourceLocation
 }
 
