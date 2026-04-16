@@ -19,7 +19,7 @@ interface IDeferredRegister<T> {
     /**
      * [DeferredRegister.register]のラップメソッド。
      * */
-    fun <I : T> register(name: String, sup: Supplier<out I>): RegistryObject<I>
+    fun <I : T> register(name: String, sup: (ResourceLocation) -> I): IRegistryObject<I>
     /**
      * [DeferredRegister.register]のラップメソッド。
      * */

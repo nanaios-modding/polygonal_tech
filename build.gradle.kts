@@ -1,5 +1,6 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.text.SimpleDateFormat
-import java.util.Date
+import java.util.*
 
 buildscript {
     repositories {
@@ -45,6 +46,12 @@ base {
 
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_17
+    }
 }
 
 minecraft {

@@ -4,8 +4,6 @@ import com.nanaios.polygonal_tech.lib.util.IModIdProvider
 import net.minecraft.resources.ResourceLocation
 import net.minecraftforge.registries.DeferredRegister
 import net.minecraftforge.registries.IForgeRegistry
-import net.minecraftforge.registries.RegistryObject
-import java.util.function.Supplier
 
 interface IDeferredSingleRegister<T> : IDeferredRegister<T>, IModIdProvider {
     /**
@@ -22,15 +20,15 @@ interface IDeferredSingleRegister<T> : IDeferredRegister<T>, IModIdProvider {
 abstract class DeferredSingleRegister<T> private constructor(
     protected val register: DeferredRegister<T>,
     override val modId: String,
-    protected val map: MutableMap<ResourceLocation, RegistryObject<out T>>
+    protected val map: MutableMap<ResourceLocation, IRegistryObject<out T>>
 ): IDeferredSingleRegister<T>,IDeferredRegister<T> by register.cast() {
-    constructor(registry: IForgeRegistry<T>,modId: String,map: MutableMap<ResourceLocation, RegistryObject<out T>>)
+    constructor(registry: IForgeRegistry<T>,modId: String,map: MutableMap<ResourceLocation, IRegistryObject<out T>>)
             :this(DeferredRegister.create(registry,modId),modId,map)
 
-    override fun <I : T> register(name: String, sup: Supplier<out I>): RegistryObject<I> {
-        val registryObject: RegistryObject<I> = register.register(name, sup)
-        map[registryObject.id] = registryObject
-        return registryObject
+    override fun <I : T> register(name: String, sup: (ResourceLocation) -> I): IRegistryObject<I> {
+        val registry = register.cast().register(name,sup)
+        map[registry.getId()] = registry
+        return registry
     }
 
     override fun cast(): DeferredRegister<T> {
