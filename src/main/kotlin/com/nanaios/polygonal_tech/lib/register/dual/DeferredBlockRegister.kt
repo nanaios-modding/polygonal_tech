@@ -1,9 +1,13 @@
-package com.nanaios.polygonal_tech.lib.register
+package com.nanaios.polygonal_tech.lib.register.dual
 
+import com.nanaios.polygonal_tech.lib.register.IRegistryObject
+import com.nanaios.polygonal_tech.lib.register.single.DeferredSingleBlockRegister
+import com.nanaios.polygonal_tech.lib.register.single.DeferredSingleItemRegister
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.Item
 import net.minecraft.world.level.block.Block
+import kotlin.text.get
 
 class DeferredBlockRegister(modId: String): DeferredDoubleRegister<Block, Item>(
     DeferredSingleBlockRegister(modId),

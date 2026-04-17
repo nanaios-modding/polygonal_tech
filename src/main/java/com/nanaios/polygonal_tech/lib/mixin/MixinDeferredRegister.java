@@ -8,6 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
@@ -23,6 +24,10 @@ public abstract class MixinDeferredRegister<T> implements IDeferredRegister<T> {
     @Shadow
     public abstract <I extends T> RegistryObject<I> register(String name, Supplier<? extends I> sup);
 
+    @Shadow
+    @Final
+    private String modid;
+
     @Override
     @NotNull
     @SuppressWarnings("unchecked")
@@ -31,5 +36,11 @@ public abstract class MixinDeferredRegister<T> implements IDeferredRegister<T> {
         RegistryObject<? extends I> registry = this.register(name,() -> sup.invoke(pointer.getPointer()));
         pointer.setPointer(registry.getId());
         return (IRegistryObject<I>)(Object) registry;
+    }
+
+    @Override
+    @NotNull
+    public String getModId() {
+        return this.modid;
     }
 }

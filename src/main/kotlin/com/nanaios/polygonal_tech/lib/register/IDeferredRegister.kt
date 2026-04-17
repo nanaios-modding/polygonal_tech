@@ -1,12 +1,12 @@
 package com.nanaios.polygonal_tech.lib.register
 
+import com.nanaios.polygonal_tech.lib.util.IModIdProvider
 import net.minecraft.core.Registry
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.minecraftforge.eventbus.api.IEventBus
 import net.minecraftforge.registries.DeferredRegister
 import net.minecraftforge.registries.RegistryObject
-import java.util.function.Supplier
 
 /**
  * [DeferredRegister]をラップするためのinterface。
@@ -15,7 +15,7 @@ import java.util.function.Supplier
  * そうすることで、DeferredRegisterのメソッドをIDeferredRegisterのメソッドとして使用できるようになります。
  * これにより、移譲を用いてDeferredRegisterの機能を少ない記述量で継承できます
  * */
-interface IDeferredRegister<T> {
+interface IDeferredRegister<T>: IModIdProvider {
     /**
      * [DeferredRegister.register]のラップメソッド。
      * */
