@@ -13,6 +13,7 @@ interface ISyncValue {
     val storage:ISyncValueStorage
     val syncType: ISyncType
 
+    fun isDirty(): Boolean
     fun writeBuffer(buffer: FriendlyByteBuf)
     fun readBuffer(buffer: FriendlyByteBuf)
     fun onSync()
