@@ -12,8 +12,8 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker
 import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockState
 
-open class TileBlock(
-    val id: ResourceLocation,
+abstract class TileBlock(
+    protected val id: ResourceLocation,
     properties: Properties
 ) : BaseEntityBlock(properties) {
     override fun newBlockEntity(

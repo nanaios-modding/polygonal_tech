@@ -19,7 +19,7 @@ interface IDeferredRegister<T>: IModIdProvider {
     /**
      * [DeferredRegister.register]のラップメソッド。
      * */
-    fun <I : T> register(name: String, sup: (ResourceLocation) -> I): IRegistryObject<I>
+    fun <I : T> register(name: String, sup: (location:ResourceLocation) -> I): IRegistryObject<I>
     /**
      * [DeferredRegister.register]のラップメソッド。
      * */

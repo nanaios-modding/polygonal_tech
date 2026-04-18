@@ -3,7 +3,8 @@ package com.nanaios.polygonal_tech.lib.register.single
 import com.nanaios.polygonal_tech.lib.register.IDeferredRegister
 import com.nanaios.polygonal_tech.lib.register.IRegistryObject
 import com.nanaios.polygonal_tech.lib.register.cast
-import com.nanaios.polygonal_tech.lib.util.IModIdProvider
+import net.minecraft.core.Registry
+import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.minecraftforge.registries.DeferredRegister
 import net.minecraftforge.registries.IForgeRegistry
@@ -20,6 +21,9 @@ abstract class DeferredSingleRegister<T> private constructor(
 ): IDeferredSingleRegister<T>, IDeferredRegister<T> by register.cast() {
     constructor(registry: IForgeRegistry<T>, modId: String, map: MutableMap<ResourceLocation, IRegistryObject<out T>>)
             :this(DeferredRegister.create(registry,modId),modId,map)
+    constructor(registry: ResourceKey<out Registry<T>>, modId: String, map: MutableMap<ResourceLocation, IRegistryObject<out T>>)
+            :this(DeferredRegister.create(registry,modId),modId,map)
+
 
     override fun <I : T> register(name: String, sup: (ResourceLocation) -> I): IRegistryObject<I> {
         val registry = register.cast().register(name,sup)

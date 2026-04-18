@@ -7,9 +7,9 @@ import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockState
 
 abstract class TileBlockEntity(
-    type: BlockEntityType<*>,
-    pos: BlockPos,
-    state: BlockState
+    protected val type: BlockEntityType<*>,
+    protected val pos: BlockPos,
+    protected val state: BlockState
 ): BlockEntity(type, pos, state), ITile {
     final override fun serverTick(
         level: Level,
@@ -25,6 +25,10 @@ abstract class TileBlockEntity(
         state: BlockState
     ) {
         onClientTick(level, pos, state)
+    }
+
+    protected fun getSyncPacket() {
+
     }
 
     protected open fun onServerTick(level: Level, pos: BlockPos, state: BlockState) = Unit
