@@ -17,6 +17,19 @@ import net.minecraftforge.registries.RegistryObject
  * */
 interface IDeferredRegister<T>: IModIdProvider {
     /**
+     * [DeferredRegister.getEntries]のラッププロパティ。
+     * */
+    val entries: MutableCollection<RegistryObject<T>>
+    /**
+     * [DeferredRegister.getRegistryKey]のラッププロパティ。
+     * */
+    val registryKey: ResourceKey<out Registry<T>>
+    /**
+     * [DeferredRegister.getRegistryName]のラッププロパティ。
+     * */
+    val registryName: ResourceLocation
+
+    /**
      * [DeferredRegister.register]のラップメソッド。
      * */
     fun <I : T> register(name: String, sup: (location:ResourceLocation) -> I): IRegistryObject<I>
@@ -24,18 +37,6 @@ interface IDeferredRegister<T>: IModIdProvider {
      * [DeferredRegister.register]のラップメソッド。
      * */
     fun register(bus: IEventBus)
-    /**
-     * [DeferredRegister.getEntries]のラップメソッド。
-     * */
-    fun getEntries(): MutableCollection<RegistryObject<T>>
-    /**
-     * [DeferredRegister.getRegistryKey]のラップメソッド。
-     * */
-    fun getRegistryKey(): ResourceKey<out Registry<T>>
-    /**
-     * [DeferredRegister.getRegistryName]のラップメソッド。
-     * */
-    fun getRegistryName(): ResourceLocation
 }
 
 /**

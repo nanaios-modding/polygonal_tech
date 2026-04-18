@@ -20,13 +20,17 @@ import java.util.stream.Stream
  * */
 interface IRegistryObject<T>: Supplier<T> {
     /**
-     * [RegistryObject.getId]のラップメソッド。
+     * [RegistryObject.getId]のラッププロパティ。
      * */
-    fun getId(): ResourceLocation
+    val id: ResourceLocation
     /**
-     * [RegistryObject.getKey]のラップメソッド。
+     * [RegistryObject.getKey]のラッププロパティ。
      * */
-    fun getKey(): ResourceKey<T>
+    val key: ResourceKey<T>
+    /**
+     * [RegistryObject.getHolder]のラッププロパティ。
+     * */
+    val holder: Optional<Holder<T>>
     /**
      * [RegistryObject.stream]のラップメソッド。
      * */
@@ -67,10 +71,6 @@ interface IRegistryObject<T>: Supplier<T> {
      * [RegistryObject.orElseThrow]のラップメソッド。
      * */
     fun <X : Throwable> orElseThrow(exceptionSupplier: Supplier<out X>): T
-    /**
-     * [RegistryObject.getHolder]のラップメソッド。
-     * */
-    fun getHolder(): Optional<Holder<T>>
 }
 
 

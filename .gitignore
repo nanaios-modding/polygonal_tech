@@ -103,6 +103,7 @@ $RECYCLE.BIN/
 .gradle
 build/
 src/generated/resources/.cache/
+.kotlin
 
 # Ignore Gradle GUI config
 gradle-app.setting

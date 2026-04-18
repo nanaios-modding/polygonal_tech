@@ -5,6 +5,7 @@ import net.minecraft.core.Registry
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.minecraftforge.registries.RegistryObject
+import net.minecraftforge.registries.DeferredRegister
 
 /**
  * 2つのIDeferredSingleRegisterをまとめるためのinterface。
@@ -12,15 +13,15 @@ import net.minecraftforge.registries.RegistryObject
  * */
 interface IDeferredDoubleRegister<T1,T2>: IDeferredRegister<T1> {
     /**
-     * 2つ目の[net.minecraftforge.registries.DeferredRegister.getEntries]のラップメソッド。
+     * 2つ目の[DeferredRegister.getEntries]のラッププロパティ。
      * */
-    fun getSecondEntries(): MutableCollection<RegistryObject<T2>>
+    val secondEntries: MutableCollection<RegistryObject<T2>>
     /**
-     * 2つ目の[net.minecraftforge.registries.DeferredRegister.getRegistryKey]のラップメソッド。
+     * 2つ目の[DeferredRegister.getRegistryKey]のラッププロパティ。
      * */
-    fun getSecondRegistryKey(): ResourceKey<out Registry<T2>>
+    val secondRegistryKey: ResourceKey<out Registry<T2>>
     /**
-     * 2つ目の[net.minecraftforge.registries.DeferredRegister.getRegistryName]のラップメソッド。
+     * 2つ目の[DeferredRegister.getRegistryName]のラッププロパティ。
      * */
-    fun getSecondRegistryName(): ResourceLocation
+    val secondRegistryName: ResourceLocation
 }
