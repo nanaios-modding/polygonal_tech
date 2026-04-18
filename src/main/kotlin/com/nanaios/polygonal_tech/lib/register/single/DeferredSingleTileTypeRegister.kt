@@ -5,13 +5,15 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraftforge.registries.ForgeRegistries
 
-class DeferredSingleBlockEntityTypeRegister(modId: String): DeferredSingleRegister<BlockEntityType<*>>(
+typealias TileType<T> = BlockEntityType<T>
+
+class DeferredSingleTileTypeRegister(modId: String): DeferredSingleRegister<TileType<*>>(
     ForgeRegistries.BLOCK_ENTITY_TYPES,modId, MAP
 ){
     companion object{
-        private val MAP: MutableMap<ResourceLocation, IRegistryObject<out BlockEntityType<*>>> = mutableMapOf()
+        private val MAP: MutableMap<ResourceLocation, IRegistryObject<out TileType<*>>> = mutableMapOf()
 
-        fun getBlockRegistryObject(location: ResourceLocation): IRegistryObject<out BlockEntityType<*>>? {
+        fun getTileTypeRegistryObject(location: ResourceLocation): IRegistryObject<out TileType<*>>? {
             return MAP[location]
         }
     }

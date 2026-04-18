@@ -1,4 +1,4 @@
-package com.nanaios.polygonal_tech.lib.register.dual
+package com.nanaios.polygonal_tech.lib.register.multi
 
 import com.nanaios.polygonal_tech.lib.register.registry.BlockRegistryObject
 import com.nanaios.polygonal_tech.lib.register.single.DeferredSingleBlockRegister
@@ -8,7 +8,7 @@ import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.Item
 import net.minecraft.world.level.block.Block
 
-class DeferredBlockRegister(modId: String): DeferredDoubleRegister<Block, Item>(
+class DeferredBlockRegister(modId: String): DeferredMultiRegister<Block, Item>(
     DeferredSingleBlockRegister(modId),
     DeferredSingleItemRegister(modId)
 ) {

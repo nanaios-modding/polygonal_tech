@@ -1,7 +1,7 @@
 package com.nanaios.polygonal_tech.lib.block
 
 import com.nanaios.polygonal_tech.lib.register.registry.IRegistryObject
-import com.nanaios.polygonal_tech.lib.register.single.DeferredSingleBlockEntityTypeRegister
+import com.nanaios.polygonal_tech.lib.register.single.DeferredSingleTileTypeRegister
 import com.nanaios.polygonal_tech.lib.tile.ITile
 import net.minecraft.core.BlockPos
 import net.minecraft.resources.ResourceLocation
@@ -24,7 +24,7 @@ open class TileBlock(
     }
 
     protected fun getRegistryObject(): IRegistryObject<out BlockEntityType<*>>? {
-        return DeferredSingleBlockEntityTypeRegister.getBlockRegistryObject(id)
+        return DeferredSingleTileTypeRegister.getTileTypeRegistryObject(id)
     }
 
     override fun <T : BlockEntity> getTicker(
