@@ -1,12 +1,16 @@
 package com.nanaios.polygonal_tech.lib.register.single
 
 import com.nanaios.polygonal_tech.lib.register.registry.IRegistryObject
+import net.minecraft.core.BlockPos
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.BlockEntityType
+import net.minecraft.world.level.block.state.BlockState
 import net.minecraftforge.registries.ForgeRegistries
 
 typealias TileType<T> = BlockEntityType<T>
+typealias Tile = BlockEntity
 
 class DeferredSingleTileTypeRegister(modId: String): DeferredSingleRegister<TileType<*>>(
     ForgeRegistries.BLOCK_ENTITY_TYPES,modId, MAP
@@ -19,7 +23,11 @@ class DeferredSingleTileTypeRegister(modId: String): DeferredSingleRegister<Tile
         }
     }
 
-    fun <I : TileType<*>> register(block: IRegistryObject<out Block>, sup: (ResourceLocation) -> I): IRegistryObject<I> {
-        return super.register(block.id.path, sup)
+    fun <I : Tile> register(block: IRegistryObject<out Block>, sup: (ResourceLocation, BlockPos, BlockState) -> I): IRegistryObject<TileType<I>> {
+        return super.register(block.id.path ) {
+            BlockEntityType.Builder.of(
+                { pos, state -> sup(block.id, pos, state) },
+                block.get()).build(null)
+        }
     }
 }
