@@ -1,5 +1,6 @@
 package com.nanaios.polygonal_tech.lib.tile
 
+import com.nanaios.polygonal_tech.lib.util.sync.storage.ISyncValueStorage
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.world.level.Level
@@ -13,7 +14,7 @@ import net.minecraftforge.common.util.LazyOptional
  * - serverTick,clientTickによるtickごとの動作の提供
  * - capabilityの保管、管理、提供
  * */
-interface ITile {
+interface ITile: ISyncValueStorage {
     fun serverTick(level: Level, pos: BlockPos, state: BlockState)
     fun clientTick(level: Level, pos: BlockPos, state:BlockState)
     fun <T> getCapability(cap: Capability<T>,face: Direction?): LazyOptional<T>?

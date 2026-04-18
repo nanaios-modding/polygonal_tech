@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker
 import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockState
 
-abstract class TileBlock(
+open class TileBlock(
     protected val id: ResourceLocation,
     properties: Properties
 ) : BaseEntityBlock(properties) {

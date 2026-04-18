@@ -1,5 +1,6 @@
 package com.nanaios.polygonal_tech.lib.tile
 
+import com.nanaios.polygonal_tech.lib.util.sync.value.ISyncValue
 import net.minecraft.core.BlockPos
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.entity.BlockEntity
@@ -11,6 +12,8 @@ abstract class TileBlockEntity(
     protected val pos: BlockPos,
     protected val state: BlockState
 ): BlockEntity(type, pos, state), ITile {
+    protected val syncValues: MutableList<ISyncValue> = mutableListOf()
+
     final override fun serverTick(
         level: Level,
         pos: BlockPos,
@@ -25,6 +28,10 @@ abstract class TileBlockEntity(
         state: BlockState
     ) {
         onClientTick(level, pos, state)
+    }
+
+    override fun addValue(value: ISyncValue) {
+        syncValues.add(value)
     }
 
     protected fun getSyncPacket() {

@@ -1,5 +1,6 @@
 package com.nanaios.polygonal_tech.lib.register.dual
 
+import com.nanaios.polygonal_tech.lib.register.BlockRegistryObject
 import com.nanaios.polygonal_tech.lib.register.IRegistryObject
 import com.nanaios.polygonal_tech.lib.register.single.DeferredSingleBlockRegister
 import com.nanaios.polygonal_tech.lib.register.single.DeferredSingleItemRegister
@@ -13,11 +14,11 @@ class DeferredBlockRegister(modId: String): DeferredDoubleRegister<Block, Item>(
     DeferredSingleBlockRegister(modId),
     DeferredSingleItemRegister(modId)
 ) {
-    override fun <I : Block> register(name: String, sup: (ResourceLocation) -> I): IRegistryObject<I> {
+    override fun <I : Block> register(name: String, sup: (ResourceLocation) -> I): BlockRegistryObject<I> {
         val blockRegistryObject = firstRegister.register(name, sup)
         val itemRegistryObject = secondRegister.register(name) {id ->
             BlockItem(blockRegistryObject.get(), Item.Properties())
         }
-        return blockRegistryObject
+        return BlockRegistryObject(blockRegistryObject, itemRegistryObject)
     }
 }
