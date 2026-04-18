@@ -1,6 +1,6 @@
 package com.nanaios.polygonal_tech.lib.register.single
 
-import com.nanaios.polygonal_tech.lib.register.IRegistryObject
+import com.nanaios.polygonal_tech.lib.register.registry.IRegistryObject
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraftforge.registries.ForgeRegistries

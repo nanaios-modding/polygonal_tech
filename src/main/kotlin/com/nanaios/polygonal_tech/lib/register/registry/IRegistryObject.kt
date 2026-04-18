@@ -1,4 +1,4 @@
-package com.nanaios.polygonal_tech.lib.register
+package com.nanaios.polygonal_tech.lib.register.registry
 
 import net.minecraft.core.Holder
 import net.minecraft.resources.ResourceKey
@@ -12,7 +12,7 @@ import java.util.function.Supplier
 import java.util.stream.Stream
 
 /**
- * [RegistryObject]をラップするためのinterface。
+ * [net.minecraftforge.registries.RegistryObject]をラップするためのinterface。
  * RegistryObjectにはpublicなconstructorが存在せず、通常の方法での継承が使用できません
  * そこで、このinterfaceをRegistryObjectにmixinして実装します。
  * そうすることで、RegistryObjectのメソッドをIRegistryObjectのメソッドとして使用できるようになります。
@@ -20,31 +20,31 @@ import java.util.stream.Stream
  * */
 interface IRegistryObject<T>: Supplier<T> {
     /**
-     * [RegistryObject.getId]のラッププロパティ。
+     * [net.minecraftforge.registries.RegistryObject.getId]のラッププロパティ。
      * */
     val id: ResourceLocation
     /**
-     * [RegistryObject.getKey]のラッププロパティ。
+     * [net.minecraftforge.registries.RegistryObject.getKey]のラッププロパティ。
      * */
     val key: ResourceKey<T>
     /**
-     * [RegistryObject.getHolder]のラッププロパティ。
+     * [net.minecraftforge.registries.RegistryObject.getHolder]のラッププロパティ。
      * */
     val holder: Optional<Holder<T>>
     /**
-     * [RegistryObject.stream]のラップメソッド。
+     * [net.minecraftforge.registries.RegistryObject.stream]のラップメソッド。
      * */
     fun stream(): Stream<T>
     /**
-     * [RegistryObject.ifPresent]のラップメソッド。
+     * [net.minecraftforge.registries.RegistryObject.ifPresent]のラップメソッド。
      * */
     fun isPresent(): Boolean
     /**
-     * [RegistryObject.ifPresent]のラップメソッド。
+     * [net.minecraftforge.registries.RegistryObject.ifPresent]のラップメソッド。
      * */
     fun ifPresent(consumer: Consumer<in T>)
     /**
-     * [RegistryObject.filter]のラップメソッド。
+     * [net.minecraftforge.registries.RegistryObject.filter]のラップメソッド。
      * */
     fun filter(predicate: Predicate<in T>): RegistryObject<T>
     /**

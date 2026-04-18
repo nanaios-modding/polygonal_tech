@@ -1,10 +1,10 @@
 package com.nanaios.polygonal_tech.lib.register.single
 
-import com.nanaios.polygonal_tech.lib.register.IRegistryObject
+import com.nanaios.polygonal_tech.lib.register.registry.IRegistryObject
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.block.Block
 import net.minecraftforge.registries.ForgeRegistries
-import java.util.Collections
+import java.util.*
 
 class DeferredSingleBlockRegister(modId: String): DeferredSingleRegister<Block>(
     ForgeRegistries.BLOCKS,modId, MAP

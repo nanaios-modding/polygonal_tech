@@ -1,6 +1,6 @@
 package com.nanaios.polygonal_tech.lib.mixin;
 
-import com.nanaios.polygonal_tech.lib.register.IRegistryObject;
+import com.nanaios.polygonal_tech.lib.register.registry.IRegistryObject;
 import net.minecraftforge.registries.RegistryObject;
 import org.spongepowered.asm.mixin.Mixin;
 

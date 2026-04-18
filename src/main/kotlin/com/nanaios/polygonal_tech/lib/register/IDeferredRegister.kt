@@ -1,5 +1,6 @@
 package com.nanaios.polygonal_tech.lib.register
 
+import com.nanaios.polygonal_tech.lib.register.registry.IRegistryObject
 import com.nanaios.polygonal_tech.lib.util.IModIdProvider
 import net.minecraft.core.Registry
 import net.minecraft.resources.ResourceKey

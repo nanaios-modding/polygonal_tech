@@ -1,8 +1,8 @@
 package com.nanaios.polygonal_tech.lib.register.single
 
 import com.nanaios.polygonal_tech.lib.register.IDeferredRegister
-import com.nanaios.polygonal_tech.lib.register.IRegistryObject
 import com.nanaios.polygonal_tech.lib.register.cast
+import com.nanaios.polygonal_tech.lib.register.registry.IRegistryObject
 import net.minecraft.core.Registry
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation

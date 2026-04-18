@@ -1,4 +1,4 @@
-package com.nanaios.polygonal_tech.lib.register
+package com.nanaios.polygonal_tech.lib.register.registry
 
 import net.minecraft.world.item.Item
 import net.minecraft.world.level.block.Block

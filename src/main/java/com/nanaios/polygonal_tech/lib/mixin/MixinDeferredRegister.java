@@ -1,7 +1,7 @@
 package com.nanaios.polygonal_tech.lib.mixin;
 
 import com.nanaios.polygonal_tech.lib.register.IDeferredRegister;
-import com.nanaios.polygonal_tech.lib.register.IRegistryObject;
+import com.nanaios.polygonal_tech.lib.register.registry.IRegistryObject;
 import com.nanaios.polygonal_tech.lib.util.PointerLike;
 import com.nanaios.polygonal_tech.main.PolygonalTech;
 import kotlin.jvm.functions.Function1;
