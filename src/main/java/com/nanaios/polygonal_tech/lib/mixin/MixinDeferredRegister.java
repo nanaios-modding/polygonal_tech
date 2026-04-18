@@ -34,8 +34,8 @@ public abstract class MixinDeferredRegister<T> implements IDeferredRegister<T> {
     @SuppressWarnings("unchecked")
     public <I extends T> IRegistryObject<I> register(@NotNull String name, @NotNull Function1<? super @NotNull ResourceLocation, ? extends I> sup) {
         PointerLike<ResourceLocation> pointer = new PointerLike<>();
-        RegistryObject<? extends I> registry = this.register(name,() -> sup.invoke(pointer.getPointer()));
-        pointer.setPointer(registry.getId());
+        RegistryObject<? extends I> registry = this.register(name,() -> sup.invoke(pointer.getValue()));
+        pointer.setValue(registry.getId());
         PolygonalTech.Companion.getLOGGER().info("register {} to {}.",registry.getId(),this.getRegistryKey());
         return (IRegistryObject<I>)(Object) registry;
     }

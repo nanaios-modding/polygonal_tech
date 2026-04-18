@@ -10,7 +10,7 @@ import com.nanaios.polygonal_tech.lib.util.sync.storage.ISyncValueStorage
  * - writeBuffer,readBufferによるネットワークでの値の読み書き機能の提供
  * */
 interface ISyncValue {
-    val storage:ISyncValue
+    val storage:ISyncValueStorage
     val syncType: ISyncType
 
     fun writeBuffer(buffer: FriendlyByteBuf)
