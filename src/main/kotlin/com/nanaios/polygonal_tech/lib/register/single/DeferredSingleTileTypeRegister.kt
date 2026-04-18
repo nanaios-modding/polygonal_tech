@@ -12,10 +12,10 @@ import net.minecraftforge.registries.ForgeRegistries
 typealias TileType<T> = BlockEntityType<T>
 typealias Tile = BlockEntity
 
-class DeferredSingleTileTypeRegister(modId: String): DeferredSingleRegister<TileType<*>>(
-    ForgeRegistries.BLOCK_ENTITY_TYPES,modId, MAP
-){
-    companion object{
+class DeferredSingleTileTypeRegister(modId: String) : DeferredSingleRegister<TileType<*>>(
+    ForgeRegistries.BLOCK_ENTITY_TYPES, modId, MAP
+) {
+    companion object {
         private val MAP: MutableMap<ResourceLocation, IRegistryObject<out TileType<*>>> = mutableMapOf()
 
         fun getTileTypeRegistryObject(location: ResourceLocation): IRegistryObject<out TileType<*>>? {
@@ -23,11 +23,23 @@ class DeferredSingleTileTypeRegister(modId: String): DeferredSingleRegister<Tile
         }
     }
 
-    fun <I : Tile> register(block: IRegistryObject<out Block>, sup: (ResourceLocation, BlockPos, BlockState) -> I): IRegistryObject<TileType<I>> {
-        return super.register(block.id.path ) {
+    fun <I : Tile> register(
+        name: String,
+        block: IRegistryObject<out Block>,
+        sup: (ResourceLocation, BlockPos, BlockState) -> I
+    ): IRegistryObject<TileType<I>> {
+        return super.register(block.id.path) {
             BlockEntityType.Builder.of(
                 { pos, state -> sup(block.id, pos, state) },
-                block.get()).build(null)
+                block.get()
+            ).build(null)
         }
     }
+
+    fun <I : Tile> register(block: IRegistryObject<out Block>, sup: (ResourceLocation, BlockPos, BlockState) -> I) =
+        register(
+            block.id.path,
+            block,
+            sup
+        )
 }

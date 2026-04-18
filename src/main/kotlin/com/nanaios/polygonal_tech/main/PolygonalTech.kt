@@ -2,6 +2,7 @@ package com.nanaios.polygonal_tech.main
 
 import com.nanaios.polygonal_tech.main.registries.PolygonalTechBlockRegister
 import com.nanaios.polygonal_tech.main.registries.PolygonalTechItemRegister
+import com.nanaios.polygonal_tech.main.registries.PolygonalTechTileTypeRegister
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext
 import org.apache.logging.log4j.LogManager
@@ -19,6 +20,7 @@ open class PolygonalTech(context: FMLJavaModLoadingContext) {
         showBootLog(context)
         PolygonalTechItemRegister.TEST_ITEMS.register(eventBus)
         PolygonalTechBlockRegister.MACHINE_BLOCKS.register(eventBus)
+        PolygonalTechTileTypeRegister.MACHINE_TILES.register(eventBus)
     }
 
     /**
