@@ -12,8 +12,8 @@ import com.nanaios.polygonal_tech.lib.util.sync.storage.ISyncValueStorage
 interface ISyncValue {
     val storage:ISyncValueStorage
     val syncType: ISyncType
+    var isDirty: Boolean
 
-    fun isDirty(): Boolean
     fun writeBuffer(buffer: FriendlyByteBuf)
     fun readBuffer(buffer: FriendlyByteBuf)
     fun onSync()

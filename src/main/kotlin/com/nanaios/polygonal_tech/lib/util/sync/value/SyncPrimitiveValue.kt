@@ -10,9 +10,7 @@ abstract class SyncPrimitiveValue<V>(
     override val syncType: ISyncType,
     protected var value: V
 ) : ISyncValue, ReadWriteProperty<Any?, V> {
-    protected var isDirty = false
-
-    override fun isDirty() = isDirty
+    override var isDirty = false
 
     override fun onSync() {
         isDirty = false

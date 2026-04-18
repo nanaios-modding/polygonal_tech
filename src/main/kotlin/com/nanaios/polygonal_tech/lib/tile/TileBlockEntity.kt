@@ -12,6 +12,7 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
+import net.minecraftforge.network.PacketDistributor
 
 open class TileBlockEntity(
     protected val id: ResourceLocation,
@@ -38,6 +39,7 @@ open class TileBlockEntity(
         state: BlockState
     ) {
         onServerTick(level, pos, state)
+        sendSyncPacket()
     }
 
     final override fun clientTick(
@@ -65,10 +67,10 @@ open class TileBlockEntity(
     protected fun sendSyncPacket() {
         val packet = SyncValuesPacket(pos)
         packet.setBufWriter { buf ->
-            var count = 0;
+            var count = 0
 
             syncValues.forEachIndexed { index, value ->
-                if(value.syncType == SyncType.ALWAYS && value.isDirty()) {
+                if(value.syncType == SyncType.ALWAYS && value.isDirty) {
                     // indexは値の種類を識別するためのもの。受信側でこのindexをもとにどの値が送られてきたのかを判断する。
                     // valueは実際の値を書き込む。処理はISyncValueの継承クラスで定義されている。
                     buf.writeInt(index)
@@ -80,6 +82,11 @@ open class TileBlockEntity(
 
             buf.writeInt(count)
         }
+
+        PolygonalTechNetwork.CHANNEL.send(
+            PacketDistributor.TRACKING_CHUNK.with { level?.getChunkAt(pos) },
+            packet,
+        )
     }
 
     protected open fun onServerTick(level: Level, pos: BlockPos, state: BlockState) = Unit

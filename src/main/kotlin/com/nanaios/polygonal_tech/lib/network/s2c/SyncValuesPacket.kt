@@ -9,13 +9,13 @@ import java.util.function.Supplier
 open class SyncValuesPacket(
     val pos: BlockPos
 ) {
-    protected var bufWriter = {buf:FriendlyByteBuf-> }
+    protected var bufWriterSup = { buf:FriendlyByteBuf-> }
     fun encode(buf: FriendlyByteBuf) {
         buf.writeBlockPos(pos)
-        bufWriter(buf)
+        bufWriterSup(buf)
     }
     fun setBufWriter(writer: (FriendlyByteBuf) -> Unit) {
-        bufWriter = writer
+        bufWriterSup = writer
     }
 
     companion object {
