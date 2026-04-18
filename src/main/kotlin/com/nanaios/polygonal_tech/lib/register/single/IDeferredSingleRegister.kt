@@ -10,5 +10,5 @@ interface IDeferredSingleRegister<T> : IDeferredRegister<T> {
     /**
      * IDeferredSingleRegisterをDeferredRegisterにキャストして返します。
      * */
-    fun cast(): DeferredRegister<T>
+    val cast: DeferredRegister<T>
 }
