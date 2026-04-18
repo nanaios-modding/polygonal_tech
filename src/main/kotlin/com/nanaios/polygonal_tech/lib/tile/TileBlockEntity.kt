@@ -8,10 +8,10 @@ import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockState
 
 abstract class TileBlockEntity(
-    protected val type: BlockEntityType<*>,
+    protected val tileType: BlockEntityType<*>,
     protected val pos: BlockPos,
     protected val state: BlockState
-): BlockEntity(type, pos, state), ITile {
+): BlockEntity(tileType, pos, state), ITile {
     protected val syncValues: MutableList<ISyncValue> = mutableListOf()
 
     final override fun serverTick(

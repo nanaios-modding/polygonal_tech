@@ -1,5 +1,6 @@
 package com.nanaios.polygonal_tech.main
 
+import com.nanaios.polygonal_tech.main.registries.PolygonalTechBlockRegister
 import com.nanaios.polygonal_tech.main.registries.PolygonalTechItemRegister
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext
@@ -10,13 +11,14 @@ import org.apache.logging.log4j.Logger
 open class PolygonalTech(context: FMLJavaModLoadingContext) {
     companion object {
         const val MOD_ID = "polygonal_tech"
-        private val LOGGER: Logger = LogManager.getLogger(MOD_ID)
+        val LOGGER: Logger = LogManager.getLogger(MOD_ID)
     }
 
     init {
         val eventBus = context.modEventBus
         showBootLog(context)
         PolygonalTechItemRegister.TEST_ITEMS.register(eventBus)
+        PolygonalTechBlockRegister.MACHINE_BLOCKS.register(eventBus)
     }
 
     /**

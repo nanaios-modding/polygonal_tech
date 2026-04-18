@@ -3,6 +3,7 @@ package com.nanaios.polygonal_tech.lib.mixin;
 import com.nanaios.polygonal_tech.lib.register.IDeferredRegister;
 import com.nanaios.polygonal_tech.lib.register.IRegistryObject;
 import com.nanaios.polygonal_tech.lib.util.PointerLike;
+import com.nanaios.polygonal_tech.main.PolygonalTech;
 import kotlin.jvm.functions.Function1;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.DeferredRegister;
@@ -35,6 +36,7 @@ public abstract class MixinDeferredRegister<T> implements IDeferredRegister<T> {
         PointerLike<ResourceLocation> pointer = new PointerLike<>();
         RegistryObject<? extends I> registry = this.register(name,() -> sup.invoke(pointer.getPointer()));
         pointer.setPointer(registry.getId());
+        PolygonalTech.Companion.getLOGGER().info("register {} to {}.",registry.getId(),this.getRegistryKey());
         return (IRegistryObject<I>)(Object) registry;
     }
 

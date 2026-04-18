@@ -11,11 +11,9 @@ interface ISyncType {
     fun getId(): ResourceLocation
 }
 
-enum class SyncType(val id: ResourceLocation): ISyncType {
+enum class SyncType(private val id: ResourceLocation): ISyncType {
     IN_GUI(ResourceLocation.fromNamespaceAndPath(PolygonalTech.MOD_ID, "in_gui")),
     ALWAYS(ResourceLocation.fromNamespaceAndPath(PolygonalTech.MOD_ID, "always"));
 
-    override fun getId(): ResourceLocation {
-        return id
-    }
+    override fun getId(): ResourceLocation = id
 }
