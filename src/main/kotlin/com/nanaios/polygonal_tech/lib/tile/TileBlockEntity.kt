@@ -6,6 +6,8 @@ import com.nanaios.polygonal_tech.lib.register.single.DeferredSingleTileTypeRegi
 import com.nanaios.polygonal_tech.lib.register.single.TileType
 import com.nanaios.polygonal_tech.lib.util.sync.value.ISyncValue
 import com.nanaios.polygonal_tech.lib.util.sync.value.SyncType
+import com.nanaios.polygonal_tech.main.PolygonalTech
+import io.netty.buffer.Unpooled
 import net.minecraft.core.BlockPos
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.resources.ResourceLocation
@@ -65,26 +67,30 @@ open class TileBlockEntity(
     }
 
     protected fun sendSyncPacket() {
-        val packet = SyncValuesPacket(pos)
-        packet.setBufWriter { buf ->
-            var count = 0
+        val buf = FriendlyByteBuf(Unpooled.buffer())
+        var count = 0
 
-            syncValues.forEachIndexed { index, value ->
-                if(value.syncType == SyncType.ALWAYS && value.isDirty) {
-                    // indexは値の種類を識別するためのもの。受信側でこのindexをもとにどの値が送られてきたのかを判断する。
-                    // valueは実際の値を書き込む。処理はISyncValueの継承クラスで定義されている。
-                    buf.writeInt(index)
-                    value.writeBuffer(buf)
-                    value.onSync()
-                    count++
-                }
+        syncValues.forEachIndexed { index, value ->
+            if(value.isDirty && value.syncType == SyncType.ALWAYS) {
+                buf.writeInt(index)
+                value.writeBuffer(buf)
+                value.onSync()
+                count++
             }
-
-            buf.writeInt(count)
         }
 
+        buf.writeInt(count)
+
+        val level = this.level ?: return
+
+        val packet = SyncValuesPacket(
+            level.dimension().location(),
+            pos,
+            buf
+        )
+
         PolygonalTechNetwork.CHANNEL.send(
-            PacketDistributor.TRACKING_CHUNK.with { level?.getChunkAt(pos) },
+            PacketDistributor.TRACKING_CHUNK.with { level.getChunkAt(pos) },
             packet,
         )
     }

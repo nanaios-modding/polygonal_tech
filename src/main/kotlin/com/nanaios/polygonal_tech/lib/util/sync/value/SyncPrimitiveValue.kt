@@ -12,6 +12,10 @@ abstract class SyncPrimitiveValue<V>(
 ) : ISyncValue, ReadWriteProperty<Any?, V> {
     override var isDirty = false
 
+    init {
+        storage.addValue(this)
+    }
+
     override fun onSync() {
         isDirty = false
     }

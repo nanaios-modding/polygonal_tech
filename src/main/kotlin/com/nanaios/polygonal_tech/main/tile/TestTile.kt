@@ -21,6 +21,5 @@ class TestTile(
 
     override fun onClientTick(level: Level, pos: BlockPos, state: BlockState) {
         super.onClientTick(level, pos, state)
-        PolygonalTech.LOGGER.info("syncInt = {}",syncInt)
     }
 }
