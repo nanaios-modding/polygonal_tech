@@ -11,7 +11,6 @@ object PolygonalTechLib {
     @JvmStatic
     @SubscribeEvent
     fun commonSetup(event: FMLCommonSetupEvent) {
-        PolygonalTech.LOGGER.info("commonSetup called, registering network packets...")
         PolygonalTechNetwork.register()
     }
 }
