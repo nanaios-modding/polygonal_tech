@@ -1,7 +1,6 @@
 package com.nanaios.polygonal_tech.lib.network.s2c
 
-import com.nanaios.polygonal_tech.lib.tile.TileBlockEntity
-import com.nanaios.polygonal_tech.main.PolygonalTech
+import com.nanaios.polygonal_tech.lib.tile.SingleTile
 import net.minecraft.client.Minecraft
 import net.minecraft.core.BlockPos
 import net.minecraft.network.FriendlyByteBuf
@@ -37,7 +36,7 @@ open class SyncValuesPacket(
                 if(level.dimension().location() != packet.dimension) return@enqueueWork
 
                 val blockEntity = level.getBlockEntity(packet.pos)
-                if(blockEntity !is TileBlockEntity) return@enqueueWork
+                if(blockEntity !is SingleTile) return@enqueueWork
                 blockEntity.readSyncValue(packet.buf)
             }
             ctx.packetHandled = true

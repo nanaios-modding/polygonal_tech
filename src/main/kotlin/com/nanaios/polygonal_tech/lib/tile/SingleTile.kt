@@ -6,9 +6,9 @@ import com.nanaios.polygonal_tech.lib.register.single.DeferredSingleTileTypeRegi
 import com.nanaios.polygonal_tech.lib.register.single.TileType
 import com.nanaios.polygonal_tech.lib.util.sync.value.ISyncValue
 import com.nanaios.polygonal_tech.lib.util.sync.value.SyncType
-import com.nanaios.polygonal_tech.main.PolygonalTech
 import io.netty.buffer.Unpooled
 import net.minecraft.core.BlockPos
+import net.minecraft.core.Direction
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.Level
@@ -16,14 +16,20 @@ import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraftforge.network.PacketDistributor
 
-open class TileBlockEntity(
+abstract class SingleTile(
     protected val id: ResourceLocation,
     protected val tileType: TileType<*>,
     protected val pos: BlockPos,
     protected val state: BlockState
-): BlockEntity(tileType, pos, state), ITile {
-    protected val syncValues: MutableList<ISyncValue> = mutableListOf()
+): BlockEntity(tileType, pos, state), ISingleTile {
+    override val tileLevel: Level?
+        get() = level
+    override val tilePos: BlockPos
+        get() = pos
+    override val defaultFront: Direction
+        get() = Direction.NORTH
 
+    protected val syncValues: MutableList<ISyncValue> = mutableListOf()
     /**
      * TileTypeが[DeferredSingleTileTypeRegister]もしくはその継承クラスを通して登録されていることを前提としたconstructor。
      * 上記以外のDeferredRegisterを使用している場合は、TileTypeを直接渡すconstructorを使用してください。
