@@ -10,7 +10,8 @@ interface ISingleTile: ITile {
     val tilePos: BlockPos
     val defaultFront: Direction
 
-    fun getCurrentFront(): Direction {
+    val currentFront: Direction
+        get(){
         val level = tileLevel ?: return defaultFront
         val state = level.getBlockState(tilePos)
 
