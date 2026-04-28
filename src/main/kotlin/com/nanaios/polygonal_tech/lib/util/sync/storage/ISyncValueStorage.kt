@@ -7,4 +7,5 @@ import com.nanaios.polygonal_tech.lib.util.sync.value.ISyncValue
  * */
 interface ISyncValueStorage {
     fun addValue(value: ISyncValue)
+    fun onSyncValueChanged(value: ISyncValue)
 }

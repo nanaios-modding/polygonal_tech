@@ -17,8 +17,4 @@ class TestSingleTile(
         super.onServerTick(level, pos, state)
         syncInt += 1
     }
-
-    override fun onClientTick(level: Level, pos: BlockPos, state: BlockState) {
-        super.onClientTick(level, pos, state)
-    }
 }

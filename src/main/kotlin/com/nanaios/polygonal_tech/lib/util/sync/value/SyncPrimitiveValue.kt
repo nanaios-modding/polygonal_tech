@@ -10,14 +10,16 @@ abstract class SyncPrimitiveValue<V>(
     override val syncType: ISyncType,
     protected var value: V
 ) : ISyncValue, ReadWriteProperty<Any?, V> {
-    override var isDirty = false
+    protected var _isDirty = false
+    override val isDirty: Boolean
+        get() = _isDirty
 
     init {
         storage.addValue(this)
     }
 
     override fun onSync() {
-        isDirty = false
+        _isDirty = false
     }
 
     override fun getValue(thisRef: Any?, property: KProperty<*>) = value
@@ -25,7 +27,8 @@ abstract class SyncPrimitiveValue<V>(
     override fun setValue(thisRef: Any?, property: KProperty<*>, value: V) {
         if (this.value != value) {
             this.value = value
-            isDirty = true
+            _isDirty = true
+            storage.onSyncValueChanged(this)
         }
     }
 }

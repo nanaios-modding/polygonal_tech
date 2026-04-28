@@ -34,6 +34,9 @@ abstract class SingleTile(
         get() = Direction.NORTH
 
     protected val syncValues: MutableList<ISyncValue> = mutableListOf()
+
+    protected var isChanged = false
+
     /**
      * TileTypeが[DeferredSingleTileTypeRegister]もしくはその継承クラスを通して登録されていることを前提としたconstructor。
      * 上記以外のDeferredRegisterを使用している場合は、TileTypeを直接渡すconstructorを使用してください。
@@ -66,6 +69,11 @@ abstract class SingleTile(
         syncValues.add(value)
     }
 
+    override fun onSyncValueChanged(value: ISyncValue) {
+        isChanged = true
+        setChanged()
+    }
+
     fun readSyncValue(buf: FriendlyByteBuf) {
         if(buf.writerIndex() < Int.SIZE_BYTES) return
 
@@ -82,11 +90,12 @@ abstract class SingleTile(
         return if(capability.isPresent) capability else super.getCapability(cap, side)
     }
 
-    override fun <T> getCapability(cap: Capability<T>, face: IFace): LazyOptional<T> {
-        return LazyOptional.empty()
-    }
+    override fun <T> getCapability(cap: Capability<T>, face: IFace): LazyOptional<T> = LazyOptional.empty()
 
     protected fun sendSyncPacket() {
+        if(!isChanged) return
+        isChanged = false
+
         val buf = FriendlyByteBuf(Unpooled.buffer())
         var count = 0
 

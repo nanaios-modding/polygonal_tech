@@ -1,95 +1,166 @@
 package com.nanaios.polygonal_tech.lib.fluid
 
 import com.nanaios.polygonal_tech.lib.util.roundInt
-import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.Tag
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.material.Fluid
 import net.minecraft.world.level.material.Fluids
 import net.minecraftforge.fluids.FluidStack
-import kotlin.math.min
+import net.minecraftforge.fluids.FluidUtil
+import net.minecraftforge.registries.ForgeRegistries
 
 open class LongFluidStack(
-    val fluid: Fluid,
-    protected var longAmount: Long,
-    protected var nbt: CompoundTag? = null,
+    private val rawFluid: Fluid,
+    private var amount: Long,
+    private var tag: CompoundTag? = null,
 ) {
-    constructor(fluid: Fluid, longAmount: Long, nbt: CompoundTag) : this(fluid, longAmount, nbt as CompoundTag?)
+    private var isEmpty: Boolean = rawFluid == Fluids.EMPTY || amount <= 0L
+
+    val fluid: Fluid
+        get() = if (isEmpty) Fluids.EMPTY else rawFluid
+
+    fun getRawFluid(): Fluid {
+        return rawFluid
+    }
 
     fun getAmount(): Long {
-        return longAmount
+        return if (isEmpty) 0L else amount
     }
 
     fun setAmount(amount: Long) {
-        longAmount = amount.coerceAtLeast(0L)
+        check(rawFluid != Fluids.EMPTY) { "Can't modify the empty stack." }
+        this.amount = amount
+        updateEmpty()
     }
 
     fun grow(amount: Long) {
-        if (amount <= 0L) return
-        longAmount = longAmount + amount
+        setAmount(this.amount + amount)
     }
 
     fun shrink(amount: Long) {
-        if (amount <= 0L) return
-        longAmount = (longAmount - amount).coerceAtLeast(0L)
-    }
-
-    fun split(amount: Long): LongFluidStack {
-        if (amount <= 0L || isEmpty()) return EMPTY.copy()
-        val splitAmount = min(longAmount, amount)
-        longAmount -= splitAmount
-        return LongFluidStack(fluid, splitAmount, nbt?.copy())
+        setAmount(this.amount - amount)
     }
 
     fun isEmpty(): Boolean {
-        return fluid == Fluids.EMPTY || longAmount <= 0L
+        return isEmpty
+    }
+
+    protected fun updateEmpty() {
+        isEmpty = rawFluid == Fluids.EMPTY || amount <= 0L
+    }
+
+    fun hasTag(): Boolean {
+        return tag != null
     }
 
     fun getTag(): CompoundTag? {
-        return nbt
+        return tag
     }
 
     fun setTag(tag: CompoundTag?) {
-        nbt = tag?.copy()
+        check(rawFluid != Fluids.EMPTY) { "Can't modify the empty stack." }
+        this.tag = tag
+    }
+
+    fun getOrCreateTag(): CompoundTag {
+        if (tag == null) {
+            setTag(CompoundTag())
+        }
+        return tag!!
+    }
+
+    fun getChildTag(childName: String): CompoundTag? {
+        if (tag == null) {
+            return null
+        }
+        return tag!!.getCompound(childName)
+    }
+
+    fun getOrCreateChildTag(childName: String): CompoundTag {
+        val rootTag = getOrCreateTag()
+        val child = rootTag.getCompound(childName)
+        if (!rootTag.contains(childName, Tag.TAG_COMPOUND.toInt())) {
+            rootTag.put(childName, child)
+        }
+        return child
+    }
+
+    fun removeChildTag(childName: String) {
+        if (tag != null) {
+            tag!!.remove(childName)
+        }
     }
 
     fun copy(): LongFluidStack {
-        return LongFluidStack(fluid, longAmount, nbt?.copy())
-    }
-
-    fun isFluidEqual(other: LongFluidStack): Boolean {
-        return fluid == other.fluid
-    }
-
-    fun isFluidStackIdentical(other: LongFluidStack): Boolean {
-        return fluid == other.fluid && longAmount == other.longAmount && areTagsEqual(nbt, other.nbt)
+        return LongFluidStack(fluid, amount, tag?.copy())
     }
 
     fun toFluidStack(): FluidStack {
         if (isEmpty()) return FluidStack.EMPTY
-        return FluidStack(fluid, longAmount.roundInt(), nbt?.copy())
+        return FluidStack(fluid, amount.roundInt(), tag?.copy())
     }
 
-    fun writeToBuf(buf: FriendlyByteBuf) {
-        buf.writeResourceLocation(BuiltInRegistries.FLUID.getKey(fluid))
-        buf.writeVarLong(longAmount)
-        buf.writeNbt(nbt?.copy())
+    fun writeToPacket(buf: FriendlyByteBuf) {
+        buf.writeRegistryId(ForgeRegistries.FLUIDS, fluid)
+        buf.writeVarLong(amount)
+        buf.writeNbt(tag)
     }
 
-    fun save(tag: CompoundTag = CompoundTag()): CompoundTag {
-        if (isEmpty()) return tag
+    fun writeToNBT(nbt: CompoundTag): CompoundTag {
+        nbt.putString(KEY_FLUID_NAME, ForgeRegistries.FLUIDS.getKey(fluid).toString())
+        nbt.putLong(KEY_AMOUNT, amount)
 
-        tag.putString(KEY_FLUID_NAME, BuiltInRegistries.FLUID.getKey(fluid).toString())
-        tag.putLong(KEY_AMOUNT, longAmount)
-
-        val copiedTag = nbt
-        if (copiedTag != null && !copiedTag.isEmpty) {
-            tag.put(KEY_TAG, copiedTag.copy())
+        val stackTag = tag
+        if (stackTag != null) {
+            nbt.put(KEY_TAG, stackTag)
         }
-
-        return tag
+        return nbt
     }
+
+    fun isFluidEqual(other: LongFluidStack): Boolean {
+        return fluid == other.fluid && isFluidStackTagEqual(other)
+    }
+
+    fun isFluidEqual(other: FluidStack): Boolean {
+        return fluid == other.fluid && areTagsEqual(tag, other.tag)
+    }
+
+    private fun isFluidStackTagEqual(other: LongFluidStack): Boolean {
+        val selfTag = tag
+        return selfTag == null && other.tag == null || (selfTag != null && other.tag != null && selfTag == other.tag)
+    }
+
+    fun containsFluid(other: LongFluidStack): Boolean {
+        return isFluidEqual(other) && amount >= other.amount
+    }
+
+    fun isFluidStackIdentical(other: LongFluidStack): Boolean {
+        return isFluidEqual(other) && amount == other.amount
+    }
+
+    fun isFluidEqual(other: ItemStack): Boolean {
+        return FluidUtil.getFluidContained(other).map { stack -> isFluidEqual(stack) }.orElse(false)!!
+    }
+
+    override fun hashCode(): Int {
+        var code = 1
+        code = 31 * code + fluid.hashCode()
+        if (tag != null) {
+            code = 31 * code + tag.hashCode()
+        }
+        return code
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (other !is LongFluidStack) {
+            return false
+        }
+        return isFluidEqual(other)
+    }
+
 
     companion object {
         const val KEY_FLUID_NAME: String = "FluidName"
@@ -112,26 +183,31 @@ open class LongFluidStack(
         }
 
         @JvmStatic
-        fun readFromBuf(buf: FriendlyByteBuf): LongFluidStack {
-            val fluidId = buf.readResourceLocation()
-            val fluid = BuiltInRegistries.FLUID.getOptional(fluidId).orElse(Fluids.EMPTY)
+        fun readFromPacket(buf: FriendlyByteBuf): LongFluidStack {
+            val fluid = buf.readRegistryId<Fluid>()
             val amount = buf.readVarLong()
             val tag = buf.readNbt()
+            if (fluid == null || fluid == Fluids.EMPTY) return EMPTY
             return of(fluid, amount, tag)
         }
 
         @JvmStatic
-        fun load(tag: CompoundTag): LongFluidStack {
-            if (!tag.contains(KEY_FLUID_NAME)) return EMPTY.copy()
+        fun loadFluidStackFromNBT(tag: CompoundTag?): LongFluidStack {
+            if (tag == null) return EMPTY
+            if (!tag.contains(KEY_FLUID_NAME, Tag.TAG_STRING.toInt())) return EMPTY
 
             val fluidId = ResourceLocation.tryParse(tag.getString(KEY_FLUID_NAME)) ?: return EMPTY.copy()
-            val fluid = BuiltInRegistries.FLUID.getOptional(fluidId).orElse(Fluids.EMPTY)
+            val fluid = ForgeRegistries.FLUIDS.getValue(fluidId) ?: Fluids.EMPTY
             if (fluid == Fluids.EMPTY) return EMPTY.copy()
 
-            val amount = tag.getLong(KEY_AMOUNT)
+            val amount = if (tag.contains(KEY_AMOUNT, Tag.TAG_LONG.toInt())) {
+                tag.getLong(KEY_AMOUNT)
+            } else {
+                tag.getInt(KEY_AMOUNT).toLong()
+            }
             if (amount <= 0L) return EMPTY.copy()
 
-            val copiedTag = if (tag.contains(KEY_TAG, CompoundTag.TAG_COMPOUND.toInt())) {
+            val copiedTag = if (tag.contains(KEY_TAG, Tag.TAG_COMPOUND.toInt())) {
                 tag.getCompound(KEY_TAG).copy()
             } else {
                 null
@@ -141,10 +217,19 @@ open class LongFluidStack(
         }
 
         @JvmStatic
+        fun areFluidStackTagsEqual(first: LongFluidStack, second: LongFluidStack): Boolean {
+            return first.isFluidStackTagEqual(second)
+        }
+
+        @JvmStatic
         fun areTagsEqual(first: CompoundTag?, second: CompoundTag?): Boolean {
             if (first == null && second == null) return true
             if (first == null || second == null) return false
             return first == second
         }
     }
+}
+
+fun FluidStack.toLongFluidStack(): LongFluidStack {
+    return LongFluidStack(fluid, amount.toLong(), tag?.copy())
 }
