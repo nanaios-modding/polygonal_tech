@@ -69,6 +69,10 @@ abstract class SingleTile(
         syncValues.add(value)
     }
 
+    override fun removeValue(value: ISyncValue) {
+        syncValues.remove(value)
+    }
+
     override fun onSyncValueChanged(value: ISyncValue) {
         isChanged = true
         setChanged()
@@ -100,7 +104,7 @@ abstract class SingleTile(
         var count = 0
 
         syncValues.forEachIndexed { index, value ->
-            if(value.isDirty && value.syncType == SyncType.ALWAYS) {
+            if(value.isDirty && value.type == SyncType.ALWAYS) {
                 buf.writeInt(index)
                 value.writeBuffer(buf)
                 value.onSync()

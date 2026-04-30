@@ -1,7 +1,7 @@
 package com.nanaios.polygonal_tech.lib.util.sync.value
 
-import net.minecraft.network.FriendlyByteBuf
 import com.nanaios.polygonal_tech.lib.util.sync.storage.ISyncValueStorage
+import net.minecraft.network.FriendlyByteBuf
 
 /**
  * ネットワークで同期する値を表すインターフェース。
@@ -10,11 +10,21 @@ import com.nanaios.polygonal_tech.lib.util.sync.storage.ISyncValueStorage
  * - writeBuffer,readBufferによるネットワークでの値の読み書き機能の提供
  * */
 interface ISyncValue {
-    val storage:ISyncValueStorage
-    val syncType: ISyncType
+    var storage: ISyncValueStorage
+    var type: ISyncType
     val isDirty: Boolean
 
     fun writeBuffer(buffer: FriendlyByteBuf)
     fun readBuffer(buffer: FriendlyByteBuf)
     fun onSync()
+}
+
+inline infix fun <V : ISyncValue> V.bind(storage: ISyncValueStorage): V {
+    this.storage = storage
+    return this
+}
+
+inline infix fun <V : ISyncValue> V.on(type: ISyncType): V {
+    this.type = type
+    return this
 }

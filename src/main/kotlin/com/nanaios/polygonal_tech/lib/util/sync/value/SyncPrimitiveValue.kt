@@ -1,25 +1,19 @@
 package com.nanaios.polygonal_tech.lib.util.sync.value
 
+import com.nanaios.polygonal_tech.lib.util.sync.storage.EmptySyncValueStorage
 import com.nanaios.polygonal_tech.lib.util.sync.storage.ISyncValueStorage
 import net.minecraft.network.FriendlyByteBuf
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
-abstract class SyncPrimitiveValue<V>(
-    override val storage: ISyncValueStorage,
-    override val syncType: ISyncType,
-    protected var value: V
-) : ISyncValue, ReadWriteProperty<Any?, V> {
-    protected var _isDirty = false
-    override val isDirty: Boolean
-        get() = _isDirty
-
-    init {
-        storage.addValue(this)
-    }
+abstract class SyncPrimitiveValue<V>(protected var value: V) : ISyncValue, ReadWriteProperty<Any?, V> {
+    override var storage: ISyncValueStorage = EmptySyncValueStorage
+    override var type: ISyncType = SyncType.NONE
+    override var isDirty = false
+        protected set
 
     override fun onSync() {
-        _isDirty = false
+        isDirty = false
     }
 
     override fun getValue(thisRef: Any?, property: KProperty<*>) = value
@@ -27,20 +21,13 @@ abstract class SyncPrimitiveValue<V>(
     override fun setValue(thisRef: Any?, property: KProperty<*>, value: V) {
         if (this.value != value) {
             this.value = value
-            _isDirty = true
+            isDirty = true
             storage.onSyncValueChanged(this)
         }
     }
 }
 
-class SyncIntValue(
-    storage: ISyncValueStorage,
-    syncType: ISyncType
-) : SyncPrimitiveValue<Int>(
-    storage,
-    syncType,
-    0
-) {
+class SyncIntValue : SyncPrimitiveValue<Int>(0) {
     companion object;
     override fun readBuffer(buffer: FriendlyByteBuf) {
         value = buffer.readInt()
@@ -51,14 +38,7 @@ class SyncIntValue(
     }
 }
 
-class SyncLongValue(
-    storage: ISyncValueStorage,
-    syncType: ISyncType
-) : SyncPrimitiveValue<Long>(
-    storage,
-    syncType,
-    0L
-) {
+class SyncLongValue : SyncPrimitiveValue<Long>(0L) {
     companion object;
     override fun readBuffer(buffer: FriendlyByteBuf) {
         value = buffer.readLong()
@@ -69,14 +49,7 @@ class SyncLongValue(
     }
 }
 
-class SyncFloatValue(
-    storage: ISyncValueStorage,
-    syncType: ISyncType
-) : SyncPrimitiveValue<Float>(
-    storage,
-    syncType,
-    0f
-) {
+class SyncFloatValue: SyncPrimitiveValue<Float>(0f) {
     companion object;
     override fun readBuffer(buffer: FriendlyByteBuf) {
         value = buffer.readFloat()
@@ -87,14 +60,7 @@ class SyncFloatValue(
     }
 }
 
-class SyncDoubleValue(
-    storage: ISyncValueStorage,
-    syncType: ISyncType
-) : SyncPrimitiveValue<Double>(
-    storage,
-    syncType,
-    0.0
-) {
+class SyncDoubleValue: SyncPrimitiveValue<Double>(0.0) {
     companion object;
     override fun readBuffer(buffer: FriendlyByteBuf) {
         value = buffer.readDouble()
@@ -108,11 +74,7 @@ class SyncDoubleValue(
 class SyncBooleanValue(
     storage: ISyncValueStorage,
     syncType: ISyncType
-) : SyncPrimitiveValue<Boolean>(
-    storage,
-    syncType,
-    false
-) {
+) : SyncPrimitiveValue<Boolean>(false) {
     companion object;
     override fun readBuffer(buffer: FriendlyByteBuf) {
         value = buffer.readBoolean()
@@ -123,14 +85,7 @@ class SyncBooleanValue(
     }
 }
 
-class SyncStringValue(
-    storage: ISyncValueStorage,
-    syncType: ISyncType
-) : SyncPrimitiveValue<String>(
-    storage,
-    syncType,
-    ""
-) {
+class SyncStringValue: SyncPrimitiveValue<String>("") {
     companion object;
     override fun readBuffer(buffer: FriendlyByteBuf) {
         value = buffer.readUtf()
@@ -141,14 +96,7 @@ class SyncStringValue(
     }
 }
 
-class SyncByteValue(
-    storage: ISyncValueStorage,
-    syncType: ISyncType
-) : SyncPrimitiveValue<Byte>(
-    storage,
-    syncType,
-    0
-) {
+class SyncByteValue: SyncPrimitiveValue<Byte>(0) {
     companion object;
     override fun readBuffer(buffer: FriendlyByteBuf) {
         value = buffer.readByte()
