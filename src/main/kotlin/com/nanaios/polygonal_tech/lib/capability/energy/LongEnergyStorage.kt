@@ -4,7 +4,9 @@ import com.nanaios.polygonal_tech.lib.util.sync.storage.EmptySyncValueStorage
 import com.nanaios.polygonal_tech.lib.util.sync.storage.ISyncValueStorage
 import com.nanaios.polygonal_tech.lib.util.sync.value.ISyncType
 import com.nanaios.polygonal_tech.lib.util.sync.value.SyncType
+import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.FriendlyByteBuf
+import kotlin.math.min
 
 open class LongEnergyStorage(
     stored: Long,
@@ -12,6 +14,11 @@ open class LongEnergyStorage(
     protected var extract: Boolean,
     protected var receive: Boolean,
 ) : ILongEnergyStorage {
+    companion object {
+        const val NBT_STORED_KEY = "stored"
+        const val NBT_CAPACITY_KEY = "capacity"
+    }
+
     override var longEnergyStored = stored
         protected set
     override var maxLongEnergyStored = capacity
@@ -21,8 +28,20 @@ open class LongEnergyStorage(
     override var isDirty = false
         protected set
 
+    override fun serializeNBT(): CompoundTag {
+        val tag = CompoundTag()
+        tag.putLong(NBT_STORED_KEY, this.longEnergyStored)
+        tag.putLong(NBT_CAPACITY_KEY, this.maxLongEnergyStored)
+        return tag
+    }
+
+    override fun deserializeNBT(nbt: CompoundTag) {
+        this.longEnergyStored = nbt.getLong(NBT_STORED_KEY)
+        this.maxLongEnergyStored = nbt.getLong(NBT_CAPACITY_KEY)
+    }
+
     override fun receiveLongEnergy(maxReceive: Long, simulate: Boolean): Long {
-        val received = maxReceive.coerceAtMost(maxLongEnergyStored - longEnergyStored)
+        val received = min(maxReceive,maxLongEnergyStored - longEnergyStored)
         if (!simulate && received != 0L) {
             longEnergyStored += received
             isDirty = true
@@ -32,7 +51,7 @@ open class LongEnergyStorage(
     }
 
     override fun extractLongEnergy(maxExtract: Long, simulate: Boolean): Long {
-        val extracted = maxExtract.coerceAtMost(longEnergyStored)
+        val extracted = min(maxExtract,longEnergyStored)
         if (!simulate && extracted != 0L) {
             longEnergyStored -= extracted
             isDirty = true

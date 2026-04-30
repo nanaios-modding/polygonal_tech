@@ -8,6 +8,7 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.material.Fluid
 import net.minecraft.world.level.material.Fluids
+import net.minecraftforge.common.extensions.IForgeFriendlyByteBuf
 import net.minecraftforge.fluids.FluidStack
 import net.minecraftforge.fluids.FluidUtil
 import net.minecraftforge.registries.ForgeRegistries
@@ -232,4 +233,19 @@ open class LongFluidStack(
 
 fun FluidStack.toLongFluidStack(): LongFluidStack {
     return LongFluidStack(fluid, amount.toLong(), tag?.copy())
+}
+
+fun IForgeFriendlyByteBuf.writeLongFluidStack(stack: LongFluidStack) {
+    val self = this as FriendlyByteBuf
+    if (stack.isEmpty()) {
+        self.writeBoolean(false)
+    } else {
+        self.writeBoolean(true)
+        stack.writeToPacket(self)
+    }
+}
+
+fun IForgeFriendlyByteBuf.readLongFluidStack(): LongFluidStack {
+    val self = this as FriendlyByteBuf
+    return if (!self.readBoolean()) LongFluidStack.EMPTY else LongFluidStack.readFromPacket(self)
 }

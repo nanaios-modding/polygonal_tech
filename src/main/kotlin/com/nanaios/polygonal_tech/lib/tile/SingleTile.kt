@@ -11,6 +11,7 @@ import com.nanaios.polygonal_tech.lib.util.sync.value.SyncType
 import io.netty.buffer.Unpooled
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
+import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.Level
@@ -63,6 +64,15 @@ abstract class SingleTile(
         state: BlockState
     ) {
         onClientTick(level, pos, state)
+    }
+
+    final override fun saveAdditional(tag: CompoundTag) {
+        super.saveAdditional(tag)
+        save(tag)
+    }
+
+    fun save(tag: CompoundTag) {
+
     }
 
     override fun addValue(value: ISyncValue) {
