@@ -1,10 +1,9 @@
 package com.nanaios.polygonal_tech.main.registries
 
-import com.nanaios.polygonal_tech.lib.register.single.DeferredSingleTileTypeRegister
-import com.nanaios.polygonal_tech.main.PolygonalTech
-import com.nanaios.polygonal_tech.main.tile.TestSingleTile
+import com.nanaios.polygonal_tech.main.registry.PolygonalTechTileTypeRegistry
 
+@Deprecated("main.registryへ移動しました")
 object PolygonalTechTileTypeRegister {
-    val MACHINE_TILES = DeferredSingleTileTypeRegister(PolygonalTech.MOD_ID)
-    val TEST_MACHINE = MACHINE_TILES.register(PolygonalTechBlockRegister.TEST_MACHINE,::TestSingleTile)
+    val MACHINE_TILES = PolygonalTechTileTypeRegistry.MACHINE_TILES
+    val TEST_MACHINE = PolygonalTechTileTypeRegistry.TEST_MACHINE
 }
