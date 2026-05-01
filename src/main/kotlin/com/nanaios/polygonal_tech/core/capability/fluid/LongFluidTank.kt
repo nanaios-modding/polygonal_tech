@@ -3,10 +3,10 @@ package com.nanaios.polygonal_tech.core.capability.fluid
 import com.nanaios.polygonal_tech.core.fluid.LongFluidStack
 import com.nanaios.polygonal_tech.core.fluid.readLongFluidStack
 import com.nanaios.polygonal_tech.core.fluid.writeLongFluidStack
-import com.nanaios.polygonal_tech.core.util.sync.storage.EmptySyncValueStorage
-import com.nanaios.polygonal_tech.core.util.sync.storage.ISyncValueStorage
-import com.nanaios.polygonal_tech.core.util.sync.value.ISyncType
-import com.nanaios.polygonal_tech.core.util.sync.value.SyncType
+import com.nanaios.polygonal_tech.core.network.sync.storage.EmptySyncValueStorage
+import com.nanaios.polygonal_tech.core.network.sync.storage.ISyncValueStorage
+import com.nanaios.polygonal_tech.core.network.sync.type.ISyncType
+import com.nanaios.polygonal_tech.core.network.sync.type.SyncType
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraftforge.fluids.capability.IFluidHandler

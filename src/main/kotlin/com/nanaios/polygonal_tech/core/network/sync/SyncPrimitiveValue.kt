@@ -1,7 +1,9 @@
-package com.nanaios.polygonal_tech.core.util.sync.value
+package com.nanaios.polygonal_tech.core.network.sync
 
-import com.nanaios.polygonal_tech.core.util.sync.storage.EmptySyncValueStorage
-import com.nanaios.polygonal_tech.core.util.sync.storage.ISyncValueStorage
+import com.nanaios.polygonal_tech.core.network.sync.storage.EmptySyncValueStorage
+import com.nanaios.polygonal_tech.core.network.sync.storage.ISyncValueStorage
+import com.nanaios.polygonal_tech.core.network.sync.type.ISyncType
+import com.nanaios.polygonal_tech.core.network.sync.type.SyncType
 import net.minecraft.network.FriendlyByteBuf
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty

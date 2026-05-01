@@ -1,7 +1,7 @@
 package com.nanaios.polygonal_tech.core.tile
 
-import com.nanaios.polygonal_tech.core.util.face.IFace
-import com.nanaios.polygonal_tech.core.util.sync.storage.ISyncValueStorage
+import com.nanaios.polygonal_tech.core.capability.face.IFace
+import com.nanaios.polygonal_tech.core.network.sync.storage.ISyncValueStorage
 import net.minecraft.core.BlockPos
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.state.BlockState

@@ -1,11 +1,12 @@
-package com.nanaios.polygonal_tech.core.util.sync.value
+package com.nanaios.polygonal_tech.core.network.sync
 
-import com.nanaios.polygonal_tech.core.util.sync.storage.ISyncValueStorage
+import com.nanaios.polygonal_tech.core.network.sync.storage.ISyncValueStorage
+import com.nanaios.polygonal_tech.core.network.sync.type.ISyncType
 import net.minecraft.network.FriendlyByteBuf
 
 /**
  * ネットワークで同期する値を表すインターフェース。
- * [ISyncValueStorage]に保管され、ネットワークで同期される値はISyncValueを実装する必要があります。
+ * [com.nanaios.polygonal_tech.core.network.sync.storage.ISyncValueStorage]に保管され、ネットワークで同期される値はISyncValueを実装する必要があります。
  * ISyncValueを実装するクラスは以下の責務を負います
  * - writeBuffer,readBufferによるネットワークでの値の読み書き機能の提供
  * */

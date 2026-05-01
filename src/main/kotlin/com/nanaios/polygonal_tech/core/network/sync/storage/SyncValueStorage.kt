@@ -1,6 +1,6 @@
-package com.nanaios.polygonal_tech.core.util.sync.storage
+package com.nanaios.polygonal_tech.core.network.sync.storage
 
-import com.nanaios.polygonal_tech.core.util.sync.value.ISyncValue
+import com.nanaios.polygonal_tech.core.network.sync.ISyncValue
 
 /**
  * [ISyncValue]を保管するためのインターフェース。

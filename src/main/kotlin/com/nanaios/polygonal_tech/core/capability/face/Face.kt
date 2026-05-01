@@ -1,4 +1,4 @@
-package com.nanaios.polygonal_tech.core.util.face
+package com.nanaios.polygonal_tech.core.capability.face
 
 import com.nanaios.polygonal_tech.main.PolygonalTech
 import net.minecraft.core.Direction

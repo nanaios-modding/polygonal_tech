@@ -1,7 +1,7 @@
 package com.nanaios.polygonal_tech.core.tile
 
 import com.nanaios.polygonal_tech.core.capability.energy.ILongEnergyStorage
-import com.nanaios.polygonal_tech.core.util.face.DirectionFace
+import com.nanaios.polygonal_tech.core.capability.face.DirectionFace
 import net.minecraft.core.BlockPos
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.block.state.BlockState

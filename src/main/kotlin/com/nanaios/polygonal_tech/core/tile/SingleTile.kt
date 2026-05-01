@@ -1,13 +1,13 @@
 package com.nanaios.polygonal_tech.core.tile
 
+import com.nanaios.polygonal_tech.core.capability.face.DirectionFace
+import com.nanaios.polygonal_tech.core.capability.face.IFace
 import com.nanaios.polygonal_tech.core.network.PolygonalTechNetwork
 import com.nanaios.polygonal_tech.core.network.s2c.SyncValuesPacket
+import com.nanaios.polygonal_tech.core.network.sync.ISyncValue
+import com.nanaios.polygonal_tech.core.network.sync.type.SyncType
 import com.nanaios.polygonal_tech.core.register.single.DeferredSingleTileTypeRegister
 import com.nanaios.polygonal_tech.core.register.single.TileType
-import com.nanaios.polygonal_tech.core.util.face.DirectionFace
-import com.nanaios.polygonal_tech.core.util.face.IFace
-import com.nanaios.polygonal_tech.core.util.sync.value.ISyncValue
-import com.nanaios.polygonal_tech.core.util.sync.value.SyncType
 import io.netty.buffer.Unpooled
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
