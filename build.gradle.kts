@@ -98,7 +98,7 @@ minecraft {
 configure<org.spongepowered.asm.gradle.plugins.MixinExtension> {
     add(sourceSets.main.get(), "${modId}.refmap.json")
     config("${modId}.main.mixins.json")
-    config("${modId}.lib.mixins.json")
+    config("${modId}.core.mixins.json")
 }
 
 sourceSets.main.get().resources.srcDir("src/generated/resources")

@@ -1,4 +1,4 @@
-package com.nanaios.polygonal_tech.lib.mixin;
+package com.nanaios.polygonal_tech.core.mixin;
 
 import com.nanaios.polygonal_tech.core.register.registry.IRegistryObject;
 import net.minecraftforge.registries.RegistryObject;
@@ -10,5 +10,5 @@ import org.spongepowered.asm.mixin.Mixin;
  * これにより、RegistryObjectをIRegistryObjectとして扱うことができるようになる
  * */
 @Mixin(RegistryObject.class)
-public abstract class MxinRegistryObject<T> implements IRegistryObject<T> {
+public abstract class MixinRegistryObject<T> implements IRegistryObject<T> {
 }

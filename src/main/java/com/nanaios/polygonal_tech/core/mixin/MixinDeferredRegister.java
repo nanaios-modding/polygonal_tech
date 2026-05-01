@@ -1,4 +1,4 @@
-package com.nanaios.polygonal_tech.lib.mixin;
+package com.nanaios.polygonal_tech.core.mixin;
 
 import com.nanaios.polygonal_tech.core.register.IDeferredRegister;
 import com.nanaios.polygonal_tech.core.register.registry.IRegistryObject;

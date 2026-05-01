@@ -1,12 +1,12 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "com.nanaios.polygonal_tech.lib.mixin",
+  "package": "com.nanaios.polygonal_tech.core.mixin",
   "compatibilityLevel": "JAVA_17",
   "refmap": "polygonal_tech.refmap.json",
   "mixins": [
     "MixinDeferredRegister",
-    "MxinRegistryObject"
+    "MixinRegistryObject"
   ],
   "client": [
   ],
