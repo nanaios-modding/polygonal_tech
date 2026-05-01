@@ -1,8 +1,8 @@
 package com.nanaios.polygonal_tech.lib.mixin;
 
-import com.nanaios.polygonal_tech.lib.register.IDeferredRegister;
-import com.nanaios.polygonal_tech.lib.register.registry.IRegistryObject;
-import com.nanaios.polygonal_tech.lib.util.PointerLike;
+import com.nanaios.polygonal_tech.core.register.IDeferredRegister;
+import com.nanaios.polygonal_tech.core.register.registry.IRegistryObject;
+import com.nanaios.polygonal_tech.core.util.PointerLike;
 import kotlin.jvm.functions.Function1;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.DeferredRegister;

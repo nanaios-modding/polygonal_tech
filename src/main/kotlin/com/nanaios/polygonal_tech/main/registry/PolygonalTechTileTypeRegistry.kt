@@ -1,6 +1,6 @@
 package com.nanaios.polygonal_tech.main.registry
 
-import com.nanaios.polygonal_tech.lib.register.single.DeferredSingleTileTypeRegister
+import com.nanaios.polygonal_tech.core.register.single.DeferredSingleTileTypeRegister
 import com.nanaios.polygonal_tech.main.PolygonalTech
 import com.nanaios.polygonal_tech.main.tile.TestSingleTile
 

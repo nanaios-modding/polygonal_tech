@@ -1,6 +1,6 @@
 package com.nanaios.polygonal_tech.main.registry
 
-import com.nanaios.polygonal_tech.lib.register.single.DeferredSingleItemRegister
+import com.nanaios.polygonal_tech.core.register.single.DeferredSingleItemRegister
 import com.nanaios.polygonal_tech.main.PolygonalTech
 import net.minecraft.world.item.Item
 
