@@ -12,9 +12,13 @@ interface ISyncType {
 }
 
 enum class SyncType(private val id: ResourceLocation): ISyncType {
-    NONE(ResourceLocation.fromNamespaceAndPath(PolygonalTech.MOD_ID, "none")),
-    GUI_OPENED(ResourceLocation.fromNamespaceAndPath(PolygonalTech.MOD_ID, "gui_opened")),
-    ALWAYS(ResourceLocation.fromNamespaceAndPath(PolygonalTech.MOD_ID, "always"));
+    NONE(createSyncTypeLocation(PolygonalTech.MOD_ID, "none")),
+    GUI_OPENED(createSyncTypeLocation(PolygonalTech.MOD_ID, "gui_opened")),
+    ALWAYS(createSyncTypeLocation(PolygonalTech.MOD_ID, "always"));
 
     override fun getId(): ResourceLocation = id
+}
+
+fun createSyncTypeLocation(modId: String,name:String): ResourceLocation {
+    return ResourceLocation.fromNamespaceAndPath(modId, "sync_type.$name")
 }

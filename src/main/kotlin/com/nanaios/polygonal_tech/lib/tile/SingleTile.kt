@@ -4,8 +4,8 @@ import com.nanaios.polygonal_tech.lib.network.PolygonalTechNetwork
 import com.nanaios.polygonal_tech.lib.network.s2c.SyncValuesPacket
 import com.nanaios.polygonal_tech.lib.register.single.DeferredSingleTileTypeRegister
 import com.nanaios.polygonal_tech.lib.register.single.TileType
-import com.nanaios.polygonal_tech.lib.util.DirectionFace
-import com.nanaios.polygonal_tech.lib.util.IFace
+import com.nanaios.polygonal_tech.lib.util.face.DirectionFace
+import com.nanaios.polygonal_tech.lib.util.face.IFace
 import com.nanaios.polygonal_tech.lib.util.sync.value.ISyncValue
 import com.nanaios.polygonal_tech.lib.util.sync.value.SyncType
 import io.netty.buffer.Unpooled

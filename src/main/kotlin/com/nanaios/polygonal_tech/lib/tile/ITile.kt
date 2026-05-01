@@ -1,6 +1,6 @@
 package com.nanaios.polygonal_tech.lib.tile
 
-import com.nanaios.polygonal_tech.lib.util.IFace
+import com.nanaios.polygonal_tech.lib.util.face.IFace
 import com.nanaios.polygonal_tech.lib.util.sync.storage.ISyncValueStorage
 import net.minecraft.core.BlockPos
 import net.minecraft.world.level.Level

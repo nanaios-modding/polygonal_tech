@@ -121,3 +121,23 @@ open class LongFluidTank(
         return drainLong(resource.getAmount(), action)
     }
 }
+
+class InputOnlyLongFluidTankWrapper(
+    tank: ILongFluidTank
+): ILongFluidTank by tank {
+    override fun drainLong(maxDrain: Long, action: IFluidHandler.FluidAction): LongFluidStack {
+        return LongFluidStack.EMPTY
+    }
+
+    override fun drainLong(resource: LongFluidStack, action: IFluidHandler.FluidAction): LongFluidStack {
+        return LongFluidStack.EMPTY
+    }
+}
+
+class OutputOnlyLongFluidTankWrapper(
+    tank: ILongFluidTank
+): ILongFluidTank by tank {
+    override fun fillLong(resource: LongFluidStack, action: IFluidHandler.FluidAction): Long {
+        return 0L
+    }
+}

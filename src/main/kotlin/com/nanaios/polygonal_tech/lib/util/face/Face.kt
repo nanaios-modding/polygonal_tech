@@ -1,4 +1,4 @@
-package com.nanaios.polygonal_tech.lib.util
+package com.nanaios.polygonal_tech.lib.util.face
 
 import com.nanaios.polygonal_tech.main.PolygonalTech
 import net.minecraft.core.Direction
@@ -22,8 +22,8 @@ enum class DirectionFace(
 
     companion object {
         /**
-         * [Direction.ordinal]の値から側面の回転数を取得するマッピング
-         * [Direction.NORTH]を0として、反時計回りに1つず増えていく
+         * [Enum.ordinal]の値から側面の回転数を取得するマッピング
+         * [net.minecraft.core.Direction.NORTH]を0として、反時計回りに1つず増えていく
          * */
         val horizontalId = byteArrayOf(
             -1, -1, 0, 2, 1, 3
@@ -37,9 +37,9 @@ enum class DirectionFace(
         )
 
         /**
-         * [Direction.NORTH]を前面としたときの、指定された方向の面を返します。
+         * [net.minecraft.core.Direction.NORTH]を前面としたときの、指定された方向の面を返します。
          * */
-        inline fun from(direction: Direction?): DirectionFace {
+        fun from(direction: Direction?): DirectionFace {
             return when (direction) {
                 Direction.NORTH -> FRONT
                 Direction.DOWN -> DOWN
@@ -57,7 +57,7 @@ enum class DirectionFace(
          * @param current - 現在の前面。UP,DOWN以外である必要があります
          * @param side - 外部からアクセスされている面
          * */
-        inline fun from(default: Direction, current: Direction, side: Direction?): DirectionFace {
+        fun from(default: Direction, current: Direction, side: Direction?): DirectionFace {
             return when (side) {
                 null -> INTERNAL
                 Direction.UP -> UP
