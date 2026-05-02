@@ -4,6 +4,7 @@ import com.nanaios.polygonal_tech.core.network.sync.storage.EmptySyncValueStorag
 import com.nanaios.polygonal_tech.core.network.sync.storage.ISyncValueStorage
 import com.nanaios.polygonal_tech.core.network.sync.type.ISyncType
 import com.nanaios.polygonal_tech.core.network.sync.type.SyncType
+import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.FriendlyByteBuf
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
@@ -38,6 +39,16 @@ class SyncIntValue : SyncPrimitiveValue<Int>(0) {
     override fun writeBuffer(buffer: FriendlyByteBuf) {
         buffer.writeInt(value)
     }
+
+    override fun serializeNBT(): CompoundTag {
+        val tag = CompoundTag()
+        tag.putInt("value", value)
+        return tag
+    }
+
+    override fun deserializeNBT(nbt: CompoundTag) {
+        value = nbt.getInt("value")
+    }
 }
 
 class SyncLongValue : SyncPrimitiveValue<Long>(0L) {
@@ -48,6 +59,16 @@ class SyncLongValue : SyncPrimitiveValue<Long>(0L) {
 
     override fun writeBuffer(buffer: FriendlyByteBuf) {
         buffer.writeLong(value)
+    }
+
+    override fun serializeNBT(): CompoundTag {
+        val tag = CompoundTag()
+        tag.putLong("value", value)
+        return tag
+    }
+
+    override fun deserializeNBT(nbt: CompoundTag) {
+        value = nbt.getLong("value")
     }
 }
 
@@ -60,6 +81,16 @@ class SyncFloatValue: SyncPrimitiveValue<Float>(0f) {
     override fun writeBuffer(buffer: FriendlyByteBuf) {
         buffer.writeFloat(value)
     }
+
+    override fun serializeNBT(): CompoundTag {
+        val tag = CompoundTag()
+        tag.putFloat("value", value)
+        return tag
+    }
+
+    override fun deserializeNBT(nbt: CompoundTag) {
+        value = nbt.getFloat("value")
+    }
 }
 
 class SyncDoubleValue: SyncPrimitiveValue<Double>(0.0) {
@@ -70,6 +101,16 @@ class SyncDoubleValue: SyncPrimitiveValue<Double>(0.0) {
 
     override fun writeBuffer(buffer: FriendlyByteBuf) {
         buffer.writeDouble(value)
+    }
+
+    override fun serializeNBT(): CompoundTag {
+        val tag = CompoundTag()
+        tag.putDouble("value", value)
+        return tag
+    }
+
+    override fun deserializeNBT(nbt: CompoundTag) {
+        value = nbt.getDouble("value")
     }
 }
 
@@ -85,6 +126,16 @@ class SyncBooleanValue(
     override fun writeBuffer(buffer: FriendlyByteBuf) {
         buffer.writeBoolean(value)
     }
+
+    override fun serializeNBT(): CompoundTag {
+        val tag = CompoundTag()
+        tag.putBoolean("value", value)
+        return tag
+    }
+
+    override fun deserializeNBT(nbt: CompoundTag) {
+        value = nbt.getBoolean("value")
+    }
 }
 
 class SyncStringValue: SyncPrimitiveValue<String>("") {
@@ -96,6 +147,16 @@ class SyncStringValue: SyncPrimitiveValue<String>("") {
     override fun writeBuffer(buffer: FriendlyByteBuf) {
         buffer.writeUtf(value)
     }
+
+    override fun serializeNBT(): CompoundTag {
+        val tag = CompoundTag()
+        tag.putString("value", value)
+        return tag
+    }
+
+    override fun deserializeNBT(nbt: CompoundTag) {
+        value = nbt.getString("value")
+    }
 }
 
 class SyncByteValue: SyncPrimitiveValue<Byte>(0) {
@@ -106,5 +167,15 @@ class SyncByteValue: SyncPrimitiveValue<Byte>(0) {
 
     override fun writeBuffer(buffer: FriendlyByteBuf) {
         buffer.writeByte(value.toInt())
+    }
+
+    override fun serializeNBT(): CompoundTag {
+        val tag = CompoundTag()
+        tag.putByte("value", value)
+        return tag
+    }
+
+    override fun deserializeNBT(nbt: CompoundTag) {
+        value = nbt.getByte("value")
     }
 }

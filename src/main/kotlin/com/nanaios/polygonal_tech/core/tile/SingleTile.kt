@@ -71,8 +71,21 @@ abstract class SingleTile(
         save(tag)
     }
 
-    fun save(tag: CompoundTag) {
+    open fun save(tag: CompoundTag) {
+        syncValues.forEachIndexed { index, value ->
+            if(value.isSaving) {
+                tag.put("save_$index",value.serializeNBT())
+            }
+        }
+    }
 
+    override fun load(tag: CompoundTag) {
+        super.load(tag)
+        syncValues.forEachIndexed { index, value ->
+            if(tag.contains("save_$index")) {
+                value.deserializeNBT(tag.getCompound("save_$index"))
+            }
+        }
     }
 
     override fun addValue(value: ISyncValue) {
