@@ -17,7 +17,7 @@ class TestSingleTile(
     id: ResourceLocation, pos: BlockPos, state: BlockState
 ): SingleMachineTile(id, pos, state) {
     val syncInt:Int by SyncIntValue() on SyncType.ALWAYS bind this
-    val energyStorage = LongEnergyStorage(0,1000, extract = true, receive = true) on SyncType.ALWAYS bind this
+    val energyStorage = LongEnergyStorage(0,1000) on SyncType.ALWAYS bind this
 
     init {
         capability {

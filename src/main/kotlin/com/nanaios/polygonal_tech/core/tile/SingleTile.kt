@@ -17,6 +17,7 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraftforge.network.PacketDistributor
+import java.util.Collections
 
 abstract class SingleTile(
     protected val id: ResourceLocation,
@@ -34,7 +35,8 @@ abstract class SingleTile(
     val isClientSide: Boolean
         get() = level?.isClientSide ?: false
 
-    protected val syncValues: MutableList<ISyncValue> = mutableListOf()
+    protected val _syncValues: MutableList<ISyncValue> = mutableListOf()
+    val syncValues: List<ISyncValue> = Collections.unmodifiableList(_syncValues)
 
     protected var isChanged = false
 
@@ -53,7 +55,7 @@ abstract class SingleTile(
         super.onLoad()
         if(isClientSide) return
         PolygonalTech.LOGGER.debug("Loading {} in {}:{}", id,level,pos)
-        PolygonalTech.LOGGER.debug("syncValue:{}", syncValues)
+        PolygonalTech.LOGGER.debug("syncValue:{}", _syncValues)
     }
 
     final override fun serverTick(
@@ -79,7 +81,7 @@ abstract class SingleTile(
     }
 
     open fun save(tag: CompoundTag) {
-        syncValues.forEachIndexed { index, value ->
+        _syncValues.forEachIndexed { index, value ->
             if(value.isSaving) {
                 tag.put("save_$index",value.serializeNBT())
             }
@@ -88,7 +90,7 @@ abstract class SingleTile(
 
     override fun load(tag: CompoundTag) {
         super.load(tag)
-        syncValues.forEachIndexed { index, value ->
+        _syncValues.forEachIndexed { index, value ->
             if(tag.contains("save_$index")) {
                 value.deserializeNBT(tag.getCompound("save_$index"))
             }
@@ -96,11 +98,11 @@ abstract class SingleTile(
     }
 
     override fun addValue(value: ISyncValue) {
-        syncValues.add(value)
+        _syncValues.add(value)
     }
 
     override fun removeValue(value: ISyncValue) {
-        syncValues.remove(value)
+        _syncValues.remove(value)
     }
 
     override fun onSyncValueChanged(value: ISyncValue) {
@@ -114,7 +116,7 @@ abstract class SingleTile(
         val count = buf.getInt(buf.writerIndex() - Int.SIZE_BYTES)
         for(i in 0 until count) {
             val index = buf.readInt()
-            syncValues[index].readBuffer(buf)
+            _syncValues[index].readBuffer(buf)
         }
     }
 
@@ -125,7 +127,7 @@ abstract class SingleTile(
         val buf = FriendlyByteBuf(Unpooled.buffer())
         var count = 0
 
-        syncValues.forEachIndexed { index, value ->
+        _syncValues.forEachIndexed { index, value ->
             if(value.isDirty && value.type == SyncType.ALWAYS) {
                 buf.writeInt(index)
                 value.writeBuffer(buf)

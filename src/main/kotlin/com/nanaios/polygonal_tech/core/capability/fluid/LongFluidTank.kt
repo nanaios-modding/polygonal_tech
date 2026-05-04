@@ -20,16 +20,19 @@ open class LongFluidTank(
 ) : ILongFluidTank {
     override var storage: ISyncValueStorage = EmptySyncValueStorage
     override var type: ISyncType = SyncType.NONE
-
     override var isDirty = false
         protected set
-
     override var longFluid = fluid
         protected set
     override val longFluidAmount
         get() = longFluid.getAmount()
     override var longCapability = capacity
         protected set
+
+    protected fun markDirty() {
+        isDirty = true
+        storage.onSyncValueChanged(this)
+    }
 
     override fun serializeNBT(): CompoundTag {
         val tag = CompoundTag()
@@ -77,7 +80,7 @@ open class LongFluidTank(
         }
         if (longFluid.isEmpty()) {
             longFluid = LongFluidStack(resource.fluid, min(longCapability, resource.getAmount()))
-            storage.onSyncValueChanged(this)
+            markDirty()
             return longFluid.getAmount()
         }
         if (!longFluid.isFluidEqual(resource)) {
@@ -91,7 +94,7 @@ open class LongFluidTank(
         } else {
             fluid.setAmount(capacity)
         }
-        if (filled > 0) storage.onSyncValueChanged(this)
+        if (filled > 0) markDirty()
         return filled
     }
 
@@ -106,7 +109,7 @@ open class LongFluidTank(
         val stack = LongFluidStack(longFluid.fluid, drained)
         if (action.execute() && drained > 0) {
             longFluid.shrink(drained)
-            storage.onSyncValueChanged(this)
+            markDirty()
         }
         return stack
     }

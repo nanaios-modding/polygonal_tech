@@ -1,9 +1,10 @@
 package com.nanaios.polygonal_tech.core.capability.item
 
+import com.nanaios.polygonal_tech.core.capability.ICapability
 import net.minecraft.world.item.ItemStack
 import net.minecraftforge.items.IItemHandlerModifiable
 
-interface IItemSlot: IItemHandlerModifiable {
+interface IItemSlot: IItemHandlerModifiable, ICapability {
     val x:Int
     val y:Int
     var stack: ItemStack

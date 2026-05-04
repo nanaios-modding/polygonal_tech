@@ -13,8 +13,6 @@ import kotlin.math.min
 open class LongEnergyStorage(
     stored: Long,
     capacity: Long,
-    protected var extract: Boolean,
-    protected var receive: Boolean,
 ) : ILongEnergyStorage {
     override var longEnergyStored = stored
         protected set
@@ -24,6 +22,11 @@ open class LongEnergyStorage(
     override var storage: ISyncValueStorage = EmptySyncValueStorage
     override var isDirty = false
         protected set
+
+    protected fun markDirty() {
+        isDirty = true
+        storage.onSyncValueChanged(this)
+    }
 
     override fun serializeNBT(): CompoundTag {
         val tag = CompoundTag()
@@ -41,24 +44,19 @@ open class LongEnergyStorage(
         val received = min(maxReceive,maxLongEnergyStored - longEnergyStored)
         if (!simulate && received != 0L) {
             longEnergyStored += received
-            isDirty = true
-            storage.onSyncValueChanged(this)
+            markDirty()
         }
         return received
     }
 
     override fun extractLongEnergy(maxExtract: Long, simulate: Boolean): Long {
-        val extracted = min(maxExtract,longEnergyStored)
+        val extracted = min(maxExtract, longEnergyStored)
         if (!simulate && extracted != 0L) {
             longEnergyStored -= extracted
-            isDirty = true
-            storage.onSyncValueChanged(this)
+            markDirty()
         }
         return extracted
     }
-
-    override fun canExtract() = extract
-    override fun canReceive() = receive
 
     override fun writeBuffer(buffer: FriendlyByteBuf) {
         buffer.writeLong(this.longEnergyStored)

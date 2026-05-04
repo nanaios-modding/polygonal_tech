@@ -2,8 +2,8 @@ package com.nanaios.polygonal_tech.core.capability
 
 import com.nanaios.polygonal_tech.core.capability.energy.CombinedLongEnergyStorage
 import com.nanaios.polygonal_tech.core.capability.energy.ILongEnergyStorage
-import com.nanaios.polygonal_tech.core.capability.energy.InputOnlyLongEnergyStorage
-import com.nanaios.polygonal_tech.core.capability.energy.OutputOnlyLongEnergyStorage
+import com.nanaios.polygonal_tech.core.capability.energy.InputWrapperLongEnergyStorage
+import com.nanaios.polygonal_tech.core.capability.energy.OutputWrapperLongEnergyStorage
 import com.nanaios.polygonal_tech.core.capability.face.IFace
 import com.nanaios.polygonal_tech.core.capability.face.ILongEnergyStorageFaceBuilder
 import com.nanaios.polygonal_tech.core.capability.fluid.ILongFluidHandler
@@ -28,8 +28,8 @@ open class CapabilityBuilder(
         val combined = if (capabilities.size == 1) capabilities[0] else CombinedLongEnergyStorage(capabilities)
 
         val wrapped = if (mode is IOMode) when (mode) {
-            IOMode.INPUT -> InputOnlyLongEnergyStorage(combined)
-            IOMode.OUTPUT -> OutputOnlyLongEnergyStorage(combined)
+            IOMode.INPUT -> InputWrapperLongEnergyStorage(combined)
+            IOMode.OUTPUT -> OutputWrapperLongEnergyStorage(combined)
             else -> combined
         } else combined
 

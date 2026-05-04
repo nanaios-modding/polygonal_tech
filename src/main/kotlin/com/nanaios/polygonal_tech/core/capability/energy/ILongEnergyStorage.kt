@@ -10,6 +10,9 @@ interface ILongEnergyStorage: IEnergyStorage, ICapability {
     fun receiveLongEnergy(maxReceive: Long, simulate: Boolean): Long
     fun extractLongEnergy(maxExtract: Long, simulate: Boolean): Long
 
+
+    override fun canExtract() = allowInput
+    override fun canReceive() = allowInput
     override fun getEnergyStored() = longEnergyStored.roundInt()
     override fun getMaxEnergyStored() = maxLongEnergyStored.roundInt()
     override fun receiveEnergy(maxReceive: Int, simulate: Boolean) = receiveLongEnergy(maxReceive.toLong(), simulate).roundInt()
