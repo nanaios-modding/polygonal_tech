@@ -9,17 +9,17 @@ import com.nanaios.polygonal_tech.core.capability.face.ILongEnergyStorageFaceBui
 import com.nanaios.polygonal_tech.core.capability.fluid.ILongFluidHandler
 import com.nanaios.polygonal_tech.core.capability.io.IOMode
 import com.nanaios.polygonal_tech.core.capability.item.IItemSlotHandler
-import net.minecraft.network.chat.MutableComponent
+import net.minecraft.network.chat.Component
 
 open class CapabilityBuilder(
-    protected val longEnergyStorageList: MutableList<Pair<MutableComponent, ILongEnergyStorage>>,
-    protected val longFluidHandlerList: MutableList<Pair<MutableComponent, ILongFluidHandler>>,
-    protected val itemSlotHandlerList: MutableList<Pair<MutableComponent, IItemSlotHandler>>,
+    protected val longEnergyStorageList: MutableList<Pair<Component, ILongEnergyStorage>>,
+    protected val longFluidHandlerList: MutableList<Pair<Component, ILongFluidHandler>>,
+    protected val itemSlotHandlerList: MutableList<Pair<Component, IItemSlotHandler>>,
     protected val longEnergyStorageFaceMap: MutableMap<IFace, Int>,
     protected val longFluidHandlerFaceMap: MutableMap<IFace, Int>,
     protected val itemSlotHandlerFaceMap: MutableMap<IFace, Int>,
 ) {
-    fun energy(name: MutableComponent, builder: ILongEnergyStorageFaceBuilder.() -> Unit) {
+    fun energy(name: Component, builder: ILongEnergyStorageFaceBuilder.() -> Unit) {
         val energyBuilder = ILongEnergyStorageFaceBuilder()
         energyBuilder.builder()
 

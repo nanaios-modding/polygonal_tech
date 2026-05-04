@@ -6,7 +6,8 @@ import com.nanaios.polygonal_tech.core.tile.ITile
 import net.minecraft.core.BlockPos
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.Level
-import net.minecraft.world.level.block.BaseEntityBlock
+import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.block.EntityBlock
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.BlockEntityTicker
 import net.minecraft.world.level.block.entity.BlockEntityType
@@ -15,7 +16,7 @@ import net.minecraft.world.level.block.state.BlockState
 open class TileBlock(
     protected val id: ResourceLocation,
     properties: Properties
-) : BaseEntityBlock(properties) {
+) : Block(properties), EntityBlock {
     override fun newBlockEntity(
         pos: BlockPos,
         blockState: BlockState
@@ -38,5 +39,14 @@ open class TileBlock(
             if(level.isClientSide) tile.clientTick(level, pos, state)
             else tile.serverTick(level, pos, state)
         }
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    protected fun <E : BlockEntity, A : BlockEntity> createTickerHelper(
+        type: BlockEntityType<A>,
+        otherType: BlockEntityType<E>,
+        ticker: BlockEntityTicker<in E>
+    ): BlockEntityTicker<A>? {
+        return if (otherType === type) ticker as BlockEntityTicker<A> else null
     }
 }

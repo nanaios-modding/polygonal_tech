@@ -1,7 +1,5 @@
 package com.nanaios.polygonal_tech.core.tile
 
-import com.nanaios.polygonal_tech.core.capability.face.DirectionFace
-import com.nanaios.polygonal_tech.core.capability.face.IFace
 import com.nanaios.polygonal_tech.core.network.PolygonalTechNetwork
 import com.nanaios.polygonal_tech.core.network.s2c.SyncValuesPacket
 import com.nanaios.polygonal_tech.core.network.sync.ISyncValue
@@ -17,8 +15,6 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
-import net.minecraftforge.common.capabilities.Capability
-import net.minecraftforge.common.util.LazyOptional
 import net.minecraftforge.network.PacketDistributor
 
 abstract class SingleTile(
@@ -110,14 +106,6 @@ abstract class SingleTile(
             syncValues[index].readBuffer(buf)
         }
     }
-
-    override fun <T> getCapability(cap: Capability<T>, side: Direction?): LazyOptional<T> {
-        val face = DirectionFace.from(defaultFront, currentFront, side)
-        val capability = getCapability(cap, face)
-        return if(capability.isPresent) capability else super.getCapability(cap, side)
-    }
-
-    override fun <T> getCapability(cap: Capability<T>, face: IFace): LazyOptional<T> = LazyOptional.empty()
 
     protected fun sendSyncPacket() {
         if(!isChanged) return

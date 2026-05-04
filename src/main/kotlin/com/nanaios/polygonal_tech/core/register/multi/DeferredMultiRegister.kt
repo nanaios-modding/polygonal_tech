@@ -9,7 +9,7 @@ import net.minecraftforge.eventbus.api.IEventBus
  * 特定のタイプのオブジェクト（例:アイテム、ブロックなど）に特化した登録クラスを作成するためにこのクラスを継承してください。
  * */
 abstract class DeferredMultiRegister<T1, T2>(
-    val firstRegister: IDeferredRegister<T1>,
+    open val firstRegister: IDeferredRegister<T1>,
     override val secondRegister: IDeferredRegister<T2>
 ) : IDeferredMultiRegister<T1, T2>, IDeferredRegister<T1> by firstRegister {
     init {

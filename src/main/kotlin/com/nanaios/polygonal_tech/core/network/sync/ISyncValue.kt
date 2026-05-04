@@ -24,3 +24,13 @@ interface ISyncValue: INBTSerializable<CompoundTag> {
     fun readBuffer(buffer: FriendlyByteBuf)
     fun onSync()
 }
+
+inline infix fun <V: ISyncValue> V.on(type: ISyncType):V {
+    this.type = type
+    return this
+}
+
+inline infix fun <V: ISyncValue> V.bind(storage: ISyncValueStorage):V {
+    this.storage = storage
+    return this
+}
