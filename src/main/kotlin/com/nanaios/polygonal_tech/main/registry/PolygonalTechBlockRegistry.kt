@@ -7,7 +7,4 @@ import net.minecraft.world.level.block.state.BlockBehaviour
 
 object PolygonalTechBlockRegistry {
     val MACHINE_BLOCKS = DeferredBlockRegister(PolygonalTech.MOD_ID)
-    val TEST_MACHINE = MACHINE_BLOCKS.register("test_block") {location ->
-        TileBlock(location, BlockBehaviour.Properties.of())
-    }
 }
