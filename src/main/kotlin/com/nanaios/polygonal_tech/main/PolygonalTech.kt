@@ -2,6 +2,7 @@ package com.nanaios.polygonal_tech.main
 
 import com.nanaios.polygonal_tech.main.registry.PolygonalTechBlockRegistry
 import com.nanaios.polygonal_tech.main.registry.PolygonalTechItemRegistry
+import com.nanaios.polygonal_tech.main.registry.PolygonalTechMachineRegistry
 import com.nanaios.polygonal_tech.main.registry.PolygonalTechTileTypeRegistry
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext
@@ -18,9 +19,10 @@ open class PolygonalTech(context: FMLJavaModLoadingContext) {
     init {
         val eventBus = context.modEventBus
         showBootLog(context)
-        PolygonalTechItemRegistry.TEST_ITEMS.register(eventBus)
+        PolygonalTechItemRegistry.ITEMS.register(eventBus)
         PolygonalTechBlockRegistry.MACHINE_BLOCKS.register(eventBus)
         PolygonalTechTileTypeRegistry.MACHINE_TILES.register(eventBus)
+        PolygonalTechMachineRegistry.MACHINES.register(eventBus)
     }
 
     /**

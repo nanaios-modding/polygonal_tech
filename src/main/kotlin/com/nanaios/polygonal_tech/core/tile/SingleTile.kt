@@ -6,6 +6,7 @@ import com.nanaios.polygonal_tech.core.network.sync.ISyncValue
 import com.nanaios.polygonal_tech.core.network.sync.type.SyncType
 import com.nanaios.polygonal_tech.core.register.single.DeferredSingleTileTypeRegister
 import com.nanaios.polygonal_tech.core.register.single.TileType
+import com.nanaios.polygonal_tech.main.PolygonalTech
 import io.netty.buffer.Unpooled
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
@@ -30,6 +31,9 @@ abstract class SingleTile(
     override val defaultFront: Direction
         get() = Direction.NORTH
 
+    val isClientSide: Boolean
+        get() = level?.isClientSide ?: false
+
     protected val syncValues: MutableList<ISyncValue> = mutableListOf()
 
     protected var isChanged = false
@@ -44,6 +48,13 @@ abstract class SingleTile(
         pos,
         state
     )
+
+    override fun onLoad() {
+        super.onLoad()
+        if(isClientSide) return
+        PolygonalTech.LOGGER.debug("Loading {} in {}:{}", id,level,pos)
+        PolygonalTech.LOGGER.debug("syncValue:{}", syncValues)
+    }
 
     final override fun serverTick(
         level: Level,

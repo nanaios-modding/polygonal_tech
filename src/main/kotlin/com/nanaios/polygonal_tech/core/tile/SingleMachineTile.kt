@@ -7,19 +7,16 @@ import com.nanaios.polygonal_tech.core.capability.face.DirectionFace
 import com.nanaios.polygonal_tech.core.capability.face.IFace
 import com.nanaios.polygonal_tech.core.capability.fluid.ILongFluidHandler
 import com.nanaios.polygonal_tech.core.capability.item.IItemSlotHandler
-import com.nanaios.polygonal_tech.core.network.sync.ISyncValue
-import com.nanaios.polygonal_tech.core.network.sync.type.ISyncType
+import com.nanaios.polygonal_tech.main.PolygonalTech
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.chat.Component
-import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraftforge.common.capabilities.Capability
 import net.minecraftforge.common.capabilities.ForgeCapabilities
 import net.minecraftforge.common.util.LazyOptional
-import kotlin.collections.mutableMapOf
 
 abstract class SingleMachineTile(
     id: ResourceLocation, pos: BlockPos, state: BlockState
@@ -34,13 +31,26 @@ abstract class SingleMachineTile(
     protected val longFluidHandlerList = mutableListOf<Pair<Component, ILongFluidHandler>>()
     protected val itemSlotHandlerList = mutableListOf<Pair<Component, IItemSlotHandler>>()
 
-    protected val longEnergyLazyList = mutableListOf<LazyOptional<ILongEnergyStorage>>()
+    protected val longEnergyStorageLazyList = mutableListOf<LazyOptional<ILongEnergyStorage>>()
     protected val longFluidHandlerLazyList = mutableListOf<LazyOptional<ILongFluidHandler>>()
     protected val itemSlotHandlerLazyList = mutableListOf<LazyOptional<IItemSlotHandler>>()
 
     protected val longEnergyStorageFaceMap = mutableMapOf<IFace, Int>()
     protected val longFluidHandlerFaceMap = mutableMapOf<IFace, Int>()
     protected val itemSlotHandlerFaceMap = mutableMapOf<IFace, Int>()
+
+    override fun onLoad() {
+        super.onLoad()
+        if (isClientSide) return
+
+        PolygonalTech.LOGGER.debug("longEnergyStorageList: {}", longEnergyStorageList)
+        PolygonalTech.LOGGER.debug("longFluidHandlerList: {}", longFluidHandlerList)
+        PolygonalTech.LOGGER.debug("itemSlotHandlerList: {}", itemSlotHandlerList)
+
+        PolygonalTech.LOGGER.debug("longEnergyStorageFaceMap: {}", longEnergyStorageFaceMap)
+        PolygonalTech.LOGGER.debug("longFluidHandlerFaceMap: {}", longFluidHandlerFaceMap)
+        PolygonalTech.LOGGER.debug("itemSlotHandlerFaceMap: {}", itemSlotHandlerFaceMap)
+    }
 
     protected fun capability(builder: CapabilityBuilder.() -> Unit) {
         CapabilityBuilder(
@@ -51,18 +61,20 @@ abstract class SingleMachineTile(
             longFluidHandlerFaceMap,
             itemSlotHandlerFaceMap
         ).builder()
+
+        initCaps()
     }
 
     override fun <T> getCapability(cap: Capability<T>, side: Direction?): LazyOptional<T> {
         val face = DirectionFace.from(defaultFront, currentFront, side)
         val capability = getCapability(cap, face)
-        return if(capability.isPresent) capability else super.getCapability(cap, side)
+        return if (capability.isPresent) capability else super.getCapability(cap, side)
     }
 
     override fun <T> getCapability(cap: Capability<T>, face: IFace): LazyOptional<T> = when (cap) {
         ForgeCapabilities.ENERGY, PolygonalTechCapabilities.LONG_ENERGY -> {
             val index = longEnergyStorageFaceMap[face] ?: return LazyOptional.empty()
-            longEnergyLazyList[index].cast()
+            longEnergyStorageLazyList[index].cast()
         }
 
         ForgeCapabilities.FLUID_HANDLER, PolygonalTechCapabilities.LONG_FLUID_HANDLER -> {
@@ -78,12 +90,45 @@ abstract class SingleMachineTile(
         else -> LazyOptional.empty()
     }
 
+    protected fun initCaps() {
+        longEnergyStorageLazyList.clear()
+        longFluidHandlerLazyList.clear()
+        itemSlotHandlerLazyList.clear()
+
+        longEnergyStorageList.forEach {
+            longEnergyStorageLazyList.add(LazyOptional.of { it.second })
+        }
+        longFluidHandlerList.forEach {
+            longFluidHandlerLazyList.add(LazyOptional.of { it.second })
+        }
+        itemSlotHandlerList.forEach {
+            itemSlotHandlerLazyList.add(LazyOptional.of { it.second })
+        }
+    }
+
+    override fun invalidateCaps() {
+        longEnergyStorageLazyList.forEach {
+            it.invalidate()
+        }
+        longFluidHandlerLazyList.forEach {
+            it.invalidate()
+        }
+        itemSlotHandlerLazyList.forEach {
+            it.invalidate()
+        }
+    }
+
+    override fun reviveCaps() {
+        super.reviveCaps()
+        initCaps()
+    }
+
     override fun save(tag: CompoundTag) {
         super.save(tag)
 
-        tag.put(NBT_KEY_LONG_ENERGY_STORAGE_FACE_MAP,saveMap(longEnergyStorageFaceMap))
-        tag.put(NBT_KEY_LONG_FLUID_HANDLER_FACE_MAP,saveMap(longFluidHandlerFaceMap))
-        tag.put(NBT_KEY_ITEM_SLOT_HANDLER_FACE_MAP,saveMap(itemSlotHandlerFaceMap))
+        tag.put(NBT_KEY_LONG_ENERGY_STORAGE_FACE_MAP, saveMap(longEnergyStorageFaceMap))
+        tag.put(NBT_KEY_LONG_FLUID_HANDLER_FACE_MAP, saveMap(longFluidHandlerFaceMap))
+        tag.put(NBT_KEY_ITEM_SLOT_HANDLER_FACE_MAP, saveMap(itemSlotHandlerFaceMap))
     }
 
     override fun load(tag: CompoundTag) {
@@ -94,7 +139,7 @@ abstract class SingleMachineTile(
         loadMap(tag.getCompound(NBT_KEY_ITEM_SLOT_HANDLER_FACE_MAP), itemSlotHandlerFaceMap)
     }
 
-    protected fun saveMap(map: MutableMap<IFace,Int>): CompoundTag {
+    protected fun saveMap(map: MutableMap<IFace, Int>): CompoundTag {
         val tag = CompoundTag()
         tag.putInt("size", map.size)
         map.forEach { (face, index) ->
@@ -104,12 +149,12 @@ abstract class SingleMachineTile(
         return tag
     }
 
-    protected fun loadMap(tag: CompoundTag, map: MutableMap<IFace,Int>) {
+    protected fun loadMap(tag: CompoundTag, map: MutableMap<IFace, Int>) {
         val size = tag.getInt("size")
-        if(size <= 0) return
+        if (size <= 0) return
 
         map.forEach { (face, _) ->
-            if(tag.contains(face.id.toString())) {
+            if (tag.contains(face.id.toString())) {
                 map[face] = tag.getInt(face.id.toString())
             } else {
                 map.remove(face)

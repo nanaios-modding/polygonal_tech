@@ -5,20 +5,24 @@ import com.nanaios.polygonal_tech.core.block.MachineBlock
 import com.nanaios.polygonal_tech.core.register.registry.BlockRegistryObject
 import com.nanaios.polygonal_tech.core.register.registry.MachineRegistryObject
 import com.nanaios.polygonal_tech.core.register.single.DeferredSingleTileTypeRegister
+import com.nanaios.polygonal_tech.core.register.single.Tile
 import com.nanaios.polygonal_tech.core.register.single.TileType
+import net.minecraft.core.BlockPos
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.state.BlockBehaviour
+import net.minecraft.world.level.block.state.BlockState
 
 class DeferredMachineRegister(modId: String): DeferredMultiRegister<TileType<*>, Block>(
     DeferredSingleTileTypeRegister(modId),
     DeferredBlockRegister(modId)
 ) {
-    fun <I : TileType<*>> registerMachine(name: String, sup: (location: ResourceLocation) -> I): MachineRegistryObject<I, MachineBlock> {
-        val tileTypeRegistryObject = firstRegister.register(name, sup)
-        val blockRegistryObject = secondRegister.register(name) {
-            MachineBlock(tileTypeRegistryObject.id, BlockBehaviour.Properties.of())
+    fun <I : Tile> registerMachine(name: String, sup: (ResourceLocation, BlockPos, BlockState) -> I): MachineRegistryObject<TileType<I>, MachineBlock> {
+        val blockRegistryObject = secondRegister.register(name) { location ->
+            MachineBlock(location, BlockBehaviour.Properties.of())
         } as BlockRegistryObject<MachineBlock>
+
+        val tileTypeRegistryObject = (firstRegister as DeferredSingleTileTypeRegister).register(name,blockRegistryObject,sup)
         return MachineRegistryObject(blockRegistryObject, tileTypeRegistryObject)
     }
 
