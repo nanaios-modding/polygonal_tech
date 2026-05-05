@@ -14,6 +14,5 @@ class TestMachineScreen(
 ): MachineScreen<MachineMenu>(menu, playerInv, title) {
     override fun renderBg(guiGraphics: GuiGraphics, partialTick: Float, mouseX: Int, mouseY: Int) {
         super.renderBg(guiGraphics, partialTick, mouseX, mouseY)
-        PolygonalTech.LOGGER.debug("render screen!")
     }
 }
