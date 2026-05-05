@@ -38,8 +38,6 @@ abstract class SingleTile(
     protected val _syncValues: MutableList<ISyncValue> = mutableListOf()
     val syncValues: List<ISyncValue> = Collections.unmodifiableList(_syncValues)
 
-    protected var isChanged = false
-
     /**
      * TileTypeが[DeferredSingleTileTypeRegister]もしくはその継承クラスを通して登録されていることを前提としたconstructor。
      * 上記以外のDeferredRegisterを使用している場合は、TileTypeを直接渡すconstructorを使用してください。
@@ -106,11 +104,10 @@ abstract class SingleTile(
     }
 
     override fun onSyncValueChanged(value: ISyncValue) {
-        isChanged = true
         setChanged()
     }
 
-    fun readSyncValue(buf: FriendlyByteBuf) {
+    open fun readSyncValue(buf: FriendlyByteBuf) {
         if(buf.writerIndex() < Int.SIZE_BYTES) return
 
         val count = buf.getInt(buf.writerIndex() - Int.SIZE_BYTES)
@@ -120,10 +117,7 @@ abstract class SingleTile(
         }
     }
 
-    protected fun sendSyncPacket() {
-        if(!isChanged) return
-        isChanged = false
-
+    protected open fun sendSyncPacket() {
         val buf = FriendlyByteBuf(Unpooled.buffer())
         var count = 0
 
