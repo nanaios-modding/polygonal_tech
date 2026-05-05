@@ -30,7 +30,7 @@ abstract class SyncPrimitiveValue<V>(protected var value: V) : ISyncValue, ReadW
     }
 }
 
-class SyncIntValue : SyncPrimitiveValue<Int>(0) {
+class SyncIntValue(value: Int = 0) : SyncPrimitiveValue<Int>(value) {
     companion object;
     override fun readBuffer(buffer: FriendlyByteBuf) {
         value = buffer.readInt()
@@ -51,7 +51,7 @@ class SyncIntValue : SyncPrimitiveValue<Int>(0) {
     }
 }
 
-class SyncLongValue : SyncPrimitiveValue<Long>(0L) {
+class SyncLongValue(value: Long = 0L) : SyncPrimitiveValue<Long>(value) {
     companion object;
     override fun readBuffer(buffer: FriendlyByteBuf) {
         value = buffer.readLong()
@@ -72,7 +72,7 @@ class SyncLongValue : SyncPrimitiveValue<Long>(0L) {
     }
 }
 
-class SyncFloatValue: SyncPrimitiveValue<Float>(0f) {
+class SyncFloatValue(value: Float = 0f): SyncPrimitiveValue<Float>(value) {
     companion object;
     override fun readBuffer(buffer: FriendlyByteBuf) {
         value = buffer.readFloat()
@@ -93,7 +93,7 @@ class SyncFloatValue: SyncPrimitiveValue<Float>(0f) {
     }
 }
 
-class SyncDoubleValue: SyncPrimitiveValue<Double>(0.0) {
+class SyncDoubleValue(value: Double = 0.0): SyncPrimitiveValue<Double>(value) {
     companion object;
     override fun readBuffer(buffer: FriendlyByteBuf) {
         value = buffer.readDouble()
@@ -114,10 +114,7 @@ class SyncDoubleValue: SyncPrimitiveValue<Double>(0.0) {
     }
 }
 
-class SyncBooleanValue(
-    storage: ISyncValueStorage,
-    syncType: ISyncType
-) : SyncPrimitiveValue<Boolean>(false) {
+class SyncBooleanValue(value: Boolean = false) : SyncPrimitiveValue<Boolean>(value) {
     companion object;
     override fun readBuffer(buffer: FriendlyByteBuf) {
         value = buffer.readBoolean()
@@ -138,7 +135,7 @@ class SyncBooleanValue(
     }
 }
 
-class SyncStringValue: SyncPrimitiveValue<String>("") {
+class SyncStringValue(value: String = ""): SyncPrimitiveValue<String>(value) {
     companion object;
     override fun readBuffer(buffer: FriendlyByteBuf) {
         value = buffer.readUtf()
@@ -159,7 +156,7 @@ class SyncStringValue: SyncPrimitiveValue<String>("") {
     }
 }
 
-class SyncByteValue: SyncPrimitiveValue<Byte>(0) {
+class SyncByteValue(value: Byte = 0): SyncPrimitiveValue<Byte>(value) {
     companion object;
     override fun readBuffer(buffer: FriendlyByteBuf) {
         value = buffer.readByte()

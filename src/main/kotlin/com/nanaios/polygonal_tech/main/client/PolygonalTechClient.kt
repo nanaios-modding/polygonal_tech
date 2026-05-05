@@ -1,7 +1,6 @@
 package com.nanaios.polygonal_tech.main.client
 
 import com.nanaios.polygonal_tech.main.PolygonalTech
-import com.nanaios.polygonal_tech.main.client.gui.TestMachineScreen
 import com.nanaios.polygonal_tech.main.registry.PolygonalTechMenuTypeRegister
 import net.minecraft.client.gui.screens.MenuScreens
 import net.minecraftforge.eventbus.api.SubscribeEvent
@@ -14,7 +13,6 @@ object PolygonalTechClient {
     @SubscribeEvent
     fun onClientSetup(event: FMLClientSetupEvent) {
         event.enqueueWork {
-            MenuScreens.register(PolygonalTechMenuTypeRegister.TEST_MACHINE_MENU.get(),::TestMachineScreen)
         }
     }
 }
