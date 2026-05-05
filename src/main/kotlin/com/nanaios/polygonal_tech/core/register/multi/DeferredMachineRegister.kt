@@ -17,21 +17,29 @@ class DeferredMachineRegister(modId: String): DeferredMultiRegister<TileType<*>,
     DeferredSingleTileTypeRegister(modId),
     DeferredBlockRegister(modId)
 ) {
-    fun <I : Tile> registerMachine(name: String, sup: (ResourceLocation, BlockPos, BlockState) -> I): MachineRegistryObject<TileType<I>, MachineBlock> {
+    fun <I : Tile> registerMachine(
+        name: String,
+        sup: (ResourceLocation, BlockPos, BlockState) -> I
+    ): MachineRegistryObject<TileType<I>, MachineBlock> {
         val blockRegistryObject = secondRegister.register(name) { location ->
             MachineBlock(location, BlockBehaviour.Properties.of())
         } as BlockRegistryObject<MachineBlock>
 
-        val tileTypeRegistryObject = (firstRegister as DeferredSingleTileTypeRegister).register(name,blockRegistryObject,sup)
+        val tileTypeRegistryObject =
+            (firstRegister as DeferredSingleTileTypeRegister).register(name, blockRegistryObject, sup)
         return MachineRegistryObject(blockRegistryObject, tileTypeRegistryObject)
     }
 
-    fun <I : Tile> registerGuiMachine(name: String, sup: (ResourceLocation, BlockPos, BlockState) -> I): MachineRegistryObject<TileType<I>, GuiMachineBlock> {
+    fun <I : Tile> registerGuiMachine(
+        name: String,
+        sup: (ResourceLocation, BlockPos, BlockState) -> I
+    ): MachineRegistryObject<TileType<I>, GuiMachineBlock> {
         val blockRegistryObject = secondRegister.register(name) { location ->
             GuiMachineBlock(location, BlockBehaviour.Properties.of())
         } as BlockRegistryObject<GuiMachineBlock>
 
-        val tileTypeRegistryObject = (firstRegister as DeferredSingleTileTypeRegister).register(name,blockRegistryObject,sup)
+        val tileTypeRegistryObject =
+            (firstRegister as DeferredSingleTileTypeRegister).register(name, blockRegistryObject, sup)
         return MachineRegistryObject(blockRegistryObject, tileTypeRegistryObject)
     }
 }

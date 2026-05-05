@@ -8,6 +8,7 @@ import com.nanaios.polygonal_tech.core.network.sync.bind
 import com.nanaios.polygonal_tech.core.network.sync.on
 import com.nanaios.polygonal_tech.core.network.sync.type.SyncType
 import com.nanaios.polygonal_tech.core.tile.SingleGuiMachineTile
+import com.nanaios.polygonal_tech.core.translation.FaceName
 import net.minecraft.core.BlockPos
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
@@ -21,7 +22,7 @@ class TestSingleTile(
 
     init {
         capability {
-            energy(Component.literal("energy")) {
+            energy(FaceName.INPUT_1) {
                 mode = IOMode.INPUT_OUTPUT
                 defaultFace = DirectionFace.RIGHT
                 +energyStorage

@@ -5,10 +5,18 @@ import com.nanaios.polygonal_tech.core.capability.energy.ILongEnergyStorage
 import com.nanaios.polygonal_tech.core.capability.energy.InputWrapperLongEnergyStorage
 import com.nanaios.polygonal_tech.core.capability.energy.OutputWrapperLongEnergyStorage
 import com.nanaios.polygonal_tech.core.capability.face.IFace
+import com.nanaios.polygonal_tech.core.capability.face.IItemSlotFaceBuilder
 import com.nanaios.polygonal_tech.core.capability.face.ILongEnergyStorageFaceBuilder
+import com.nanaios.polygonal_tech.core.capability.face.ILongFluidTankFaceBuilder
 import com.nanaios.polygonal_tech.core.capability.fluid.ILongFluidHandler
+import com.nanaios.polygonal_tech.core.capability.fluid.InputOnlyLongFluidHandler
+import com.nanaios.polygonal_tech.core.capability.fluid.LongFluidHandler
+import com.nanaios.polygonal_tech.core.capability.fluid.OutputOnlyLongFluidHandler
 import com.nanaios.polygonal_tech.core.capability.io.IOMode
 import com.nanaios.polygonal_tech.core.capability.item.IItemSlotHandler
+import com.nanaios.polygonal_tech.core.capability.item.InputOnlyItemSlotHandler
+import com.nanaios.polygonal_tech.core.capability.item.ItemSlotHandler
+import com.nanaios.polygonal_tech.core.capability.item.OutputOnlyItemSlotHandler
 import net.minecraft.network.chat.Component
 
 open class CapabilityBuilder(
@@ -36,6 +44,40 @@ open class CapabilityBuilder(
         val pair = Pair(name, wrapped)
         longEnergyStorageList.add(pair)
         longEnergyStorageFaceMap[face] = longEnergyStorageList.size - 1
+    }
+
+    fun fluid(name: Component,builder: ILongFluidTankFaceBuilder.() -> Unit) {
+        val fluidBuilder = ILongFluidTankFaceBuilder()
+        fluidBuilder.builder()
+
+        val (capabilities, mode, face) = fluidBuilder
+
+        val handler = if (mode is IOMode) when (mode) {
+            IOMode.INPUT -> InputOnlyLongFluidHandler(capabilities)
+            IOMode.OUTPUT -> OutputOnlyLongFluidHandler(capabilities)
+            else -> LongFluidHandler(capabilities)
+        } else LongFluidHandler(capabilities)
+
+        val pair = Pair(name, handler)
+        longFluidHandlerList.add(pair)
+        longFluidHandlerFaceMap[face] = longFluidHandlerList.size - 1
+    }
+
+    fun item(name: Component, builder: IItemSlotFaceBuilder.()-> Unit) {
+        val itemBuilder = IItemSlotFaceBuilder()
+        itemBuilder.builder()
+
+        val (capabilities, mode, face) = itemBuilder
+
+        val handler = if (mode is IOMode) when (mode) {
+            IOMode.INPUT -> InputOnlyItemSlotHandler(capabilities)
+            IOMode.OUTPUT -> OutputOnlyItemSlotHandler(capabilities)
+            else -> ItemSlotHandler(capabilities)
+        } else ItemSlotHandler(capabilities)
+
+        val pair = Pair(name, handler)
+        itemSlotHandlerList.add(pair)
+        itemSlotHandlerFaceMap[face] = itemSlotHandlerList.size - 1
     }
 }
 
