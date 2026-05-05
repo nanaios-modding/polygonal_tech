@@ -17,6 +17,7 @@ import net.minecraft.world.level.block.state.BlockState
 import net.minecraftforge.common.capabilities.Capability
 import net.minecraftforge.common.capabilities.ForgeCapabilities
 import net.minecraftforge.common.util.LazyOptional
+import java.util.Collections
 
 abstract class SingleMachineTile(
     id: ResourceLocation, pos: BlockPos, state: BlockState
@@ -27,39 +28,47 @@ abstract class SingleMachineTile(
         const val NBT_KEY_ITEM_SLOT_HANDLER_FACE_MAP = "item_slot_handler_face_map"
     }
 
-    protected val longEnergyStorageList = mutableListOf<Pair<Component, ILongEnergyStorage>>()
-    protected val longFluidHandlerList = mutableListOf<Pair<Component, ILongFluidHandler>>()
-    protected val itemSlotHandlerList = mutableListOf<Pair<Component, IItemSlotHandler>>()
+    protected val _longEnergyStorageList = mutableListOf<Pair<Component, ILongEnergyStorage>>()
+    protected val _longFluidHandlerList = mutableListOf<Pair<Component, ILongFluidHandler>>()
+    protected val _itemSlotHandlerList = mutableListOf<Pair<Component, IItemSlotHandler>>()
 
-    protected val longEnergyStorageLazyList = mutableListOf<LazyOptional<ILongEnergyStorage>>()
-    protected val longFluidHandlerLazyList = mutableListOf<LazyOptional<ILongFluidHandler>>()
-    protected val itemSlotHandlerLazyList = mutableListOf<LazyOptional<IItemSlotHandler>>()
+    val longEnergyStorageList: List<Pair<Component, ILongEnergyStorage>> = Collections.unmodifiableList(_longEnergyStorageList)
+    val longFluidHandlerList: List<Pair<Component, ILongFluidHandler>> = Collections.unmodifiableList(_longFluidHandlerList)
+    val itemSlotHandlerList: List<Pair<Component, IItemSlotHandler>> = Collections.unmodifiableList(_itemSlotHandlerList)
 
-    protected val longEnergyStorageFaceMap = mutableMapOf<IFace, Int>()
-    protected val longFluidHandlerFaceMap = mutableMapOf<IFace, Int>()
-    protected val itemSlotHandlerFaceMap = mutableMapOf<IFace, Int>()
+    protected val _longEnergyStorageLazyList = mutableListOf<LazyOptional<ILongEnergyStorage>>()
+    protected val _longFluidHandlerLazyList = mutableListOf<LazyOptional<ILongFluidHandler>>()
+    protected val _itemSlotHandlerLazyList = mutableListOf<LazyOptional<IItemSlotHandler>>()
+
+    protected val _longEnergyStorageFaceMap = mutableMapOf<IFace, Int>()
+    protected val _longFluidHandlerFaceMap = mutableMapOf<IFace, Int>()
+    protected val _itemSlotHandlerFaceMap = mutableMapOf<IFace, Int>()
+
+    protected val longEnergyStorageFaceMap: Map<IFace, Int> = Collections.unmodifiableMap(_longEnergyStorageFaceMap)
+    protected val longFluidHandlerFaceMap: Map<IFace, Int> = Collections.unmodifiableMap(_longFluidHandlerFaceMap)
+    protected val itemSlotHandlerFaceMap: Map<IFace, Int> = Collections.unmodifiableMap(_itemSlotHandlerFaceMap)
 
     override fun onLoad() {
         super.onLoad()
         if (isClientSide) return
 
-        PolygonalTech.LOGGER.debug("longEnergyStorageList: {}", longEnergyStorageList)
-        PolygonalTech.LOGGER.debug("longFluidHandlerList: {}", longFluidHandlerList)
-        PolygonalTech.LOGGER.debug("itemSlotHandlerList: {}", itemSlotHandlerList)
+        PolygonalTech.LOGGER.debug("longEnergyStorageList: {}", _longEnergyStorageList)
+        PolygonalTech.LOGGER.debug("longFluidHandlerList: {}", _longFluidHandlerList)
+        PolygonalTech.LOGGER.debug("itemSlotHandlerList: {}", _itemSlotHandlerList)
 
-        PolygonalTech.LOGGER.debug("longEnergyStorageFaceMap: {}", longEnergyStorageFaceMap)
-        PolygonalTech.LOGGER.debug("longFluidHandlerFaceMap: {}", longFluidHandlerFaceMap)
-        PolygonalTech.LOGGER.debug("itemSlotHandlerFaceMap: {}", itemSlotHandlerFaceMap)
+        PolygonalTech.LOGGER.debug("longEnergyStorageFaceMap: {}", _longEnergyStorageFaceMap)
+        PolygonalTech.LOGGER.debug("longFluidHandlerFaceMap: {}", _longFluidHandlerFaceMap)
+        PolygonalTech.LOGGER.debug("itemSlotHandlerFaceMap: {}", _itemSlotHandlerFaceMap)
     }
 
     protected fun capability(builder: CapabilityBuilder.() -> Unit) {
         CapabilityBuilder(
-            longEnergyStorageList,
-            longFluidHandlerList,
-            itemSlotHandlerList,
-            longEnergyStorageFaceMap,
-            longFluidHandlerFaceMap,
-            itemSlotHandlerFaceMap
+            _longEnergyStorageList,
+            _longFluidHandlerList,
+            _itemSlotHandlerList,
+            _longEnergyStorageFaceMap,
+            _longFluidHandlerFaceMap,
+            _itemSlotHandlerFaceMap
         ).builder()
 
         initCaps()
@@ -73,47 +82,47 @@ abstract class SingleMachineTile(
 
     override fun <T> getCapability(cap: Capability<T>, face: IFace): LazyOptional<T> = when (cap) {
         ForgeCapabilities.ENERGY, PolygonalTechCapabilities.LONG_ENERGY -> {
-            val index = longEnergyStorageFaceMap[face] ?: return LazyOptional.empty()
-            longEnergyStorageLazyList[index].cast()
+            val index = _longEnergyStorageFaceMap[face] ?: return LazyOptional.empty()
+            _longEnergyStorageLazyList[index].cast()
         }
 
         ForgeCapabilities.FLUID_HANDLER, PolygonalTechCapabilities.LONG_FLUID_HANDLER -> {
-            val index = longFluidHandlerFaceMap[face] ?: return LazyOptional.empty()
-            longFluidHandlerLazyList[index].cast()
+            val index = _longFluidHandlerFaceMap[face] ?: return LazyOptional.empty()
+            _longFluidHandlerLazyList[index].cast()
         }
 
         ForgeCapabilities.ITEM_HANDLER -> {
-            val index = itemSlotHandlerFaceMap[face] ?: return LazyOptional.empty()
-            itemSlotHandlerLazyList[index].cast()
+            val index = _itemSlotHandlerFaceMap[face] ?: return LazyOptional.empty()
+            _itemSlotHandlerLazyList[index].cast()
         }
 
         else -> LazyOptional.empty()
     }
 
     protected fun initCaps() {
-        longEnergyStorageLazyList.clear()
-        longFluidHandlerLazyList.clear()
-        itemSlotHandlerLazyList.clear()
+        _longEnergyStorageLazyList.clear()
+        _longFluidHandlerLazyList.clear()
+        _itemSlotHandlerLazyList.clear()
 
-        longEnergyStorageList.forEach {
-            longEnergyStorageLazyList.add(LazyOptional.of { it.second })
+        _longEnergyStorageList.forEach {
+            _longEnergyStorageLazyList.add(LazyOptional.of { it.second })
         }
-        longFluidHandlerList.forEach {
-            longFluidHandlerLazyList.add(LazyOptional.of { it.second })
+        _longFluidHandlerList.forEach {
+            _longFluidHandlerLazyList.add(LazyOptional.of { it.second })
         }
-        itemSlotHandlerList.forEach {
-            itemSlotHandlerLazyList.add(LazyOptional.of { it.second })
+        _itemSlotHandlerList.forEach {
+            _itemSlotHandlerLazyList.add(LazyOptional.of { it.second })
         }
     }
 
     override fun invalidateCaps() {
-        longEnergyStorageLazyList.forEach {
+        _longEnergyStorageLazyList.forEach {
             it.invalidate()
         }
-        longFluidHandlerLazyList.forEach {
+        _longFluidHandlerLazyList.forEach {
             it.invalidate()
         }
-        itemSlotHandlerLazyList.forEach {
+        _itemSlotHandlerLazyList.forEach {
             it.invalidate()
         }
     }
@@ -126,17 +135,17 @@ abstract class SingleMachineTile(
     override fun save(tag: CompoundTag) {
         super.save(tag)
 
-        tag.put(NBT_KEY_LONG_ENERGY_STORAGE_FACE_MAP, saveMap(longEnergyStorageFaceMap))
-        tag.put(NBT_KEY_LONG_FLUID_HANDLER_FACE_MAP, saveMap(longFluidHandlerFaceMap))
-        tag.put(NBT_KEY_ITEM_SLOT_HANDLER_FACE_MAP, saveMap(itemSlotHandlerFaceMap))
+        tag.put(NBT_KEY_LONG_ENERGY_STORAGE_FACE_MAP, saveMap(_longEnergyStorageFaceMap))
+        tag.put(NBT_KEY_LONG_FLUID_HANDLER_FACE_MAP, saveMap(_longFluidHandlerFaceMap))
+        tag.put(NBT_KEY_ITEM_SLOT_HANDLER_FACE_MAP, saveMap(_itemSlotHandlerFaceMap))
     }
 
     override fun load(tag: CompoundTag) {
         super.load(tag)
 
-        loadMap(tag.getCompound(NBT_KEY_LONG_ENERGY_STORAGE_FACE_MAP), longEnergyStorageFaceMap)
-        loadMap(tag.getCompound(NBT_KEY_LONG_FLUID_HANDLER_FACE_MAP), longFluidHandlerFaceMap)
-        loadMap(tag.getCompound(NBT_KEY_ITEM_SLOT_HANDLER_FACE_MAP), itemSlotHandlerFaceMap)
+        loadMap(tag.getCompound(NBT_KEY_LONG_ENERGY_STORAGE_FACE_MAP), _longEnergyStorageFaceMap)
+        loadMap(tag.getCompound(NBT_KEY_LONG_FLUID_HANDLER_FACE_MAP), _longFluidHandlerFaceMap)
+        loadMap(tag.getCompound(NBT_KEY_ITEM_SLOT_HANDLER_FACE_MAP), _itemSlotHandlerFaceMap)
     }
 
     protected fun saveMap(map: MutableMap<IFace, Int>): CompoundTag {

@@ -7,7 +7,7 @@ import com.nanaios.polygonal_tech.core.network.sync.SyncIntValue
 import com.nanaios.polygonal_tech.core.network.sync.bind
 import com.nanaios.polygonal_tech.core.network.sync.on
 import com.nanaios.polygonal_tech.core.network.sync.type.SyncType
-import com.nanaios.polygonal_tech.core.tile.SingleMachineTile
+import com.nanaios.polygonal_tech.core.tile.SingleGuiMachineTile
 import net.minecraft.core.BlockPos
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
@@ -15,7 +15,7 @@ import net.minecraft.world.level.block.state.BlockState
 
 class TestSingleTile(
     id: ResourceLocation, pos: BlockPos, state: BlockState
-): SingleMachineTile(id, pos, state) {
+): SingleGuiMachineTile(id, pos, state) {
     val syncInt:Int by SyncIntValue() on SyncType.ALWAYS bind this
     val energyStorage = LongEnergyStorage(0,1000) on SyncType.ALWAYS bind this
 

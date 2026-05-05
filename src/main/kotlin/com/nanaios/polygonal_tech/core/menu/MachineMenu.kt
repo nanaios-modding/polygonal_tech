@@ -1,18 +1,34 @@
 package com.nanaios.polygonal_tech.core.menu
 
+import com.nanaios.polygonal_tech.main.registry.PolygonalTechMenuTypeRegister
 import net.minecraft.core.BlockPos
+import net.minecraft.network.FriendlyByteBuf
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.inventory.MenuType
 import net.minecraft.world.item.ItemStack
-import net.minecraft.world.level.Level
 
 class MachineMenu(
+    location: ResourceLocation,
     menuType: MenuType<*>,
-    id: Int,
-    level: Level,
-    pos: BlockPos
-): AbstractContainerMenu(menuType,id) {
+    windowId: Int,
+    inventory: Inventory,
+    pos: BlockPos,
+): AbstractContainerMenu(menuType,windowId) {
+    constructor(
+        location: ResourceLocation,
+        menuType: MenuType<*>,
+        windowId: Int,
+        inventory: Inventory,
+        buf: FriendlyByteBuf
+    ):this(location,menuType,windowId,inventory,buf.readBlockPos())
+
+    init {
+
+    }
+
     override fun quickMoveStack(player: Player, slot: Int): ItemStack {
         return ItemStack.EMPTY
     }

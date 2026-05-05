@@ -6,5 +6,5 @@ import com.nanaios.polygonal_tech.main.tile.TestSingleTile
 
 object PolygonalTechMachineRegistry {
     val MACHINES = DeferredMachineRegister(PolygonalTech.MOD_ID)
-    val TEST_MACHINE = MACHINES.registerMachine("test_machine_1",::TestSingleTile)
+    val TEST_MACHINE = MACHINES.registerGuiMachine("test_machine_1",::TestSingleTile)
 }

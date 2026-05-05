@@ -7,7 +7,6 @@ import com.nanaios.polygonal_tech.core.network.sync.type.SyncType
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.world.item.ItemStack
-import net.minecraftforge.items.ItemStackHandler
 import kotlin.math.min
 
 open class ItemSlot(
@@ -21,7 +20,11 @@ open class ItemSlot(
     override var isDirty = false
         protected set
     override val slotLimit
-        get() = stack.maxStackSize
+        get() = 64
+
+    protected fun getStackLimit(stack: ItemStack): Int {
+        return min(slotLimit, stack.maxStackSize)
+    }
 
     protected fun markDirty() {
         isDirty = true
@@ -32,36 +35,56 @@ open class ItemSlot(
         stack: ItemStack,
         simulate: Boolean
     ): ItemStack {
-        if(stack.isEmpty) return ItemStack.EMPTY
-        if(!valid(stack)) return stack
+        if (stack.isEmpty) return ItemStack.EMPTY
+        if (!valid(stack)) return stack
 
-        if(this.stack.isEmpty) {
-            if(!simulate) {
-                this.stack = stack.copy()
-                markDirty()
-            }
-            return ItemStack.EMPTY
+        val current = this.stack
+        var limit = getStackLimit(stack)
+
+        if (!current.isEmpty) {
+            if (!ItemStack.isSameItemSameTags(stack, current)) return stack
+            limit -= current.count
         }
 
-        if(stack.equals(this.stack,false)) {
-            val grow = min(stack.count, slotLimit - this.stack.count)
-            if(grow == 0) return stack
+        if (limit <= 0) return stack
 
-            val copy = stack.copy()
-            copy.shrink(grow)
+        val reachedLimit = stack.count > limit
 
-            if(!simulate) {
-                this.stack.grow(grow)
-                markDirty()
+        if (!simulate) {
+            if (current.isEmpty) {
+                this.stack = if (reachedLimit) stack.copyWithCount(limit) else stack
+            } else {
+                current.grow(if (reachedLimit) limit else stack.count)
             }
-            return copy
+            markDirty()
         }
 
-        return stack
+        return if (reachedLimit) stack.copyWithCount(stack.count - limit) else ItemStack.EMPTY
     }
 
     override fun extractItem(amount: Int, simulate: Boolean): ItemStack {
-        TODO("Not yet implemented")
+        if (amount <= 0) return ItemStack.EMPTY
+
+        val current = this.stack
+        if (current.isEmpty) return ItemStack.EMPTY
+
+        val toExtract = min(amount, current.maxStackSize)
+
+        if (current.count <= toExtract) {
+            if (!simulate) {
+                this.stack = ItemStack.EMPTY
+                markDirty()
+                return current
+            } else {
+                return current.copy()
+            }
+        } else {
+            if (!simulate) {
+                this.stack = current.copyWithCount(current.count - toExtract)
+                markDirty()
+            }
+            return current.copyWithCount(toExtract)
+        }
     }
 
     override fun isItemValid(stack: ItemStack) = valid(stack)
