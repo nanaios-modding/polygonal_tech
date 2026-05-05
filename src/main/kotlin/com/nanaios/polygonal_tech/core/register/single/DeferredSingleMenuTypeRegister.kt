@@ -20,15 +20,22 @@ class DeferredSingleMenuTypeRegister(modId: String): DeferredSingleRegister<Menu
         }
     }
 
-    fun <I : MenuType<*>> register(name: String, sup: (ResourceLocation, MenuType<*>) -> I): IRegistryObject<I> {
-        return super.register(
-            name
-        ) { location -> sup(location, MAP[location]!!.get()) }
-    }
-
-    fun <M: AbstractContainerMenu> register(name: String, sup: (ResourceLocation, MenuType<*>, Int, Inventory, FriendlyByteBuf) -> M): IRegistryObject<MenuType<M>> {
-        return this.register(
-            name
-        ) { location,menuType -> IForgeMenuType.create{windowId, inventory, buf -> sup(location, menuType,windowId,inventory,buf) }  }
+    /**
+     * MenuTypeを登録するメソッド
+     * @param name 登録名
+     * @param sup MenuTypeを生成するためのサプライヤー。ResourceLocation, MenuType, windowId, Inventory, FriendlyByteBufを受け取り、AbstractContainerMenuを返す。
+     * @return 登録されたMenuTypeのIRegistryObject
+     */
+    fun <M: AbstractContainerMenu> register(name: String, sup: (ResourceLocation, MenuType<M>, Int, Inventory, FriendlyByteBuf) -> M): IRegistryObject<MenuType<M>> {
+        val registryObject = super.register(name) { location ->
+            // IForgeMenuType.createを使用してMenuTypeを作成する。
+            // 実際のメニュー生成（Factory.create）はメニューが開かれる時に行われるため、その時点ではget()を安全に呼び出せる。
+            IForgeMenuType.create { windowId, inventory, buf ->
+                @Suppress("UNCHECKED_CAST")
+                val menuType = MAP[location]!!.get() as MenuType<M>
+                sup(location, menuType, windowId, inventory, buf)
+            }
+        }
+        return registryObject
     }
 }
