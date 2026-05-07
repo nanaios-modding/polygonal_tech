@@ -13,6 +13,13 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker
 import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockState
 
+/**
+ * 空間内に特殊なデータや動作を紐づけるため、[BlockEntity]（タイルエンティティ）を保持するブロックであることを宣言し、
+ * タイルの生成とTickの実行（Tickerの発行）を自動化することを目的とする基底クラス。
+ *
+ * @param id 登録されるブロックのID（タイルと共有で使われることが多いため統一利用される）
+ * @param properties ブロックの素材や硬さなどの基本的性質
+ */
 open class TileBlock(
     protected val id: ResourceLocation,
     properties: Properties

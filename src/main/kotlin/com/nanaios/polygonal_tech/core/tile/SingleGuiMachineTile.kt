@@ -67,6 +67,15 @@ open class SingleGuiMachineTile(
         sendSyncGuiPacket()
     }
 
+    /**
+     * ForgeのGUIシステムから呼ばれ、サーバー側で[AbstractContainerMenu]（主に[MachineMenu]）を生成・提供し、
+     * クライアントのGUIと結びつけることを目的としたメソッド。
+     *
+     * @param windowId ネットワーク越しに特定されるウィンドウのID
+     * @param inventory プレイヤーの[Inventory]
+     * @param player メニューを開いた[Player]
+     * @return 構築された[AbstractContainerMenu]。非対応なら[null]。
+     */
     override fun createMenu(
         windowId: Int,
         inventory: Inventory,

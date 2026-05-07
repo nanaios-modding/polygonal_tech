@@ -9,6 +9,13 @@ import net.minecraft.network.FriendlyByteBuf
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
+/**
+ * [Int]や[Boolean]など、各種プリミティブ型のフィールドを委譲プロパティとして扱い、
+ * 値の変更検知（[isDirty]の管理）や[ISyncValueStorage]への変更通知を自動化することを目的とした抽象クラス。
+ *
+ * @param V 対象となる型
+ * @property value ラップしている実際の値
+ */
 abstract class SyncPrimitiveValue<V>(protected var value: V) : ISyncValue, ReadWriteProperty<Any?, V> {
     override var storage: ISyncValueStorage = EmptySyncValueStorage
     override var type: ISyncType = SyncType.NONE

@@ -12,6 +12,15 @@ import net.minecraft.network.FriendlyByteBuf
 import net.minecraftforge.fluids.capability.IFluidHandler
 import kotlin.math.min
 
+/**
+ * [ILongFluidTank]の標準的な実装クラスであり、
+ * NBTへのセーブ/ロード、ネットワーク同期（[ISyncValue]としての振る舞い）、大容量流体のシミュレート及び実更新ロジックを統合提供することを目的とする。
+ *
+ * @param fluid 初期の流体内容
+ * @param amount 初期の流体量
+ * @param capacity このタンクの最大容量
+ * @param valid 注入されようとしている流体が条件に合うか（熱量のみ、水のみ等）を検証する述語関数
+ */
 open class LongFluidTank(
     fluid: LongFluidStack,
     amount: Long,

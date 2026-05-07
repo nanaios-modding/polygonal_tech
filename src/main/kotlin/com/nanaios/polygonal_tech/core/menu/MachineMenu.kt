@@ -52,6 +52,13 @@ open class MachineMenu(
         tile?.viewGuiPlayers?.remove(player)
     }
 
+    /**
+     * プレイヤーがGUI上でShiftクリック操作を行った際、アイテムを素早く機械とプレイヤーインベントリ間で移動させることを目的としたメソッド。
+     *
+     * @param player 操作を行った[Player]
+     * @param index Shiftクリックされたスロットのインデックス
+     * @return 移動処理を行った後の[ItemStack]のコピー（移動できなかった場合は[ItemStack.EMPTY]）
+     */
     override fun quickMoveStack(player: Player, index: Int): ItemStack {
         val slot = this.slots[index]
 
@@ -83,11 +90,20 @@ open class MachineMenu(
         return copy
     }
 
+    /**
+     * プレイヤーがこのメニュー（GUI）を操作可能な状態か（ブロックに届く距離にいるか等）を検証することを目的とする。
+     *
+     * @param player 検証対象の[Player]
+     * @return 有効であれば[true]
+     */
     override fun stillValid(player: Player): Boolean {
         val block = DeferredSingleBlockRegister.getBlockRegistryObject(location)?.get() ?: return false
         return stillValid(access, player, block)
     }
 
+    /**
+     * GUIの表示レイアウトに対し、プレイヤー自身のメインインベントリ（27スロット）を配置することを目的とするメソッド。
+     */
     private fun addPlayerInventory(playerInv: Inventory) {
         for (row in 0..2) {
             for (col in 0..8) {
@@ -101,6 +117,9 @@ open class MachineMenu(
         }
     }
 
+    /**
+     * GUIの表示レイアウトに対し、プレイヤー自身のホットバー（9スロット）を配置することを目的とするメソッド。
+     */
     private fun addPlayerHotbar(playerInv: Inventory) {
         val yOffset: Int = inventoryYOffset + 58
 

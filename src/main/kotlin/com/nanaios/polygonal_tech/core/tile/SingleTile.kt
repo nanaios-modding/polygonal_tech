@@ -36,12 +36,18 @@ abstract class SingleTile(
         get() = level?.isClientSide ?: false
 
     protected val _syncValues: MutableList<ISyncValue> = mutableListOf()
+    /** 登録されている全同期対象値（[ISyncValue]）への読み取り専用アクセス。 */
     val syncValues: List<ISyncValue> = Collections.unmodifiableList(_syncValues)
 
     /**
-     * TileTypeが[DeferredSingleTileTypeRegister]もしくはその継承クラスを通して登録されていることを前提としたconstructor。
-     * 上記以外のDeferredRegisterを使用している場合は、TileTypeを直接渡すconstructorを使用してください。
-     * */
+     * TileTypeが[DeferredSingleTileTypeRegister]（もしくはその継承クラス）を通して登録されていることを前提とし、
+     * IDから自動的に[TileType]を逆引きして生成することを目的としたショートカットコンストラクタ。
+     * 万が一これ以外のレジストリを使用している場合は、[TileType]を直接渡すコンストラクタを使用すること。
+     *
+     * @param id タイルの識別子
+     * @param pos 配置座標
+     * @param state ブロックステート
+     */
     constructor(id:ResourceLocation, pos:BlockPos, state:BlockState):this(
         id,
         DeferredSingleTileTypeRegister.getTileTypeRegistryObject(id)?.get()!!,
@@ -78,6 +84,11 @@ abstract class SingleTile(
         save(tag)
     }
 
+    /**
+     * 全[ISyncValue]の中でセーブ対象となっているフィールドをNBTへ書き込むことを目的とする。
+     * 
+     * @param tag 保存先の[CompoundTag]
+     */
     open fun save(tag: CompoundTag) {
         _syncValues.forEachIndexed { index, value ->
             if(value.isSaving) {
@@ -86,6 +97,11 @@ abstract class SingleTile(
         }
     }
 
+    /**
+     * NBTタグから値を読み出し、各[ISyncValue]に復元することを目的とする。
+     *
+     * @param tag 読み込み元の[CompoundTag]
+     */
     override fun load(tag: CompoundTag) {
         super.load(tag)
         _syncValues.forEachIndexed { index, value ->
@@ -117,6 +133,10 @@ abstract class SingleTile(
         }
     }
 
+    /**
+     * 内部で保持している[ISyncValue]のうち、同期が必要であると判定された値だけを抽出し、
+     * クライアント側に同期用パケット（[SyncValuesPacket]）として送信することを目的とする。
+     */
     protected open fun sendSyncPacket() {
         val buf = FriendlyByteBuf(Unpooled.buffer())
         var count = 0
@@ -146,6 +166,21 @@ abstract class SingleTile(
         )
     }
 
+    /**
+     * サーバー側で定期実行される個別のビジネスロジックを実装することを目的としたメソッド。
+     * 継承先で具象処理（例: エネルギーの消費や精錬の進行など）を記述する。
+     *
+     * @param level 実行されているワールド
+     * @param pos 対象位置
+     * @param state 現在のブロックステート
+     */
     protected open fun onServerTick(level: Level, pos: BlockPos, state: BlockState) = Unit
+    /**
+     * クライアント側で定期実行される描画やアニメーション更新のロジックを提供することを目的とするメソッド。
+     *
+     * @param level 実行されているワールド
+     * @param pos 対象位置
+     * @param state 現在のブロックステート
+     */
     protected open fun onClientTick(level: Level, pos: BlockPos, state: BlockState) = Unit
 }

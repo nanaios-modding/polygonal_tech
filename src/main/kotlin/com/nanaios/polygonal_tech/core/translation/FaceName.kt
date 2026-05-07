@@ -7,6 +7,13 @@ import net.minecraft.network.chat.MutableComponent
 import net.minecraft.network.chat.Style
 import java.util.Optional
 
+/**
+ * ブロック（機械など）の各面がどのような役割（入力、出力、入出力兼用など）を持っているのかを表す名前を、
+ * 翻訳可能な[Component]として定義・提供することを目的とした列挙型。
+ * [Component]インターフェースをデリゲートして実装することで、そのままチャットやGUIに表示可能なテキストコンポーネントとして振る舞う。
+ *
+ * @property component この列挙子が持つ、実際の翻訳データを持つ[Component]
+ */
 enum class FaceName(
     component: Component
 ): Component by component {

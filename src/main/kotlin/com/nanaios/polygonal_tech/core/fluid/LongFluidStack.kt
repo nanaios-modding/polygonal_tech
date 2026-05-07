@@ -95,10 +95,20 @@ open class LongFluidStack(
         }
     }
 
+    /**
+     * 現在の[LongFluidStack]をコピーし、別のインスタンスとして返すことを目的とする。
+     * 複製により、異なる操作間で状態が共有されるのを防ぐ。
+     */
     fun copy(): LongFluidStack {
         return LongFluidStack(fluid, amount, tag?.copy())
     }
 
+    /**
+     * 標準的なForgeシステムとやり取りするために、この大容量スタックを従来の[FluidStack]へ変換することを目的とするメソッド。
+     * 容量が[Int.MAX_VALUE]を超える場合は丸められることに注意。
+     *
+     * @return 変換された[FluidStack]
+     */
     fun toFluidStack(): FluidStack {
         if (isEmpty()) return FluidStack.EMPTY
         return FluidStack(fluid, amount.roundInt(), tag?.copy())

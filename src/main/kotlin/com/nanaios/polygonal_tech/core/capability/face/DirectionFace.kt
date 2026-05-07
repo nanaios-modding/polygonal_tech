@@ -5,6 +5,13 @@ import net.minecraft.core.Direction
 import net.minecraft.resources.ResourceLocation
 import kotlin.experimental.or
 
+/**
+ * 空間上の絶対方向（東西南北上下）と、ブロックにとっての相対的な論理面（正面、背面、左右など）をマッピングし、
+ * コンポーネントのCapabilityをどの方向からアクセス可能とするかを管理することを目的とした列挙型。
+ *
+ * @param modId 所属するMODのID
+ * @param name 識別用のパス名文字列
+ */
 enum class DirectionFace(
     modId: String,
     name: String
@@ -36,8 +43,11 @@ enum class DirectionFace(
         )
 
         /**
-         * [net.minecraft.core.Direction.NORTH]を前面としたときの、指定された方向の面を返します。
-         * */
+         * ブロックの正面が[Direction.NORTH]であると仮定した場合の、指定された絶対方向（[Direction]）に対する論理面（[DirectionFace]）を返すことを目的とするメソッド。
+         *
+         * @param direction 対象となる絶対方向
+         * @return マッピングされた相対論理面。[null]の場合は[INTERNAL]を返す。
+         */
         fun from(direction: Direction?): DirectionFace {
             return when (direction) {
                 Direction.NORTH -> FRONT
@@ -51,11 +61,14 @@ enum class DirectionFace(
         }
 
         /**
-         * 既定の前面と現在の前面から、指定された方向の相対的な面を返します
-         * @param default - 既定の前面。UP,DOWN以外である必要があります
-         * @param current - 現在の前面。UP,DOWN以外である必要があります
-         * @param side - 外部からアクセスされている面
-         * */
+         * ブロックの初期の正面方向と現在の正面方向から回転量を計算し、
+         * 外部からアクセスされた絶対方向（[Direction]）がブロックにとってどの論理面（[DirectionFace]）にあたるのかを算出することを目的としたメソッド。
+         *
+         * @param default ブロックの既定の正面方向。[Direction.UP], [Direction.DOWN]以外である必要がある。
+         * @param current ブロックの現在の正面方向。[Direction.UP], [Direction.DOWN]以外である必要がある。
+         * @param side 外部からアクセスされている絶対方向
+         * @return 算出された論理面
+         */
         fun from(default: Direction, current: Direction, side: Direction?): DirectionFace {
             return when (side) {
                 null -> INTERNAL

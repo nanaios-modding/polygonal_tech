@@ -10,10 +10,17 @@ import net.minecraftforge.registries.DeferredRegister
 import net.minecraftforge.registries.IForgeRegistry
 
 /**
- * 基本的なIDeferredSingleRegisterの実装クラスです。
- * DeferredRegisterを内部に持ち、登録されたオブジェクトのResourceLocationとRegistryObjectのマッピングを管理します。
- * 特定のタイプのオブジェクト（例:アイテム、ブロックなど）に特化した登録クラスを作成するためにこのクラスを継承してください。
- * */
+ * [IDeferredSingleRegister]のデフォルトとなる実装クラス。
+ * バックエンドとして[DeferredRegister]を保持し、生成された登録オブジェクト（[IRegistryObject]）と
+ * その[ResourceLocation]の紐付けをマップで一元管理して再利用しやすくすることを目的としている。
+ *
+ * 特定の登録カテゴリ（ブロック、アイテム、タイルエンティティなど）ごとに、このクラスを継承した管理クラスを作成することが推奨される。
+ *
+ * @param T 管理対象となる各種登録要素の基底型
+ * @property register 移譲先となる実際の[DeferredRegister]インスタンス
+ * @property modId 対象のMODのID
+ * @property map [ResourceLocation]と、それに対応する生成済み[IRegistryObject]を対応づけるマップ
+ */
 abstract class DeferredSingleRegister<T> private constructor(
     protected val register: DeferredRegister<T>,
     override val modId: String,
@@ -27,6 +34,14 @@ abstract class DeferredSingleRegister<T> private constructor(
     override val cast: DeferredRegister<T>
         get() = register
 
+    /**
+     * 新しい要素を登録し、同時に内部の[map]へ登録オブジェクトをキャッシュすることを目的としたメソッド。
+     *
+     * @param I 実際に登録される要素の派生型
+     * @param name 登録する識別名
+     * @param sup レジストリに登録する要素のインスタンスを生成する関数。[ResourceLocation]が渡される。
+     * @return 登録済みの要素へのアクセスを提供する[IRegistryObject]
+     */
     override fun <I : T> register(name: String, sup: (ResourceLocation) -> I): IRegistryObject<I> {
         val registry = register.cast().register(name,sup)
         map[registry.id] = registry

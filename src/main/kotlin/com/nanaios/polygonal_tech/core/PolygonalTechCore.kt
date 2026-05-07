@@ -6,8 +6,18 @@ import net.minecraftforge.eventbus.api.SubscribeEvent
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent
 
+/**
+ * Coreプロジェクト内におけるFMLのライフサイクルイベントをフックし、必要な初期化処理を実行することを目的としたオブジェクト。
+ * メインの[PolygonalTech]クラスとは切り離し、Core特有の機能（例: ネットワークなど）のセットアップを担当する。
+ */
 @Mod.EventBusSubscriber(modid = PolygonalTech.MOD_ID,bus = Mod.EventBusSubscriber.Bus.MOD)
 object PolygonalTechCore {
+    /**
+     * MODの共通セットアップフェーズにて実行され、共通システムの起動を目的とするメソッド。
+     * 現状は、ネットワークパケットの送受信に関連する[PolygonalTechNetwork]の登録処理を行う。
+     *
+     * @param event FMLのCommon Setupイベント情報を持つ[FMLCommonSetupEvent]
+     */
     @JvmStatic
     @SubscribeEvent
     fun commonSetup(event: FMLCommonSetupEvent) {

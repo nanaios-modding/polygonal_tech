@@ -22,8 +22,10 @@ open class PolygonalTech(context: FMLJavaModLoadingContext) {
     }
 
     /**
-     * 遊び心のある起動ログを表示するだけのメソッド
-     * */
+     * コンソールやログファイル上に、MODのアスキーアートロゴおよびバージョン情報を表示し、起動を装飾的に知らせることを目的とするメソッド。
+     *
+     * @param context インストールされているMODのバージョン等のメタ情報を取得するために使用される[FMLJavaModLoadingContext]。
+     */
     private fun showBootLog(context: FMLJavaModLoadingContext) {
         // バージョンを取得してタイトルを生成
         val version = context.container.modInfo.version.toString()

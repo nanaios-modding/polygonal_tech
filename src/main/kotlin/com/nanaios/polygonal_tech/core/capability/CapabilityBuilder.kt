@@ -20,6 +20,17 @@ import com.nanaios.polygonal_tech.core.capability.item.ItemSlotHandler
 import com.nanaios.polygonal_tech.core.capability.item.OutputOnlyItemSlotHandler
 import net.minecraft.network.chat.Component
 
+/**
+ * タイルエンティティ（[SingleMachineTile]等）内で保持する各種Capability（エネルギー、流体、アイテム）について、
+ * 宣言的なDSLを用いて簡潔にインスタンスと面（[IFace]）の紐付け・初期化を行うことを目的としたビルダー。
+ *
+ * @param longEnergyStorageList 追加するエネルギー関連Capabilityのリスト
+ * @param longFluidHandlerList 追加する流体関連Capabilityのリスト
+ * @param itemSlotHandlerList 追加するアイテムスロット関連Capabilityのリスト
+ * @param longEnergyStorageFaceMap 面ごとのエネルギーCapabilityマッピング
+ * @param longFluidHandlerFaceMap 面ごとの流体Capabilityマッピング
+ * @param itemSlotHandlerFaceMap 面ごとのアイテムCapabilityマッピング
+ */
 open class CapabilityBuilder(
     protected val longEnergyStorageList: MutableList<Pair<Component, ILongEnergyStorage>>,
     protected val longFluidHandlerList: MutableList<Pair<Component, ILongFluidHandler>>,
@@ -28,6 +39,14 @@ open class CapabilityBuilder(
     protected val longFluidHandlerFaceMap: MutableMap<IFace, Int>,
     protected val itemSlotHandlerFaceMap: MutableMap<IFace, Int>,
 ) {
+    /**
+     * 指定された設定に基づき、エネルギー管理用のCapability（[ILongEnergyStorage]）を構築してタイルに紐付けることを目的とするメソッド。
+     *
+     * @param name GUI表示等で使われるCapability名（[Component]）
+     * @param mode 入力専用か出力専用かを示す[IIOMode]
+     * @param defaultFace インタラクトを許可するデフォルトのブロック面（[IFace]）
+     * @param builder 内部のコンポーネントを定義する追加のDSLブロック
+     */
     fun energy(name: Component, mode: IIOMode, defaultFace: IFace, builder: ILongEnergyStorageFaceBuilder.() -> Unit) {
         val energyBuilder = ILongEnergyStorageFaceBuilder()
         energyBuilder.builder()
@@ -47,6 +66,14 @@ open class CapabilityBuilder(
         longEnergyStorageFaceMap[defaultFace] = longEnergyStorageList.size - 1
     }
 
+    /**
+     * 指定された設定に基づき、流体管理用のCapability（[ILongFluidHandler]）を構築してタイルに紐付けることを目的とするメソッド。
+     *
+     * @param name GUI表示等で使われるCapability名（[Component]）
+     * @param mode 入力専用か出力専用かを示す[IIOMode]
+     * @param defaultFace インタラクトを許可するデフォルトのブロック面（[IFace]）
+     * @param builder 内部のタンク構成を定義する追加のDSLブロック
+     */
     fun fluid(name: Component, mode: IIOMode, defaultFace: IFace, builder: ILongFluidTankFaceBuilder.() -> Unit) {
         val fluidBuilder = ILongFluidTankFaceBuilder()
         fluidBuilder.builder()
@@ -64,6 +91,14 @@ open class CapabilityBuilder(
         longFluidHandlerFaceMap[defaultFace] = longFluidHandlerList.size - 1
     }
 
+    /**
+     * 指定された設定に基づき、アイテム管理用のCapability（[IItemSlotHandler]）を構築してタイルに紐付けることを目的とするメソッド。
+     *
+     * @param name GUI表示等で使われるCapability名（[Component]）
+     * @param mode 入力専用か出力専用かを示す[IIOMode]
+     * @param defaultFace インタラクトを許可するデフォルトのブロック面（[IFace]）
+     * @param builder 内部のスロット構成を定義する追加のDSLブロック
+     */
     fun item(name: Component, mode: IIOMode, defaultFace: IFace,  builder: IItemSlotFaceBuilder.()-> Unit) {
         val itemBuilder = IItemSlotFaceBuilder()
         itemBuilder.builder()
@@ -81,4 +116,3 @@ open class CapabilityBuilder(
         itemSlotHandlerFaceMap[defaultFace] = itemSlotHandlerList.size - 1
     }
 }
-
