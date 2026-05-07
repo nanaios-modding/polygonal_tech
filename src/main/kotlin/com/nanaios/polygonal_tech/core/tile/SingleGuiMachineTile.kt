@@ -30,9 +30,7 @@ open class SingleGuiMachineTile(
 
     override fun getDisplayName(): Component = Component.translatable(Util.makeDescriptionId("block",id))
 
-    override fun sendSyncPacket() {
-        super.sendSyncPacket()
-
+    open fun sendSyncGuiPacket() {
         val buf = FriendlyByteBuf(Unpooled.buffer())
         var count = 0
 
@@ -62,6 +60,11 @@ open class SingleGuiMachineTile(
             )
 
         }
+    }
+
+    override fun sendSyncPacket() {
+        super.sendSyncPacket()
+        sendSyncGuiPacket()
     }
 
     override fun createMenu(
