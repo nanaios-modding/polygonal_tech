@@ -3,7 +3,12 @@ package com.nanaios.polygonal_tech.core.capability.item
 import net.minecraft.world.item.ItemStack
 import net.minecraftforge.items.IItemHandlerModifiable
 
+/**
+ * 複数の[IItemSlot]をグループ化して1つのインベントリの束とし、
+ * Forgeにおける標準アイテム機能である[IItemHandlerModifiable]を通じて外部（パイプ、ホッパー等）へのアクセスを提供することを目的としたインターフェース。
+ */
 interface IItemSlotHandler: IItemHandlerModifiable {
+    /** ハンドラーが管理・委譲対象としている全[IItemSlot]のリスト。 */
     val slots:List<IItemSlot>
 
     override fun isItemValid(slot: Int, stack: ItemStack) = slots[slot].isItemValid(stack)

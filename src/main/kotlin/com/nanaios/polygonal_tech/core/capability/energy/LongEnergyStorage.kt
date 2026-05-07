@@ -10,6 +10,13 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.FriendlyByteBuf
 import kotlin.math.min
 
+/**
+ * [ILongEnergyStorage]の標準的な実装クラスであり、
+ * NBTへの永続化、ネットワークへのバイトバッファ送受信機能（[ISyncValue]）を内包することを目的とする。
+ *
+ * @param stored 初期状態で保持するエネルギー量
+ * @param capacity 蓄電可能な最大エネルギー容量
+ */
 open class LongEnergyStorage(
     stored: Long,
     capacity: Long,

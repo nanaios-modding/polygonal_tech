@@ -9,6 +9,15 @@ import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.world.item.ItemStack
 import kotlin.math.min
 
+/**
+ * [IItemSlot]の標準的な実装クラスであり、
+ * アイテムの搬入・搬出ロジック、GUIやネットワークとの同期機構、NBTのセーブ/ロード機能を提供することを目的とする。
+ *
+ * @param x GUI上のX座標
+ * @param y GUI上のY座標
+ * @param stack スロットの初期アイテム状数
+ * @param valid アイテムが搬入可能かを判定する述語関数
+ */
 open class ItemSlot(
     override val x: Int,
     override val y: Int,
