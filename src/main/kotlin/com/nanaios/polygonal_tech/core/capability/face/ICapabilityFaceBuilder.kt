@@ -3,8 +3,6 @@ package com.nanaios.polygonal_tech.core.capability.face
 import com.nanaios.polygonal_tech.core.capability.ICapability
 import com.nanaios.polygonal_tech.core.capability.energy.ILongEnergyStorage
 import com.nanaios.polygonal_tech.core.capability.fluid.ILongFluidTank
-import com.nanaios.polygonal_tech.core.capability.io.IIOMode
-import com.nanaios.polygonal_tech.core.capability.io.IOMode
 import com.nanaios.polygonal_tech.core.capability.item.IItemSlot
 
 /**
