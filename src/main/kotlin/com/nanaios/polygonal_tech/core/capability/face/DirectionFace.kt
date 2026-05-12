@@ -2,29 +2,22 @@ package com.nanaios.polygonal_tech.core.capability.face
 
 import com.nanaios.polygonal_tech.main.PolygonalTech
 import net.minecraft.core.Direction
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.network.chat.Component
 import kotlin.experimental.or
 
-/**
- * 空間上の絶対方向（東西南北上下）と、ブロックにとっての相対的な論理面（正面、背面、左右など）をマッピングし、
- * コンポーネントのCapabilityをどの方向からアクセス可能とするかを管理することを目的とした列挙型。
- *
- * @param modId 所属するMODのID
- * @param name 識別用のパス名文字列
- */
 enum class DirectionFace(
-    modId: String,
-    name: String
+    val path: String
 ) : IFace {
-    DOWN(PolygonalTech.MOD_ID, "down"),
-    UP(PolygonalTech.MOD_ID, "up"),
-    FRONT(PolygonalTech.MOD_ID, "north"),
-    BACK(PolygonalTech.MOD_ID, "south"),
-    LEFT(PolygonalTech.MOD_ID, "west"),
-    RIGHT(PolygonalTech.MOD_ID, "east"),
-    INTERNAL(PolygonalTech.MOD_ID, "internal");
+    DOWN( "down"),
+    UP("up"),
+    FRONT("front"),
+    BACK("back"),
+    LEFT("left"),
+    RIGHT("right"),
+    INTERNAL("internal");
 
-    override val id: ResourceLocation = ResourceLocation.fromNamespaceAndPath(modId, "face/$name")
+    override val translation: Component
+        get() = Component.translatable("face.${PolygonalTech.MOD_ID}.$path")
 
     companion object {
         /**

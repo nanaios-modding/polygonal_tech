@@ -1,5 +1,8 @@
 package com.nanaios.polygonal_tech.main.tile
 
+import com.nanaios.polygonal_tech.core.capability.builder.IOMode
+import com.nanaios.polygonal_tech.core.capability.face.DirectionFace
+import com.nanaios.polygonal_tech.core.capability.face.IOFace
 import com.nanaios.polygonal_tech.core.capability.fluid.LongFluidTank
 import com.nanaios.polygonal_tech.core.capability.item.ItemSlot
 import com.nanaios.polygonal_tech.core.fluid.LongFluidStack
@@ -25,6 +28,9 @@ class ThermoelectricExtractionMachine(
 
     init {
         capability {
+            fluid(IOFace.OUTPUT_1, IOMode.OUTPUT) {
+                +thermTank
+            }
         }
     }
 }

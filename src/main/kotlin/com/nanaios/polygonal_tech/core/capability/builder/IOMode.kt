@@ -1,4 +1,4 @@
-package com.nanaios.polygonal_tech.core.capability
+package com.nanaios.polygonal_tech.core.capability.builder
 
 enum class IOMode(
     val canInput:Boolean,

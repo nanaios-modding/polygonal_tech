@@ -8,6 +8,8 @@ data class RGBA(val r: Int, val g: Int, val b: Int, val a: Int) {
         require(a in 0..255) { "Alpha value must be between 0 and 255" }
     }
 
+    constructor(r: Int, g: Int, b: Int) : this(r, g, b, 255)
+
     fun toHex(): String {
         return String.format("#%02X%02X%02X%02X", r, g, b, a)
     }

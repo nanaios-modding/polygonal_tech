@@ -1,4 +1,4 @@
-package com.nanaios.polygonal_tech.core.capability.face
+package com.nanaios.polygonal_tech.core.capability.builder
 
 import com.nanaios.polygonal_tech.core.capability.ICapability
 import com.nanaios.polygonal_tech.core.capability.energy.ILongEnergyStorage
@@ -9,7 +9,7 @@ import com.nanaios.polygonal_tech.core.capability.item.IItemSlot
  * Capability（アイテム、流体、エネルギーなど）のリストを構築するためのDSL（DSLレシーバー）を提供し、
  * 単項演算子 `+` などを用いて直感的にCapabilityを追加・除外できるようにすることを目的とするインターフェース。
  *
- * @param C 構築対象の[ICapability]の型
+ * @param C 構築対象の[com.nanaios.polygonal_tech.core.capability.ICapability]の型
  */
 interface ICapabilityFaceBuilder<C: ICapability> {
     /** 構築中のCapabilityのリスト */
