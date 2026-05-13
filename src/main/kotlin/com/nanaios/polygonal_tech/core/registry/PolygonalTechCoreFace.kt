@@ -1,13 +1,13 @@
 package com.nanaios.polygonal_tech.core.registry
 
-import com.nanaios.polygonal_tech.core.PolygonalTechCore
 import com.nanaios.polygonal_tech.core.capability.face.DirectionFace
 import com.nanaios.polygonal_tech.core.capability.face.EmptyFace
 import com.nanaios.polygonal_tech.core.capability.face.IOFace
 import com.nanaios.polygonal_tech.core.register.single.DeferredSingleFaceRegister
+import com.nanaios.polygonal_tech.main.PolygonalTech
 
 object PolygonalTechCoreFace {
-    val FACES = DeferredSingleFaceRegister(PolygonalTechCore.MOD_ID)
+    val FACES = DeferredSingleFaceRegister(PolygonalTech.MOD_ID)
 
     val EMPTY = FACES.register("empty") { EmptyFace }
 

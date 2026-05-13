@@ -10,20 +10,6 @@ displayName = "${mod_name}"
 authors = "${mod_authors}"
 description = '''${mod_description}'''
 
-[[mods]]
-modId="${core_mod_id}"
-version="${mod_version}"
-displayName="${core_mod_name}"
-authors = "${mod_authors}"
-description='''Core library'''
-
-[[dependencies."${mod_id}"]]
-modId="${core_mod_id}"
-mandatory=true
-versionRange="[1,)"
-ordering="BEFORE"
-side="BOTH"
-
 [[dependencies."${mod_id}"]]
 modId = "forge"
 mandatory = true

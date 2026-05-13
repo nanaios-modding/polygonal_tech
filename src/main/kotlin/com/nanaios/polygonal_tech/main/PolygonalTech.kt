@@ -1,5 +1,6 @@
 package com.nanaios.polygonal_tech.main
 
+import com.nanaios.polygonal_tech.core.PolygonalTechCore
 import com.nanaios.polygonal_tech.main.registry.PolygonalTechMachineRegistry
 import com.nanaios.polygonal_tech.main.registry.PolygonalTechMenuTypeRegistry
 import net.minecraftforge.fml.common.Mod
@@ -19,6 +20,8 @@ open class PolygonalTech(context: FMLJavaModLoadingContext) {
         showBootLog(context)
         PolygonalTechMachineRegistry.MACHINES.register(eventBus)
         PolygonalTechMenuTypeRegistry.MENUS.register(eventBus)
+
+        PolygonalTechCore(context)
     }
 
     /**
