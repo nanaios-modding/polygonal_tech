@@ -1,7 +1,5 @@
 package com.nanaios.polygonal_tech.core.register.single
 
-import com.nanaios.polygonal_tech.core.register.registry.IRegistryObject
-import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.Item
 import net.minecraftforge.registries.ForgeRegistries
 

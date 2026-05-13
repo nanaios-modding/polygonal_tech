@@ -9,17 +9,16 @@ import com.nanaios.polygonal_tech.core.capability.fluid.ILongFluidHandler
 import com.nanaios.polygonal_tech.core.capability.fluid.InputOnlyLongFluidHandler
 import com.nanaios.polygonal_tech.core.capability.fluid.LongFluidHandler
 import com.nanaios.polygonal_tech.core.capability.fluid.OutputOnlyLongFluidHandler
-import com.nanaios.polygonal_tech.core.capability.holder.CapabilityHolder
-import com.nanaios.polygonal_tech.core.capability.holder.ICapabilityHolder
 import com.nanaios.polygonal_tech.core.capability.item.IItemSlotHandler
 import com.nanaios.polygonal_tech.core.capability.item.InputOnlyItemSlotHandler
 import com.nanaios.polygonal_tech.core.capability.item.ItemSlotHandler
 import com.nanaios.polygonal_tech.core.capability.item.OutputOnlyItemSlotHandler
 
-open class CapabilityBuilder {
-    val longEnergyStorageMap = mutableMapOf<IFace, ILongEnergyStorage>()
-    val longFluidHandlerMap = mutableMapOf<IFace, ILongFluidHandler>()
-    val itemSlotHandlerMap = mutableMapOf<IFace, IItemSlotHandler>()
+open class CapabilityBuilder(
+    val longEnergyStorageMap:MutableMap<IFace, ILongEnergyStorage> ,
+    val longFluidHandlerMap: MutableMap<IFace, ILongFluidHandler>,
+    val itemSlotHandlerMap: MutableMap<IFace, IItemSlotHandler>
+) {
 
     fun energy(face: IFace, mode: IOMode, builder: ILongEnergyStorageFaceBuilder.() -> Unit) {
         val energyBuilder = ILongEnergyStorageFaceBuilder()
@@ -66,9 +65,5 @@ open class CapabilityBuilder {
         }
 
         itemSlotHandlerMap[face] = wrapper
-    }
-
-    fun createHolder(): ICapabilityHolder {
-        return CapabilityHolder(longEnergyStorageMap,longFluidHandlerMap,itemSlotHandlerMap)
     }
 }

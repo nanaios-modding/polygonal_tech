@@ -9,7 +9,7 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraftforge.registries.DeferredRegister
 import net.minecraftforge.registries.IForgeRegistry
 
-abstract class DeferredSingleRegister<T> private constructor(
+abstract class DeferredSingleRegister<T> (
     protected val register: DeferredRegister<T>,
     override val modId: String
 ) : IDeferredSingleRegister<T>, IDeferredRegister<T> by register.cast() {
@@ -20,6 +20,11 @@ abstract class DeferredSingleRegister<T> private constructor(
 
     constructor(registry: ResourceKey<out Registry<T>>, modId: String) : this(
         DeferredRegister.create(registry, modId),
+        modId
+    )
+
+    constructor(registryName: ResourceLocation, modId: String) : this(
+        DeferredRegister.create(registryName, modId),
         modId
     )
 
