@@ -11,19 +11,5 @@ import net.minecraftforge.registries.ForgeRegistries
  * @param modId 対象のMODの識別子
  */
 open class DeferredSingleItemRegister(modId: String): DeferredSingleRegister<Item>(
-    ForgeRegistries.ITEMS,modId, MAP
-) {
-    companion object{
-        private val MAP: MutableMap<ResourceLocation, IRegistryObject<out Item>> = mutableMapOf()
-
-        /**
-         * 特定のIDから、登録された[Item]の[IRegistryObject]を取得することを目的としたメソッド。
-         *
-         * @param location アイテムの識別に使用される[ResourceLocation]
-         * @return 見つかった場合は対応する[IRegistryObject]、見つからなければ[null]を返す。
-         */
-        fun getItemRegistryObject(location: ResourceLocation): IRegistryObject<out Item>? {
-            return MAP[location]
-        }
-    }
-}
+    ForgeRegistries.ITEMS,modId
+)

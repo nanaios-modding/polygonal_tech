@@ -1,7 +1,6 @@
 package com.nanaios.polygonal_tech.main.client
 
 import com.nanaios.polygonal_tech.main.PolygonalTech
-import com.nanaios.polygonal_tech.main.registry.PolygonalTechMenuTypeRegister
 import net.minecraft.client.gui.screens.MenuScreens
 import net.minecraftforge.eventbus.api.SubscribeEvent
 import net.minecraftforge.fml.common.Mod

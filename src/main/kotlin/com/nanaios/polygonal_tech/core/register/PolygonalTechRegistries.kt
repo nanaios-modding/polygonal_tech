@@ -1,4 +1,4 @@
-package com.nanaios.polygonal_tech.core
+package com.nanaios.polygonal_tech.core.register
 
 import com.nanaios.polygonal_tech.core.capability.face.IFace
 import com.nanaios.polygonal_tech.main.PolygonalTech

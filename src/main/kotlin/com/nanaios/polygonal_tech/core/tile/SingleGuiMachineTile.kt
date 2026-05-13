@@ -4,8 +4,6 @@ import com.nanaios.polygonal_tech.core.menu.MachineMenu
 import com.nanaios.polygonal_tech.core.network.PolygonalTechNetwork
 import com.nanaios.polygonal_tech.core.network.s2c.SyncValuesPacket
 import com.nanaios.polygonal_tech.core.network.sync.type.SyncType
-import com.nanaios.polygonal_tech.core.register.registry.IRegistryObject
-import com.nanaios.polygonal_tech.core.register.single.DeferredSingleMenuTypeRegister
 import io.netty.buffer.Unpooled
 import net.minecraft.Util
 import net.minecraft.core.BlockPos
@@ -17,9 +15,9 @@ import net.minecraft.world.MenuProvider
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.inventory.AbstractContainerMenu
-import net.minecraft.world.inventory.MenuType
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraftforge.network.PacketDistributor
+import net.minecraftforge.registries.ForgeRegistries
 
 open class SingleGuiMachineTile(
     id: ResourceLocation,
@@ -81,7 +79,7 @@ open class SingleGuiMachineTile(
         inventory: Inventory,
         player: Player
     ): AbstractContainerMenu? {
-        val menuType = DeferredSingleMenuTypeRegister.getMenuTypeRegistryObject(id)
-        return if(menuType != null) MachineMenu(id,menuType.get(),windowId,inventory,pos) else null
+        val menuType = ForgeRegistries.MENU_TYPES.getValue(id)
+        return if(menuType != null) MachineMenu(id,menuType,windowId,inventory,pos) else null
     }
 }

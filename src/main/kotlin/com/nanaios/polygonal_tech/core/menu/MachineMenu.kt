@@ -12,6 +12,7 @@ import net.minecraft.world.inventory.ContainerLevelAccess
 import net.minecraft.world.inventory.MenuType
 import net.minecraft.world.inventory.Slot
 import net.minecraft.world.item.ItemStack
+import net.minecraftforge.registries.ForgeRegistries
 
 
 open class MachineMenu(
@@ -97,7 +98,7 @@ open class MachineMenu(
      * @return 有効であれば[true]
      */
     override fun stillValid(player: Player): Boolean {
-        val block = DeferredSingleBlockRegister.getBlockRegistryObject(location)?.get() ?: return false
+        val block = ForgeRegistries.BLOCKS.getValue(location) ?: return false
         return stillValid(access, player, block)
     }
 

@@ -1,7 +1,7 @@
 package com.nanaios.polygonal_tech.main
 
 import com.nanaios.polygonal_tech.main.registry.PolygonalTechMachineRegistry
-import com.nanaios.polygonal_tech.main.registry.PolygonalTechMenuTypeRegister
+import com.nanaios.polygonal_tech.main.registry.PolygonalTechMenuTypeRegistry
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext
 import org.apache.logging.log4j.LogManager
@@ -18,7 +18,7 @@ open class PolygonalTech(context: FMLJavaModLoadingContext) {
         val eventBus = context.modEventBus
         showBootLog(context)
         PolygonalTechMachineRegistry.MACHINES.register(eventBus)
-        PolygonalTechMenuTypeRegister.MENUS.register(eventBus)
+        PolygonalTechMenuTypeRegistry.MENUS.register(eventBus)
     }
 
     /**

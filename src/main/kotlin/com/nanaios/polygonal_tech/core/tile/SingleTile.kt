@@ -17,6 +17,7 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraftforge.network.PacketDistributor
+import net.minecraftforge.registries.ForgeRegistries
 import java.util.Collections
 
 abstract class SingleTile(
@@ -50,7 +51,7 @@ abstract class SingleTile(
      */
     constructor(id:ResourceLocation, pos:BlockPos, state:BlockState):this(
         id,
-        DeferredSingleTileTypeRegister.getTileTypeRegistryObject(id)?.get()!!,
+        ForgeRegistries.BLOCK_ENTITY_TYPES.getValue(id)!!,
         pos,
         state
     )

@@ -15,21 +15,8 @@ import net.minecraftforge.registries.ForgeRegistries
  * @param modId 所属するMODのID
  */
 class DeferredSingleMenuTypeRegister(modId: String): DeferredSingleRegister<MenuType<*>>(
-    ForgeRegistries.MENU_TYPES,modId, MAP
+    ForgeRegistries.MENU_TYPES,modId
 ) {
-    companion object{
-        private val MAP: MutableMap<ResourceLocation, IRegistryObject<out MenuType<*>>> = mutableMapOf()
-
-        /**
-         * 特定のGUI要素を呼び出すために、登録された[MenuType]をIDをキーにして検索・取得することを目的としたメソッド。
-         *
-         * @param location メニュータイプの[ResourceLocation]
-         * @return 対応する[MenuType]の[IRegistryObject]。存在しない場合は[null]。
-         */
-        fun getMenuTypeRegistryObject(location: ResourceLocation): IRegistryObject<out MenuType<*>>? {
-            return MAP[location]
-        }
-    }
 
     /**
      * Forgeの拡張メニュータイプとして[MenuType]を安全かつ容易に登録し、初期化遅延を適切にハンドリングすることを目的としたメソッド。
@@ -46,7 +33,7 @@ class DeferredSingleMenuTypeRegister(modId: String): DeferredSingleRegister<Menu
             // 実際のメニュー生成（Factory.create）はメニューが開かれる時に行われるため、その時点ではget()を安全に呼び出せる。
             IForgeMenuType.create { windowId, inventory, buf ->
                 @Suppress("UNCHECKED_CAST")
-                val menuType = MAP[location]!!.get() as MenuType<M>
+                val menuType = ForgeRegistries.MENU_TYPES.getValue(location) as MenuType<M>
                 sup(location, menuType, windowId, inventory, buf)
             }
         }

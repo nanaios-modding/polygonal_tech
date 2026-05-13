@@ -4,7 +4,7 @@ import com.nanaios.polygonal_tech.core.capability.energy.ILongEnergyStorage
 import com.nanaios.polygonal_tech.core.capability.face.IFace
 import com.nanaios.polygonal_tech.core.capability.fluid.ILongFluidHandler
 import com.nanaios.polygonal_tech.core.capability.item.IItemSlotHandler
-import com.nanaios.polygonal_tech.core.PolygonalTechRegistries
+import com.nanaios.polygonal_tech.core.register.PolygonalTechRegistries
 import net.minecraft.nbt.CompoundTag
 import java.util.Collections
 

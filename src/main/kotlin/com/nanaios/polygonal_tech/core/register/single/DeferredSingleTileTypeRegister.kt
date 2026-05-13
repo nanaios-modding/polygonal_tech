@@ -21,21 +21,8 @@ typealias Tile = BlockEntity
  * @param modId MODの識別子
  */
 class DeferredSingleTileTypeRegister(modId: String) : DeferredSingleRegister<TileType<*>>(
-    ForgeRegistries.BLOCK_ENTITY_TYPES, modId, MAP
+    ForgeRegistries.BLOCK_ENTITY_TYPES, modId
 ) {
-    companion object {
-        private val MAP: MutableMap<ResourceLocation, IRegistryObject<out TileType<*>>> = mutableMapOf()
-
-        /**
-         * [ResourceLocation]から、登録されたタイルエンティティの定義を逆引き検索する目的で使用される。
-         *
-         * @param location 対象となるタイルエンティティ固有の[ResourceLocation]
-         * @return 該当するタイルタイプの[IRegistryObject]、存在しない場合は[null]を返す。
-         */
-        fun getTileTypeRegistryObject(location: ResourceLocation): IRegistryObject<out TileType<*>>? {
-            return MAP[location]
-        }
-    }
 
     /**
      * 特定のブロックに対して紐づくタイルエンティティのタイプを登録し、
