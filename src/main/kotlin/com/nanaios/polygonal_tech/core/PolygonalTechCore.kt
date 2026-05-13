@@ -5,11 +5,8 @@ import com.nanaios.polygonal_tech.main.PolygonalTech
 import net.minecraftforge.eventbus.api.SubscribeEvent
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent
+import net.minecraftforge.registries.RegisterEvent
 
-/**
- * Coreプロジェクト内におけるFMLのライフサイクルイベントをフックし、必要な初期化処理を実行することを目的としたオブジェクト。
- * メインの[PolygonalTech]クラスとは切り離し、Core特有の機能（例: ネットワークなど）のセットアップを担当する。
- */
 @Mod.EventBusSubscriber(modid = PolygonalTech.MOD_ID,bus = Mod.EventBusSubscriber.Bus.MOD)
 object PolygonalTechCore {
     /**

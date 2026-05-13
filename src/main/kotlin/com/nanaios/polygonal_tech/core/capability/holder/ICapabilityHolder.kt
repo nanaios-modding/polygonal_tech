@@ -7,7 +7,7 @@ import com.nanaios.polygonal_tech.core.capability.item.IItemSlotHandler
 import net.minecraft.nbt.CompoundTag
 import net.minecraftforge.common.util.INBTSerializable
 
-interface ICapabilityHolder: INBTSerializable<CompoundTag> {
+interface ICapabilityHolder {
     val longEnergyStorageMap: Map<IFace, ILongEnergyStorage>
     val longFluidHandlerMap : Map<IFace, ILongFluidHandler>
     val itemSlotHandlerMap : Map<IFace, IItemSlotHandler>

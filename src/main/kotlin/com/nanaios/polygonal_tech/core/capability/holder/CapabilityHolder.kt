@@ -4,6 +4,7 @@ import com.nanaios.polygonal_tech.core.capability.energy.ILongEnergyStorage
 import com.nanaios.polygonal_tech.core.capability.face.IFace
 import com.nanaios.polygonal_tech.core.capability.fluid.ILongFluidHandler
 import com.nanaios.polygonal_tech.core.capability.item.IItemSlotHandler
+import com.nanaios.polygonal_tech.core.PolygonalTechRegistries
 import net.minecraft.nbt.CompoundTag
 import java.util.Collections
 
@@ -18,18 +19,4 @@ open class CapabilityHolder(
         get() = Collections.unmodifiableMap(_longFluidHandlerMap)
     override val itemSlotHandlerMap: Map<IFace, IItemSlotHandler>
         get() = Collections.unmodifiableMap(_itemSlotHandlerMap)
-
-    override fun serializeNBT(): CompoundTag {
-        val tag = CompoundTag()
-
-        val energyTag = CompoundTag()
-        longEnergyStorageMap.forEach { storage ->
-
-        }
-
-        return tag
-    }
-
-    override fun deserializeNBT(nbt: CompoundTag) {
-    }
 }

@@ -37,6 +37,9 @@ val mappingChannel: String by project
 val mappingVersion: String by project
 val jeiVersion: String by project
 
+val coreModId = "${modId}_core"
+val coreModName = "${modId}_core"
+
 group = modGroupId
 version = modVersion
 
@@ -139,7 +142,9 @@ tasks.named<ProcessResources>("processResources") {
         "mod_license" to modLicense,
         "mod_version" to modVersion,
         "mod_authors" to modAuthors,
-        "mod_description" to modDescription
+        "mod_description" to modDescription,
+        "core_mod_id" to coreModId,
+        "core_mod_name" to coreModName,
     )
 
     inputs.properties(replaceProperties)
